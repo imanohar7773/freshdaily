@@ -894,6 +894,623 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ===== ORDER CUTOFF COUNTDOWN ===== */
+.cutoff-banner {
+  margin: 0 16px 4px;
+  background: linear-gradient(135deg, #0f2d1a 0%, #1b4d30 100%);
+  border-radius: var(--radius);
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(76,175,125,0.25);
+  box-shadow: var(--shadow-sm);
+}
+.cutoff-left { display: flex; align-items: center; gap: 10px; }
+.cutoff-icon { font-size: 22px; }
+.cutoff-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--green-light);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.cutoff-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 1px;
+}
+.cutoff-timer {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.ct-box {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 6px 8px;
+  text-align: center;
+  min-width: 38px;
+}
+.ct-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--amber);
+  line-height: 1;
+}
+.ct-lbl {
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--green-light);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.ct-sep {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--amber);
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+.cutoff-closed {
+  background: linear-gradient(135deg, #2d0a0a 0%, #4d1b1b 100%);
+  border-color: rgba(232,69,69,0.3);
+}
+.cutoff-closed .cutoff-label { color: #ff8080; }
+.cutoff-closed .ct-num { color: #ff6060; }
+
+/* ===== TRUST STRIP ===== */
+.trust-strip {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.trust-strip::-webkit-scrollbar { display: none; }
+.trust-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+.trust-chip .ticon { font-size: 13px; }
+.trust-chip .ttext { font-size: 11px; font-weight: 700; color: var(--green-mid); }
+
+/* ===== TESTIMONIALS ===== */
+.testimonials-section {
+  padding: 16px 0 8px;
+}
+.test-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+  padding: 0 16px 10px;
+}
+.test-scroll {
+  display: flex;
+  gap: 10px;
+  padding: 0 16px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.test-scroll::-webkit-scrollbar { display: none; }
+.test-card {
+  flex-shrink: 0;
+  width: 220px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.test-stars { font-size: 12px; margin-bottom: 6px; }
+.test-text {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  font-style: italic;
+}
+.test-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.test-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.test-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.test-loc {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ===== TRUST FOOTER ===== */
+.trust-footer {
+  margin: 16px 12px 8px;
+  background: var(--green-deep);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+  color: var(--white);
+}
+.tf-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.tf-sub {
+  font-size: 11px;
+  color: var(--green-light);
+  margin-bottom: 16px;
+}
+.tf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.tf-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.tf-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.tf-text { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; }
+.tf-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 14px 0;
+}
+.tf-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tf-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--amber);
+}
+.tf-copy {
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+}
+.tf-wa-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #25d366;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ===== COMBO DEALS ===== */
+.combo-section { padding: 16px 0 8px; }
+
+.combo-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 12px;
+}
+.combo-section-head .cs-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.combo-section-head .cs-sub {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+.combo-badge-new {
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.combo-scroll {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.combo-scroll::-webkit-scrollbar { display: none; }
+
+.combo-card {
+  flex-shrink: 0;
+  width: 240px;
+  border-radius: 20px;
+  padding: 18px 16px 14px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #0a1f10 0%, #163326 50%, #0f2d1a 100%);
+  border: 1px solid rgba(76,175,125,0.2);
+  box-shadow: 0 8px 32px rgba(15,45,26,0.25);
+}
+
+/* Decorative orbs inside card */
+.combo-card::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(244,162,40,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.combo-card::after {
+  content: '';
+  position: absolute;
+  bottom: -10px; left: -10px;
+  width: 80px; height: 80px;
+  background: radial-gradient(circle, rgba(76,175,125,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.combo-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.combo-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--amber);
+  background: rgba(244,162,40,0.12);
+  border: 1px solid rgba(244,162,40,0.25);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.combo-save-badge {
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.combo-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.combo-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+.combo-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+.combo-item-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+.combo-item-qty {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green-light);
+}
+
+.combo-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+.combo-price-sp {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--amber);
+  line-height: 1;
+}
+.combo-price-mrp {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  text-decoration: line-through;
+}
+.combo-price-note {
+  font-size: 10px;
+  color: var(--green-light);
+  font-weight: 600;
+}
+
+.combo-add-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--green-light) 0%, var(--green-bright) 100%);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 14px rgba(76,175,125,0.4);
+  letter-spacing: 0.3px;
+}
+.combo-add-btn:active { transform: scale(0.97); }
+.combo-add-btn.added {
+  background: linear-gradient(135deg, #e84545 0%, #c02020 100%);
+  box-shadow: 0 4px 14px rgba(232,69,69,0.4);
+}
+
+/* ===== HOW IT WORKS ===== */
+.hiw-section {
+  padding: 20px 16px 8px;
+}
+.hiw-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 14px;
+  text-align: center;
+}
+.hiw-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  position: relative;
+}
+.hiw-steps::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  left: 36px;
+  right: 36px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--green-light), var(--amber), var(--green-light));
+  opacity: 0.3;
+  border-radius: 1px;
+}
+.hiw-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.hiw-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  position: relative;
+  z-index: 1;
+}
+.hiw-step:nth-child(1) .hiw-icon-wrap { background: linear-gradient(135deg, #e8f5ee, #c8ead8); }
+.hiw-step:nth-child(2) .hiw-icon-wrap { background: linear-gradient(135deg, #fff5e0, #fde8b0); }
+.hiw-step:nth-child(3) .hiw-icon-wrap { background: linear-gradient(135deg, #e8f0ff, #c8d8ff); }
+.hiw-step:nth-child(4) .hiw-icon-wrap { background: linear-gradient(135deg, #ffe8e8, #ffc8c8); }
+.hiw-step-num {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.hiw-step-text {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+/* ===== ORDER SUCCESS OVERLAY ===== */
+.order-success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,25,15,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.order-success-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+.order-success-card {
+  background: var(--white);
+  border-radius: 28px;
+  padding: 36px 28px;
+  text-align: center;
+  width: 300px;
+  transform: scale(0.8);
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.order-success-overlay.show .order-success-card {
+  transform: scale(1);
+}
+@keyframes successPop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes confettiDrop {
+  0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(60px) rotate(360deg); opacity: 0; }
+}
+.success-emoji {
+  font-size: 64px;
+  display: block;
+  margin-bottom: 12px;
+  animation: successPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-deep);
+  margin-bottom: 6px;
+}
+.success-sub {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.success-delivery-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-pale);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green-mid);
+  margin-bottom: 20px;
+}
+.success-close-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 14px;
+  border: none;
+  background: var(--green-mid);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+.confetti-wrap {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 100px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  font-size: 16px;
+  animation: confettiDrop 1.2s ease-out both;
+}
+
+/* ===== FLOATING WHATSAPP BUTTON ===== */
+.float-wa {
+  position: fixed;
+  bottom: 90px;
+  right: 16px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.float-wa-btn {
+  width: 50px; height: 50px;
+  background: #25d366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+  cursor: pointer;
+  border: none;
+  font-size: 24px;
+  transition: all 0.2s;
+  animation: floatPulse 3s ease-in-out infinite;
+}
+.float-wa-btn:active { transform: scale(0.92); }
+@keyframes floatPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.5); }
+  50% { box-shadow: 0 4px 30px rgba(37,211,102,0.8); }
+}
+.float-wa-tooltip {
+  background: var(--green-deep);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.float-wa.show-tip .float-wa-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 /* ===== OFFERS CAROUSEL ===== */
 .offers-section {
   padding: 12px 0 4px;
@@ -1174,6 +1791,33 @@ body {
   </div>
 </div>
 
+<!-- ORDER CUTOFF COUNTDOWN -->
+<div class="cutoff-banner" id="cutoffBanner" style="margin-top:14px;">
+  <div class="cutoff-left">
+    <div class="cutoff-icon">⏳</div>
+    <div>
+      <div class="cutoff-label" id="cutoffLabel">✅ Aaj Delivery Available</div>
+      <div class="cutoff-sub" id="cutoffSub">Aaj 4 PM tak delivery — order band hoga 10 AM par</div>
+    </div>
+  </div>
+  <div class="cutoff-timer">
+    <div class="ct-box"><div class="ct-num" id="ctH">--</div><div class="ct-lbl">HRS</div></div>
+    <div class="ct-sep">:</div>
+    <div class="ct-box"><div class="ct-num" id="ctM">--</div><div class="ct-lbl">MIN</div></div>
+    <div class="ct-sep">:</div>
+    <div class="ct-box"><div class="ct-num" id="ctS">--</div><div class="ct-lbl">SEC</div></div>
+  </div>
+</div>
+
+<!-- TRUST CHIPS -->
+<div class="trust-strip">
+  <div class="trust-chip"><span class="ticon">✅</span><span class="ttext">100% Fresh Guarantee</span></div>
+  <div class="trust-chip"><span class="ticon">🧾</span><span class="ttext">No Hidden Charges</span></div>
+  <div class="trust-chip"><span class="ticon">🔄</span><span class="ttext">Easy Replacement</span></div>
+  <div class="trust-chip"><span class="ticon">🌿</span><span class="ttext">Direct from Farm</span></div>
+  <div class="trust-chip"><span class="ticon">⚡</span><span class="ttext">Daily Fresh Stock</span></div>
+</div>
+
 <!-- DELIVERY CHIPS -->
 <div class="delivery-strip">
   <div class="dchip"><span class="icon">🚚</span><span class="text">Free above ₹499</span></div>
@@ -1181,6 +1825,47 @@ body {
   <div class="dchip"><span class="icon">💵</span><span class="text">Cash on Delivery</span></div>
   <div class="dchip"><span class="icon">🌱</span><span class="text">Farm Fresh</span></div>
   <div class="dchip"><span class="icon">🔄</span><span class="text">Daily Restock</span></div>
+</div>
+
+<!-- COMBO DEALS SECTION -->
+<div class="combo-section">
+  <div class="combo-section-head">
+    <div>
+      <div class="cs-title">🎁 Combo Deals</div>
+      <div class="cs-sub">Sath mein order karo — aur bachao</div>
+    </div>
+    <span class="combo-badge-new">NEW</span>
+  </div>
+  <div class="combo-scroll" id="comboScroll">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="hiw-section">
+  <div class="hiw-title">🌿 Kaise Kaam Karta Hai?</div>
+  <div class="hiw-steps">
+    <div class="hiw-step">
+      <div class="hiw-icon-wrap">🛒</div>
+      <div class="hiw-step-num">STEP 1</div>
+      <div class="hiw-step-text">Items select karo</div>
+    </div>
+    <div class="hiw-step">
+      <div class="hiw-icon-wrap">📱</div>
+      <div class="hiw-step-num">STEP 2</div>
+      <div class="hiw-step-text">WhatsApp pe order bhejo</div>
+    </div>
+    <div class="hiw-step">
+      <div class="hiw-icon-wrap">🌿</div>
+      <div class="hiw-step-num">STEP 3</div>
+      <div class="hiw-step-text">Fresh pack kiya jaata hai</div>
+    </div>
+    <div class="hiw-step">
+      <div class="hiw-icon-wrap">🚚</div>
+      <div class="hiw-step-num">STEP 4</div>
+      <div class="hiw-step-text">Ghar pe delivery 4 PM tak</div>
+    </div>
+  </div>
 </div>
 
 <!-- OFFERS CAROUSEL -->
@@ -1228,6 +1913,69 @@ body {
 
 <!-- ITEM LIST -->
 <div id="itemList"></div>
+
+<!-- TESTIMONIALS -->
+<div class="testimonials-section">
+  <div class="test-title">❤️ Customers Love Us</div>
+  <div class="test-scroll">
+    <div class="test-card">
+      <div class="test-stars">⭐⭐⭐⭐⭐</div>
+      <div class="test-text">"Vegetables bilkul fresh aate hain, market se bhi better quality. Har roz order karta hoon!"</div>
+      <div class="test-author">
+        <div class="test-avatar" style="background:#e8f5ee;">👨</div>
+        <div><div class="test-name">Rahul Sharma</div><div class="test-loc">Sector 12, Noida</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">⭐⭐⭐⭐⭐</div>
+      <div class="test-text">"WhatsApp pe order karo aur subah ghar pe fresh sabzi! Bahut convenient hai, price bhi sahi hai."</div>
+      <div class="test-author">
+        <div class="test-avatar" style="background:#fff0e8;">👩</div>
+        <div><div class="test-name">Priya Verma</div><div class="test-loc">Green Park Colony</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">⭐⭐⭐⭐⭐</div>
+      <div class="test-text">"Pehle delivery late aati thi dusri jagah se, yahan hamesha 4 PM se pehle milti hai. Trusted service!"</div>
+      <div class="test-author">
+        <div class="test-avatar" style="background:#e8f0ff;">👨‍💼</div>
+        <div><div class="test-name">Anil Gupta</div><div class="test-loc">Rajpur Road</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">⭐⭐⭐⭐⭐</div>
+      <div class="test-text">"Mango season mein Alphonso mangoes ekdum fresh mile, market rate se kam price mein. Superb!"</div>
+      <div class="test-author">
+        <div class="test-avatar" style="background:#f5e8ff;">👩‍🍳</div>
+        <div><div class="test-name">Sunita Patel</div><div class="test-loc">Model Town</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST FOOTER -->
+<div class="trust-footer">
+  <div class="tf-title">🌿 About Fresh Daily</div>
+  <div class="tf-sub">Farm to doorstep — har din, bilkul fresh</div>
+  <div class="tf-grid">
+    <div class="tf-item"><div class="tf-icon">🚜</div><div class="tf-text">Directly sourced from local farms</div></div>
+    <div class="tf-item"><div class="tf-icon">🕓</div><div class="tf-text">Daily 4 PM delivery, no delays</div></div>
+    <div class="tf-item"><div class="tf-icon">✅</div><div class="tf-text">100% freshness guarantee</div></div>
+    <div class="tf-item"><div class="tf-icon">🔄</div><div class="tf-text">Free replacement if not satisfied</div></div>
+    <div class="tf-item"><div class="tf-icon">💵</div><div class="tf-text">Cash on delivery — no prepayment</div></div>
+    <div class="tf-item"><div class="tf-icon">📦</div><div class="tf-text">Hygienic packaging, no compromise</div></div>
+  </div>
+  <div class="tf-divider"></div>
+  <div class="tf-bottom">
+    <div>
+      <div class="tf-brand">🌿 FreshDaily</div>
+      <div class="tf-copy">© 2025 · All rights reserved</div>
+    </div>
+    <a class="tf-wa-link" href="https://wa.me/918000344554" target="_blank" rel="noopener">
+      💬 WhatsApp Support
+    </a>
+  </div>
+</div>
 
 <div class="bottom-spacer"></div>
 
@@ -1431,6 +2179,7 @@ let selWeight = {};
 let activeFilter = 'all';
 let drawerOpen = false;
 let isFullRender = true;
+let comboDiscount = 0; // Total discount applied from active combos
 
 function hasWeightOpts(item) {
   return WEIGHT_CATS.includes(item.cat) && item.uom === "Kg";
@@ -1442,9 +2191,68 @@ function getCartKey(idx, wIdx) {
 
 function calcPrice(sp, mult) { return Math.round(sp * mult); }
 
+// Max quantity per item (in units — Kg for weight items, Pc for piece items)
+const MAX_QTY = {
+  // Fruits — default 10 Kg/Pc, exceptions below
+  "Jamun":           3,   // 3 Kg
+  "Kiwi Fresh":      10,  // 10 Pc (pieces)
+  // Root Vegetables — default 10 Kg, exceptions:
+  "Ginger":          5,   // 5 Kg
+  // Herbs & Leafy — default 10 Kg, exceptions:
+  "Lemon (Nimbu)":   4,   // 4 Kg
+};
+
+const CAT_MAX = {
+  "🍊 Fruits":          10,
+  "🥕 Root Vegetables": 10,
+  "🥬 Green Vegetables": 10,
+  "🌿 Herbs & Leafy":   10,
+};
+
+function getMaxQty(it, wIdx) {
+  // Item-specific limit first
+  for (let key in MAX_QTY) {
+    if (it.name.toLowerCase().includes(key.toLowerCase())) return MAX_QTY[key];
+  }
+  // Category default
+  if (CAT_MAX[it.cat]) return CAT_MAX[it.cat];
+  return 99; // No limit for exotic/packed
+}
+
+// Returns total Kg already in cart for this item across ALL weight tabs
+function getItemTotalKg(idx) {
+  let totalKg = 0;
+  WEIGHT_OPTIONS.forEach((w, wi) => {
+    const k = getCartKey(idx, wi);
+    if (cart[k]) totalKg += cart[k] * w.mult;
+  });
+  return totalKg;
+}
+
 function changeQty(idx, delta, wIdx) {
   const key = getCartKey(idx, wIdx);
   const prev = cart[key] || 0;
+  const it = items[idx];
+  const useWeight = hasWeightOpts(it);
+  const maxQty = getMaxQty(it, wIdx);
+
+  if (delta > 0 && useWeight) {
+    // Combined check: current total Kg across all tabs + this addition
+    const wMult = WEIGHT_OPTIONS[wIdx].mult;
+    const currentTotalKg = getItemTotalKg(idx);
+    if (currentTotalKg + wMult > maxQty + 0.001) {
+      const remaining = +(maxQty - currentTotalKg).toFixed(2);
+      showToast('⚠️ Max limit ' + maxQty + ' Kg — sirf ' + (remaining > 0 ? remaining + ' Kg' : '0 Kg') + ' bacha');
+      return;
+    }
+  } else if (delta > 0 && !useWeight) {
+    const newQty = prev + delta;
+    if (newQty > maxQty) {
+      showToast('⚠️ Max limit: ' + maxQty + (it.uom === 'Pc' ? ' Pcs' : ' Kg'));
+      return;
+    }
+  }
+
   cart[key] = Math.max(0, prev + delta);
   if (cart[key] === 0) delete cart[key];
   const isFirstAdd = (delta > 0 && prev === 0);
@@ -1551,6 +2359,16 @@ function clearCart() {
   if (drawerOpen) toggleDrawer();
 }
 
+function calcComboDiscount() {
+  let discount = 0;
+  COMBOS.forEach(combo => {
+    if (isComboInCart(combo)) {
+      discount += combo.mrpTotal - combo.comboPrice;
+    }
+  });
+  return discount;
+}
+
 function getCartTotals() {
   let count = 0, total = 0, mrpTotal = 0;
   for (let key in cart) {
@@ -1564,6 +2382,8 @@ function getCartTotals() {
     mrpTotal += qty * calcPrice(it.mrp, mult);
     count += qty;
   }
+  const comboDis = calcComboDiscount();
+  total = Math.max(0, total - comboDis);
   return { count, total, mrpTotal, savings: mrpTotal - total };
 }
 
@@ -1624,9 +2444,12 @@ function renderDrawer() {
   document.getElementById('freeDeliveryBar').innerHTML = fdb;
 
   // Bill summary
+  const comboDis = calcComboDiscount();
+  const itemSavings = mrpTotal - (total + comboDis); // savings from sp vs mrp
   const bs = `<div class="bill-summary">
     <div class="bill-row"><span>Item Total (MRP)</span><span>₹${mrpTotal}</span></div>
-    <div class="bill-row savings"><span>💚 You Save</span><span>-₹${savings}</span></div>
+    ${itemSavings > 0 ? `<div class="bill-row savings"><span>💚 Item Discount</span><span>-₹${itemSavings}</span></div>` : ''}
+    ${comboDis > 0 ? `<div class="bill-row savings"><span>🎁 Combo Discount</span><span>-₹${comboDis}</span></div>` : ''}
     <div class="bill-row"><span>Delivery Charge</span><span>${delivery === 0 ? '<span style="color:#1b7a3f;font-weight:800">FREE</span>' : '₹' + delivery}</span></div>
     <div class="bill-row total"><span>Grand Total</span><span>₹${grandTotal}</span></div>
   </div>`;
@@ -1855,7 +2678,237 @@ function sendWhatsAppWithData(data) {
   msg += "━━━━━━━━━━━━━━━━━━\n";
   msg += "⏰ Kal subah 4 PM se pehle deliver karein.\n💵 Payment: Cash on Delivery.";
   openWhatsApp('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg));
+  setTimeout(showSuccessOverlay, 800);
 }
+
+// ===== COMBO DEALS =====
+// ✅ Sirf yahan naye combos add karo — baaki sab automatic
+const COMBOS = [
+  {
+    id: 'combo1',
+    name: 'Sabzi Starter Pack',
+    emoji: '🥔🧅',
+    items: [
+      { name: 'Onion',  kg: 5 },
+      { name: 'Potato', kg: 5 },
+    ],
+    comboPrice: 160,   // Special combo price
+    mrpTotal:   195,   // Original total
+  },
+  // Add more combos below like this:
+  // {
+  //   id: 'combo2',
+  //   name: 'Green Basket',
+  //   emoji: '🥬🍅',
+  //   items: [
+  //     { name: 'Tomato', kg: 2 },
+  //     { name: 'Spinach', kg: 1 },
+  //   ],
+  //   comboPrice: 80,
+  //   mrpTotal: 110,
+  // },
+];
+
+function isComboInCart(combo) {
+  return combo.items.every(ci => {
+    const idx = items.findIndex(it => it.name.toLowerCase().includes(ci.name.toLowerCase()));
+    if (idx === -1) return false;
+    const it = items[idx];
+    const useWeight = hasWeightOpts(it);
+    if (useWeight) {
+      const totalKg = getItemTotalKg(idx);
+      return totalKg >= ci.kg - 0.001;
+    } else {
+      const key = getCartKey(idx);
+      return (cart[key] || 0) >= ci.kg;
+    }
+  });
+}
+
+function addComboToCart(comboId) {
+  const combo = COMBOS.find(c => c.id === comboId);
+  if (!combo) return;
+
+  const alreadyIn = isComboInCart(combo);
+  if (alreadyIn) {
+    // Remove combo items
+    combo.items.forEach(ci => {
+      const idx = items.findIndex(it => it.name.toLowerCase().includes(ci.name.toLowerCase()));
+      if (idx === -1) return;
+      const it = items[idx];
+      const useWeight = hasWeightOpts(it);
+      if (useWeight) {
+        WEIGHT_OPTIONS.forEach((w, wi) => { delete cart[getCartKey(idx, wi)]; });
+      } else {
+        delete cart[getCartKey(idx)];
+      }
+    });
+    showToast('🗑️ Combo cart se hataya');
+  } else {
+    // Add combo items — use 1Kg tab (wIdx=2) for weight items
+    let blocked = false;
+    combo.items.forEach(ci => {
+      if (blocked) return;
+      const idx = items.findIndex(it => it.name.toLowerCase().includes(ci.name.toLowerCase()));
+      if (idx === -1) { showToast('⚠️ Item not found: ' + ci.name); blocked = true; return; }
+      const it = items[idx];
+      const useWeight = hasWeightOpts(it);
+      const maxKg = getMaxQty(it);
+
+      if (useWeight) {
+        // Clear any existing qty for this item first, then set 1Kg tab × ci.kg
+        WEIGHT_OPTIONS.forEach((w, wi) => { delete cart[getCartKey(idx, wi)]; });
+        if (ci.kg > maxKg) { showToast('⚠️ ' + it.name + ' max limit ' + maxKg + ' Kg'); blocked = true; return; }
+        const wIdx = 2; // 1 Kg tab
+        cart[getCartKey(idx, wIdx)] = ci.kg; // ci.kg units of 1Kg = ci.kg Kg
+      } else {
+        if (ci.kg > getMaxQty(it)) { showToast('⚠️ ' + it.name + ' max limit exceeded'); blocked = true; return; }
+        cart[getCartKey(idx)] = ci.kg;
+      }
+    });
+    if (!blocked) showToast('🎁 Combo cart mein add hua!');
+  }
+
+  updateCart();
+  renderCombos();
+  isFullRender = true;
+  renderItems();
+  isFullRender = false;
+}
+
+function renderCombos() {
+  const container = document.getElementById('comboScroll');
+  if (!container) return;
+
+  container.innerHTML = COMBOS.map(combo => {
+    const inCart = isComboInCart(combo);
+    const saving = combo.mrpTotal - combo.comboPrice;
+    const savePct = Math.round(saving / combo.mrpTotal * 100);
+
+    const itemsHTML = combo.items.map(ci =>
+      `<div class="combo-item-row">
+        <span class="combo-item-name">${ci.name}</span>
+        <span class="combo-item-qty">${ci.kg} Kg</span>
+      </div>`
+    ).join('');
+
+    return `<div class="combo-card">
+      <div class="combo-top">
+        <span class="combo-label">🎁 Combo Deal</span>
+        <span class="combo-save-badge">SAVE ${savePct}%</span>
+      </div>
+      <div class="combo-name">${combo.emoji} ${combo.name}</div>
+      <div class="combo-items-list">${itemsHTML}</div>
+      <div class="combo-price-row">
+        <span class="combo-price-sp">₹${combo.comboPrice}</span>
+        <span class="combo-price-mrp">₹${combo.mrpTotal}</span>
+        <span class="combo-price-note">combo price</span>
+      </div>
+      <button class="combo-add-btn ${inCart ? 'added' : ''}" onclick="addComboToCart('${combo.id}')">
+        ${inCart ? '✓ Cart Mein Hai — Hatao' : '+ Add Combo to Cart'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+// ===== ORDER SUCCESS OVERLAY =====
+function showSuccessOverlay() {
+  // Set delivery text based on time
+  const now = new Date();
+  const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (5.5 * 60 * 60 * 1000));
+  const deliveryText = ist.getHours() < 10
+    ? 'Aaj 4 PM tak delivery expected'
+    : 'Kal 4 PM tak delivery expected';
+  document.getElementById('successDeliveryText').textContent = deliveryText;
+
+  // Confetti
+  const wrap = document.getElementById('confettiWrap');
+  wrap.innerHTML = '';
+  ['🎉','🌿','✨','🎊','💚','⭐','🎁'].forEach((em, i) => {
+    const el = document.createElement('span');
+    el.className = 'confetti-piece';
+    el.textContent = em;
+    el.style.left = (10 + i * 13) + '%';
+    el.style.animationDelay = (i * 0.1) + 's';
+    wrap.appendChild(el);
+  });
+
+  document.getElementById('orderSuccessOverlay').classList.add('show');
+}
+
+function closeSuccessOverlay() {
+  document.getElementById('orderSuccessOverlay').classList.remove('show');
+}
+
+// ===== FLOATING WA BUTTON =====
+setTimeout(() => {
+  const floatWa = document.getElementById('floatWa');
+  if (floatWa) {
+    floatWa.classList.add('show-tip');
+    setTimeout(() => floatWa.classList.remove('show-tip'), 3500);
+  }
+}, 4000);
+
+// ===== ORDER CUTOFF COUNTDOWN =====
+// Logic:
+//   Before 10 AM  → countdown to 10 AM  → "Aaj 4 PM tak delivery"
+//   After  10 AM  → countdown to next day 10 AM → "Kal 4 PM tak delivery"
+
+const CUTOFF_HOUR = 10; // 10 AM IST
+
+function updateCountdown() {
+  const now = new Date();
+  // Convert to IST (UTC+5:30)
+  const ist = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (5.5 * 60 * 60 * 1000));
+
+  const istHour = ist.getHours();
+  const isBeforeCutoff = istHour < CUTOFF_HOUR; // before 10 AM
+
+  // Build cutoff target
+  const cutoff = new Date(ist);
+  cutoff.setHours(CUTOFF_HOUR, 0, 0, 0);
+  if (!isBeforeCutoff) {
+    // Already past 10 AM — next cutoff is tomorrow 10 AM
+    cutoff.setDate(cutoff.getDate() + 1);
+  }
+
+  const diff = cutoff - ist;
+  if (diff <= 0) { setTimeout(updateCountdown, 500); return; }
+
+  const totalSecs = Math.floor(diff / 1000);
+  const hrs  = Math.floor(totalSecs / 3600);
+  const mins = Math.floor((totalSecs % 3600) / 60);
+  const secs = totalSecs % 60;
+
+  document.getElementById('ctH').textContent = String(hrs).padStart(2,'0');
+  document.getElementById('ctM').textContent = String(mins).padStart(2,'0');
+  document.getElementById('ctS').textContent = String(secs).padStart(2,'0');
+
+  const banner   = document.getElementById('cutoffBanner');
+  const label    = document.getElementById('cutoffLabel');
+  const sub      = document.getElementById('cutoffSub');
+
+  banner.classList.remove('cutoff-closed');
+
+  if (isBeforeCutoff) {
+    // Window is OPEN — counting down to 10 AM cutoff
+    if (hrs === 0 && mins < 30) {
+      banner.classList.add('cutoff-closed');
+      label.textContent = '⚠️ Last Chance — Aaj Ki Delivery!';
+      sub.textContent   = 'Sirf ' + mins + ' min bacha hai! Aaj 4 PM delivery ke liye abhi order karein';
+    } else {
+      label.textContent = '✅ Aaj Delivery Available';
+      sub.textContent   = 'Aaj 4 PM tak delivery — order band hoga 10 AM par';
+    }
+  } else {
+    // Window is CLOSED — counting down to tomorrow 10 AM
+    label.textContent = '📦 Next Day Delivery';
+    sub.textContent   = 'Kal 4 PM tak milegi — order band hoga kal 10 AM par';
+  }
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
 // Close modal on overlay click — deferred so addressModal exists in DOM
 document.addEventListener('DOMContentLoaded', function() {
@@ -1867,7 +2920,29 @@ document.addEventListener('DOMContentLoaded', function() {
 isFullRender = true;
 renderItems();
 isFullRender = false;
+renderCombos();
 </script>
+
+<!-- FLOATING WHATSAPP SUPPORT BUTTON -->
+<div class="float-wa" id="floatWa">
+  <div class="float-wa-tooltip">Koi sawaal? Chat karein 💬</div>
+  <a href="https://wa.me/918000344554" target="_blank" rel="noopener" class="float-wa-btn" id="floatWaBtn">💬</a>
+</div>
+
+<!-- ORDER SUCCESS OVERLAY -->
+<div class="order-success-overlay" id="orderSuccessOverlay">
+  <div class="order-success-card" style="position:relative;">
+    <div class="confetti-wrap" id="confettiWrap"></div>
+    <span class="success-emoji">🎉</span>
+    <div class="success-title">Order Bhej Diya!</div>
+    <div class="success-sub">Aapka order WhatsApp pe bhej diya gaya hai. Hum jald hi confirm karenge!</div>
+    <div class="success-delivery-tag">
+      <span>🚚</span>
+      <span id="successDeliveryText">Aaj 4 PM tak delivery</span>
+    </div>
+    <button class="success-close-btn" onclick="closeSuccessOverlay()">✓ Theek Hai</button>
+  </div>
+</div>
 
 <!-- ADDRESS MODAL -->
 <div class="modal-overlay" id="addressModal">
