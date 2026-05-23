@@ -171,7 +171,7 @@ body {
 }
 
 .stat-card .num {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 22px;
   font-weight: 700;
   color: var(--amber);
@@ -490,7 +490,7 @@ body {
 }
 
 .price-sp {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: var(--green-mid);
@@ -574,7 +574,7 @@ body {
   font-size: 14px;
   font-weight: 800;
   color: var(--green-deep);
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Sans', sans-serif;
 }
 
 /* Cart total on item */
@@ -643,7 +643,7 @@ body {
 
 .cart-info-text .ct { font-size: 11px; color: var(--green-light); font-weight: 500; }
 .cart-info-text .cv {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 20px;
   font-weight: 700;
   color: var(--amber);
@@ -746,7 +746,7 @@ body {
 }
 
 .ci-price {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 15px;
   font-weight: 700;
   color: var(--green-mid);
@@ -934,7 +934,7 @@ body {
   min-width: 38px;
 }
 .ct-num {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 20px;
   font-weight: 700;
   color: var(--amber);
@@ -990,13 +990,52 @@ body {
 .testimonials-section {
   padding: 16px 0 8px;
 }
+.test-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 10px;
+}
 .test-title {
   font-family: 'Playfair Display', serif;
   font-size: 15px;
   font-weight: 700;
   color: var(--text-dark);
-  padding: 0 16px 10px;
 }
+.test-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.add-review-btn {
+  background: var(--green-pale);
+  border: 1.5px solid var(--green-bright);
+  color: var(--green-mid);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.add-review-btn:active { background: var(--green-bright); color: white; }
+
+/* Star picker */
+.star-picker {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.star-opt {
+  font-size: 32px;
+  color: #d0d0d0;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1;
+}
+.star-opt.active { color: var(--amber); transform: scale(1.15); }
 .test-scroll {
   display: flex;
   gap: 10px;
@@ -1261,7 +1300,7 @@ body {
   z-index: 1;
 }
 .combo-price-sp {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 24px;
   font-weight: 900;
   color: var(--amber);
@@ -1562,7 +1601,7 @@ body {
 }
 
 .offer-card .obig {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 36px;
   font-weight: 900;
   color: var(--amber);
@@ -1729,6 +1768,199 @@ body {
   cursor: pointer;
   font-family: 'DM Sans', sans-serif;
 }
+
+/* ===== PAYMENT METHOD SELECTOR ===== */
+.payment-section { margin-bottom: 14px; }
+.payment-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pay-card {
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  background: var(--white);
+  position: relative;
+}
+.pay-card.selected {
+  border-color: var(--green-bright);
+  background: var(--green-pale);
+}
+.pay-card .pc-icon { font-size: 26px; margin-bottom: 4px; }
+.pay-card .pc-title { font-size: 12px; font-weight: 800; color: var(--text-dark); }
+.pay-card .pc-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.pay-card .pc-check {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--green-bright);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.pay-card.selected .pc-check { display: flex; }
+
+/* ===== UPI PAYMENT SCREEN ===== */
+.upi-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,25,15,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 600;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  overflow: hidden;
+}
+.upi-overlay.open { opacity: 1; pointer-events: all; }
+.upi-sheet {
+  background: var(--white);
+  width: 100%;
+  border-radius: 28px 28px 0 0;
+  padding: 0 0 40px;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  max-height: 92vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.upi-overlay.open .upi-sheet { transform: translateY(0); }
+.upi-handle { width: 40px; height: 4px; background: #d0d0d0; border-radius: 2px; margin: 12px auto 0; }
+.upi-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.upi-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; color: var(--green-deep); }
+.upi-title span { color: var(--amber); }
+.upi-close {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--green-pale); border: none; font-size: 18px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--green-mid); font-weight: 700;
+}
+.upi-amount-box {
+  margin: 16px 20px;
+  background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+  border-radius: 18px;
+  padding: 18px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.upi-amount-box::before {
+  content: '₹';
+  position: absolute;
+  font-size: 120px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.04);
+  top: -20px; right: -10px;
+  font-family: 'Playfair Display', serif;
+}
+.upi-amount-box .uab-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.6); letter-spacing: 1px; text-transform: uppercase; }
+.upi-amount-box .uab-amount { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 900; color: var(--amber); line-height: 1.1; margin-top: 4px; }
+.upi-amount-box .uab-id { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 6px; }
+
+.upi-apps-label {
+  font-size: 11px; font-weight: 700; color: var(--text-mid);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 0 20px 10px;
+}
+.upi-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 0 20px 16px;
+}
+.upi-app-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.upi-app-btn:active { transform: scale(0.94); background: var(--green-pale); border-color: var(--green-bright); }
+.upi-app-btn .app-icon { width: 44px; height: 44px; border-radius: 12px; overflow:hidden; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; }
+.upi-app-btn .app-name { font-size: 10px; font-weight: 700; color: var(--text-mid); }
+
+.upi-divider {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 20px 14px;
+  color: var(--text-muted); font-size: 11px; font-weight: 600;
+}
+.upi-divider::before, .upi-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.upi-manual {
+  margin: 0 20px;
+  background: var(--amber-light);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+.upi-manual .um-title { font-size: 12px; font-weight: 800; color: #7a5000; margin-bottom: 6px; }
+.upi-manual .um-id {
+  font-size: 15px; font-weight: 800; color: var(--green-deep);
+  letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;
+}
+.copy-btn {
+  background: var(--green-mid); color: white; border: none;
+  padding: 4px 10px; border-radius: 8px; font-size: 10px;
+  font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif;
+}
+.upi-steps {
+  margin: 14px 20px 0;
+  background: var(--green-pale);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+.upi-steps .us-title { font-size: 11px; font-weight: 800; color: var(--green-deep); margin-bottom: 8px; }
+.upi-step { display: flex; gap: 10px; margin-bottom: 6px; align-items: flex-start; }
+.upi-step:last-child { margin-bottom: 0; }
+.us-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--green-mid); color: white;
+  font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.us-text { font-size: 12px; font-weight: 500; color: var(--text-mid); line-height: 1.4; }
+.upi-done-btn {
+  display: block; width: calc(100% - 40px);
+  margin: 14px 20px 0;
+  background: linear-gradient(135deg, #25d366, #1da851);
+  color: white; border: none; padding: 15px;
+  border-radius: 16px; font-size: 14px; font-weight: 800;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 6px 16px rgba(37,211,102,0.35);
+  transition: all 0.2s;
+}
+.upi-done-btn:active { transform: scale(0.98); }
 </style>
 </head>
 <body>
@@ -1916,14 +2148,20 @@ body {
 
 <!-- TESTIMONIALS -->
 <div class="testimonials-section">
-  <div class="test-title">❤️ Customers Love Us</div>
-  <div class="test-scroll">
+  <div class="test-header">
+    <div>
+      <div class="test-title">❤️ Customers Love Us</div>
+      <div class="test-subtitle" id="reviewCount">4 reviews · 5.0 ⭐ avg</div>
+    </div>
+    <button class="add-review-btn" onclick="openReviewModal()">+ Review Do</button>
+  </div>
+  <div class="test-scroll" id="reviewsScroll">
     <div class="test-card">
       <div class="test-stars">⭐⭐⭐⭐⭐</div>
       <div class="test-text">"Vegetables bilkul fresh aate hain, market se bhi better quality. Har roz order karta hoon!"</div>
       <div class="test-author">
         <div class="test-avatar" style="background:#e8f5ee;">👨</div>
-        <div><div class="test-name">Rahul Sharma</div><div class="test-loc">Sector 12, Noida</div></div>
+        <div><div class="test-name">Rahul Sharma</div><div class="test-loc">📍 Malviya Nagar, Jaipur</div></div>
       </div>
     </div>
     <div class="test-card">
@@ -1931,7 +2169,7 @@ body {
       <div class="test-text">"WhatsApp pe order karo aur subah ghar pe fresh sabzi! Bahut convenient hai, price bhi sahi hai."</div>
       <div class="test-author">
         <div class="test-avatar" style="background:#fff0e8;">👩</div>
-        <div><div class="test-name">Priya Verma</div><div class="test-loc">Green Park Colony</div></div>
+        <div><div class="test-name">Priya Verma</div><div class="test-loc">📍 Vaishali Nagar, Jaipur</div></div>
       </div>
     </div>
     <div class="test-card">
@@ -1939,7 +2177,7 @@ body {
       <div class="test-text">"Pehle delivery late aati thi dusri jagah se, yahan hamesha 4 PM se pehle milti hai. Trusted service!"</div>
       <div class="test-author">
         <div class="test-avatar" style="background:#e8f0ff;">👨‍💼</div>
-        <div><div class="test-name">Anil Gupta</div><div class="test-loc">Rajpur Road</div></div>
+        <div><div class="test-name">Anil Gupta</div><div class="test-loc">📍 Mansarovar, Jaipur</div></div>
       </div>
     </div>
     <div class="test-card">
@@ -1947,8 +2185,48 @@ body {
       <div class="test-text">"Mango season mein Alphonso mangoes ekdum fresh mile, market rate se kam price mein. Superb!"</div>
       <div class="test-author">
         <div class="test-avatar" style="background:#f5e8ff;">👩‍🍳</div>
-        <div><div class="test-name">Sunita Patel</div><div class="test-loc">Model Town</div></div>
+        <div><div class="test-name">Sunita Patel</div><div class="test-loc">📍 Pratap Nagar, Jaipur</div></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <div class="modal-title">✍️ Apna <span>Review</span> Dein</div>
+      <button class="modal-close" onclick="closeReviewModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <div class="field-label">👤 Aapka Naam</div>
+        <input class="field-input" id="rv_name" type="text" placeholder="Naam likhein" />
+      </div>
+      <div class="field-group">
+        <div class="field-label">📍 Area / Colony, Jaipur</div>
+        <input class="field-input" id="rv_loc" type="text" placeholder="Jaise: Vaishali Nagar, Jaipur" />
+      </div>
+      <div class="field-group">
+        <div class="field-label">⭐ Rating</div>
+        <div class="star-picker" id="starPicker">
+          <span class="star-opt" data-val="1" onclick="setRating(1)">★</span>
+          <span class="star-opt" data-val="2" onclick="setRating(2)">★</span>
+          <span class="star-opt" data-val="3" onclick="setRating(3)">★</span>
+          <span class="star-opt" data-val="4" onclick="setRating(4)">★</span>
+          <span class="star-opt" data-val="5" onclick="setRating(5)">★</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">💬 Aapka Anubhav</div>
+        <textarea class="field-input" id="rv_text" rows="3" placeholder="Fresh Daily ke baare mein batayein..." style="resize:none;height:80px;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="confirm-btn" onclick="submitReview()">
+        <span>❤️</span> Review Submit Karein
+      </button>
     </div>
   </div>
 </div>
@@ -1962,7 +2240,7 @@ body {
     <div class="tf-item"><div class="tf-icon">🕓</div><div class="tf-text">Daily 4 PM delivery, no delays</div></div>
     <div class="tf-item"><div class="tf-icon">✅</div><div class="tf-text">100% freshness guarantee</div></div>
     <div class="tf-item"><div class="tf-icon">🔄</div><div class="tf-text">Free replacement if not satisfied</div></div>
-    <div class="tf-item"><div class="tf-icon">💵</div><div class="tf-text">Cash on delivery — no prepayment</div></div>
+    <div class="tf-item"><div class="tf-icon">💳</div><div class="tf-text">COD & Online UPI payment — dono accepted</div></div>
     <div class="tf-item"><div class="tf-icon">📦</div><div class="tf-text">Hygienic packaging, no compromise</div></div>
   </div>
   <div class="tf-divider"></div>
@@ -2621,7 +2899,12 @@ function saveCustomer(data) {
 function useSavedAndOrder() {
   closeAddressModal();
   const saved = getSavedCustomer();
-  if (saved) sendWhatsAppWithData(saved);
+  if (!saved) return;
+  if (selectedPayment === 'upi') {
+    openUpiScreen(saved);
+  } else {
+    sendWhatsAppWithData(saved, 'cod');
+  }
 }
 
 function confirmAndOrder() {
@@ -2638,15 +2921,21 @@ function confirmAndOrder() {
   const data = { name, society, block, flat, address, phone };
   saveCustomer(data);
   closeAddressModal();
-  sendWhatsAppWithData(data);
+
+  if (selectedPayment === 'upi') {
+    openUpiScreen(data);
+  } else {
+    sendWhatsAppWithData(data, 'cod');
+  }
 }
 
-function sendWhatsAppWithData(data) {
+function sendWhatsAppWithData(data, paymentMode) {
   const cartKeys = Object.keys(cart);
   if (!cartKeys.length) return;
   const { total, savings } = getCartTotals();
   const delivery = total >= 499 ? 0 : 69;
   const grand = total + delivery;
+  const isPaid = paymentMode === 'upi';
 
   let msg = "Hello! 🌿 *Fresh Daily* pe order dena tha\n";
   msg += "━━━━━━━━━━━━━━━━━━\n";
@@ -2676,7 +2965,14 @@ function sendWhatsAppWithData(data) {
   msg += `🚚 *Delivery: ${delivery === 0 ? 'FREE 🎉' : '₹' + delivery}*\n`;
   msg += `✅ *Grand Total: ₹${grand}*\n`;
   msg += "━━━━━━━━━━━━━━━━━━\n";
-  msg += "⏰ Kal subah 4 PM se pehle deliver karein.\n💵 Payment: Cash on Delivery.";
+  if (isPaid) {
+    msg += `💳 *Payment: Online UPI ✅*\n`;
+    msg += `📸 Screenshot attach kar raha/rahi hoon\n`;
+  } else {
+    msg += `💵 *Payment: Cash on Delivery*\n`;
+  }
+  msg += "━━━━━━━━━━━━━━━━━━\n";
+  msg += "⏰ Kal subah 4 PM se pehle deliver karein.";
   openWhatsApp('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg));
   setTimeout(showSuccessOverlay, 800);
 }
@@ -2692,21 +2988,33 @@ const COMBOS = [
       { name: 'Onion',  kg: 5 },
       { name: 'Potato', kg: 5 },
     ],
-    comboPrice: 160,   // Special combo price
-    mrpTotal:   195,   // Original total
+    comboPrice: 160,
+    mrpTotal:   195,
   },
-  // Add more combos below like this:
-  // {
-  //   id: 'combo2',
-  //   name: 'Green Basket',
-  //   emoji: '🥬🍅',
-  //   items: [
-  //     { name: 'Tomato', kg: 2 },
-  //     { name: 'Spinach', kg: 1 },
-  //   ],
-  //   comboPrice: 80,
-  //   mrpTotal: 110,
-  // },
+  {
+    id: 'combo2',
+    name: 'Green Basket',
+    emoji: '🥬🍅',
+    items: [
+      { name: 'Tomato',  kg: 2 },
+      { name: 'Spinach', kg: 1 },
+      { name: 'Capsicum Green', kg: 1 },
+    ],
+    comboPrice: 115,
+    mrpTotal:   150,
+  },
+  {
+    id: 'combo3',
+    name: 'Kitchen Essentials',
+    emoji: '🧄🌶️',
+    items: [
+      { name: 'Garlic', kg: 1 },
+      { name: 'Ginger', kg: 1 },
+      { name: 'Green Chilli', kg: 1 },
+    ],
+    comboPrice: 270,
+    mrpTotal:   350,
+  },
 ];
 
 function isComboInCart(combo) {
@@ -2849,6 +3157,84 @@ setTimeout(() => {
   }
 }, 4000);
 
+// ===== REVIEW SYSTEM =====
+let selectedRating = 0;
+const AVATARS = ['👨','👩','👨‍💼','👩‍🍳','👦','👧','🧑','👴','👵'];
+const AVATAR_COLORS = ['#e8f5ee','#fff0e8','#e8f0ff','#f5e8ff','#fff8e0','#e8f8ff'];
+
+function openReviewModal() {
+  document.getElementById('reviewModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  selectedRating = 0;
+  document.getElementById('rv_name').value = '';
+  document.getElementById('rv_loc').value = '';
+  document.getElementById('rv_text').value = '';
+  document.querySelectorAll('.star-opt').forEach(s => s.classList.remove('active'));
+}
+
+function closeReviewModal() {
+  document.getElementById('reviewModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function setRating(val) {
+  selectedRating = val;
+  document.querySelectorAll('.star-opt').forEach(s => {
+    s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+  });
+}
+
+function submitReview() {
+  const name = document.getElementById('rv_name').value.trim();
+  const loc  = document.getElementById('rv_loc').value.trim();
+  const text = document.getElementById('rv_text').value.trim();
+
+  if (!name) { showToast('⚠️ Naam likhein!'); return; }
+  if (!selectedRating) { showToast('⚠️ Rating select karein!'); return; }
+  if (!text) { showToast('⚠️ Anubhav likhein!'); return; }
+
+  const stars = '⭐'.repeat(selectedRating);
+  const avatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+  const color  = AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
+  const locFull = loc ? '📍 ' + loc + (loc.toLowerCase().includes('jaipur') ? '' : ', Jaipur') : '📍 Jaipur';
+
+  const card = document.createElement('div');
+  card.className = 'test-card animate-in';
+  card.innerHTML = `
+    <div class="test-stars">${stars}</div>
+    <div class="test-text">"${text}"</div>
+    <div class="test-author">
+      <div class="test-avatar" style="background:${color};">${avatar}</div>
+      <div><div class="test-name">${name}</div><div class="test-loc">${locFull}</div></div>
+    </div>`;
+
+  const scroll = document.getElementById('reviewsScroll');
+  scroll.insertBefore(card, scroll.firstChild);
+
+  // Update count
+  const total = scroll.querySelectorAll('.test-card').length;
+  document.getElementById('reviewCount').textContent = total + ' reviews · ' + selectedRating + '.0 ⭐ avg';
+
+  closeReviewModal();
+  showToast('❤️ Review add ho gaya! Shukriya!');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Modals overlay close on bg tap
+  const reviewModal = document.getElementById('reviewModal');
+  if (reviewModal) reviewModal.addEventListener('click', function(e) {
+    if (e.target === this) closeReviewModal();
+  });
+  const addressModal = document.getElementById('addressModal');
+  if (addressModal) addressModal.addEventListener('click', function(e) {
+    if (e.target === this) closeAddressModal();
+  });
+  const upiOverlay = document.getElementById('upiOverlay');
+  if (upiOverlay) upiOverlay.addEventListener('click', function(e) {
+    if (e.target === this) closeUpiScreen();
+  });
+});
+
 // ===== ORDER CUTOFF COUNTDOWN =====
 // Logic:
 //   Before 10 AM  → countdown to 10 AM  → "Aaj 4 PM tak delivery"
@@ -2910,12 +3296,84 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// Close modal on overlay click — deferred so addressModal exists in DOM
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('addressModal').addEventListener('click', function(e) {
-    if (e.target === this) closeAddressModal();
-  });
-});
+
+
+// ===== PAYMENT METHOD =====
+const UPI_ID = 'imanohar07773@ybl';
+const UPI_NAME = 'Fresh Daily';
+let selectedPayment = 'cod';
+let pendingOrderData = null;
+
+function selectPayment(method) {
+  selectedPayment = method;
+  document.getElementById('pay_cod').classList.toggle('selected', method === 'cod');
+  document.getElementById('pay_upi').classList.toggle('selected', method === 'upi');
+}
+
+function openUpiScreen(data) {
+  pendingOrderData = data;
+  const { total } = getCartTotals();
+  const delivery = total >= 499 ? 0 : 69;
+  const grand = total + delivery;
+  document.getElementById('upiAmount').textContent = '₹' + grand;
+  const overlay = document.getElementById('upiOverlay');
+  const sheet = overlay.querySelector('.upi-sheet');
+  sheet.scrollTop = 0;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeUpiScreen() {
+  document.getElementById('upiOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function buildUpiUrl(app) {
+  const { total } = getCartTotals();
+  const delivery = total >= 499 ? 0 : 69;
+  const grand = total + delivery;
+  const note = encodeURIComponent('Fresh Daily Order');
+  const base = 'pa=' + UPI_ID + '&pn=' + encodeURIComponent(UPI_NAME) + '&am=' + grand + '&cu=INR&tn=' + note;
+  const urls = {
+    gpay:    'tez://upi/pay?' + base,
+    phonepe: 'phonepe://pay?' + base,
+    paytm:   'paytmmp://upi/pay?' + base,
+    bhim:    'upi://pay?' + base,
+    amazon:  'amazonapp://pay?' + base,
+    airtel:  'airtelpeapp://upi/pay?' + base,
+    any:     'upi://pay?' + base,
+  };
+  return urls[app] || ('upi://pay?' + base);
+}
+
+function openUpiApp(app) {
+  const url = buildUpiUrl(app);
+  window.location.href = url;
+  setTimeout(() => {
+    showToast('App nahi mili? UPI ID copy karein ya doosra app try karein');
+  }, 1800);
+}
+
+function copyUpiId() {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(UPI_ID).then(() => showToast('✅ UPI ID copied!'));
+  } else {
+    const el = document.createElement('textarea');
+    el.value = UPI_ID;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('✅ UPI ID copied!');
+  }
+}
+
+function upiDoneAndWhatsApp() {
+  closeUpiScreen();
+  if (pendingOrderData) sendWhatsAppWithData(pendingOrderData, 'upi');
+}
+
+
 
 isFullRender = true;
 renderItems();
@@ -2993,6 +3451,25 @@ renderCombos();
         <div class="field-label">📞 Contact Number</div>
         <input class="field-input" id="f_phone" type="tel" placeholder="10-digit mobile number" maxlength="10" />
       </div>
+
+      <!-- PAYMENT METHOD -->
+      <div class="payment-section">
+        <div class="payment-label">💳 Payment Method</div>
+        <div class="payment-options">
+          <div class="pay-card selected" id="pay_cod" onclick="selectPayment('cod')">
+            <div class="pc-check">✓</div>
+            <div class="pc-icon">💵</div>
+            <div class="pc-title">Cash on Delivery</div>
+            <div class="pc-sub">Pay when delivered</div>
+          </div>
+          <div class="pay-card" id="pay_upi" onclick="selectPayment('upi')">
+            <div class="pc-check">✓</div>
+            <div class="pc-icon">📲</div>
+            <div class="pc-title">Online / UPI</div>
+            <div class="pc-sub">GPay, PhonePe, Paytm</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="modal-footer">
@@ -3002,5 +3479,115 @@ renderCombos();
     </div>
   </div>
 </div>
+<!-- UPI PAYMENT SCREEN -->
+<div class="upi-overlay" id="upiOverlay">
+  <div class="upi-sheet">
+    <div class="upi-handle"></div>
+    <div class="upi-head">
+      <div class="upi-title">💳 Pay <span>Online</span></div>
+      <button class="upi-close" onclick="closeUpiScreen()">✕</button>
+    </div>
+
+    <div class="upi-amount-box">
+      <div class="uab-label">Total Amount to Pay</div>
+      <div class="uab-amount" id="upiAmount">₹0</div>
+      <div class="uab-id">UPI ID: imanohar07773@ybl</div>
+    </div>
+
+    <div class="upi-apps-label">📱 Choose Your UPI App</div>
+    <div class="upi-apps-grid">
+      <a class="upi-app-btn" id="gpayLink" href="#" onclick="openUpiApp('gpay')">
+        <div class="app-icon">
+          <svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="12" fill="white"/>
+            <text x="22" y="30" text-anchor="middle" font-size="22" font-family="Arial">G</text>
+            <text x="22" y="30" text-anchor="middle" font-size="22" font-family="Arial" fill="#4285F4">G</text>
+            <!-- Colorful G -->
+            <path d="M22 10 C15.4 10 10 15.4 10 22 C10 28.6 15.4 34 22 34 C28.6 34 34 28.6 34 22 L22 22 L22 26 L29.4 26 C28.4 29 25.5 31 22 31 C17.6 31 14 27.4 14 23 C14 18.6 17.6 15 22 15 C24 15 25.8 15.8 27.1 17 L30 14.1 C27.9 12.2 25.1 11 22 11 Z" fill="none"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;letter-spacing:-0.5px;">
+            <span style="color:#4285F4">G</span><span style="color:#EA4335">o</span><span style="color:#FBBC05">o</span><span style="color:#4285F4">g</span><span style="color:#34A853">l</span><span style="color:#EA4335">e</span>
+          </div>
+        </div>
+        <div class="app-name">GPay</div>
+      </a>
+      <a class="upi-app-btn" id="phonepeLink" href="#" onclick="openUpiApp('phonepe')">
+        <div class="app-icon" style="background:#5f259f;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="48" fill="#5f259f"/>
+            <path d="M35 20 L35 80 L50 80 L50 60 C50 60 75 62 75 40 C75 20 55 20 50 20 Z M50 28 C50 28 65 28 65 40 C65 52 50 52 50 52 Z" fill="white"/>
+          </svg>
+        </div>
+        <div class="app-name">PhonePe</div>
+      </a>
+      <a class="upi-app-btn" id="paytmLink" href="#" onclick="openUpiApp('paytm')">
+        <div class="app-icon" style="background:#00BAF2;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <div style="color:white;font-weight:900;font-size:10px;font-family:Arial;letter-spacing:-0.3px;text-align:center;line-height:1.1;">PAY<br>TM</div>
+        </div>
+        <div class="app-name">Paytm</div>
+      </a>
+      <a class="upi-app-btn" id="bhimLink" href="#" onclick="openUpiApp('bhim')">
+        <div class="app-icon" style="background:#00529C;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <div style="color:white;font-weight:900;font-size:13px;font-family:Arial;text-align:center;line-height:1;">BHIM</div>
+        </div>
+        <div class="app-name">BHIM</div>
+      </a>
+      <a class="upi-app-btn" id="amazonLink" href="#" onclick="openUpiApp('amazon')">
+        <div class="app-icon" style="background:#FF9900;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <div style="color:#232F3E;font-weight:900;font-size:9px;font-family:Arial;text-align:center;line-height:1.2;">amazon<br><span style="font-size:8px;">pay</span></div>
+        </div>
+        <div class="app-name">Amazon</div>
+      </a>
+      <a class="upi-app-btn" id="airtelLink" href="#" onclick="openUpiApp('airtel')">
+        <div class="app-icon" style="background:#E40000;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <div style="color:white;font-weight:900;font-size:10px;font-family:Arial;text-align:center;line-height:1.2;">airtel<br><span style="font-size:8px;">pay</span></div>
+        </div>
+        <div class="app-name">Airtel</div>
+      </a>
+      <a class="upi-app-btn" id="upiLink" href="#" onclick="openUpiApp('any')">
+        <div class="app-icon" style="background:#white;border-radius:12px;border:1.5px solid #097939;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;">
+          <div style="font-size:9px;font-weight:900;color:#097939;font-family:Arial;">UPI</div>
+          <div style="font-size:7px;color:#888;font-family:Arial;">Any App</div>
+        </div>
+        <div class="app-name">Any UPI</div>
+      </a>
+      <a class="upi-app-btn" id="otherLink" href="#" onclick="copyUpiId()">
+        <div class="app-icon" style="background:var(--green-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📋</div>
+        <div class="app-name">Copy ID</div>
+      </a>
+    </div>
+
+    <div class="upi-divider">Ya manually ID se pay karein</div>
+
+    <div class="upi-manual">
+      <div class="um-title">🏦 UPI ID</div>
+      <div class="um-id">
+        <span>imanohar07773@ybl</span>
+        <button class="copy-btn" onclick="copyUpiId()">Copy</button>
+      </div>
+    </div>
+
+    <div class="upi-steps">
+      <div class="us-title">📋 Payment Karne ke Baad:</div>
+      <div class="upi-step">
+        <div class="us-num">1</div>
+        <div class="us-text">Upar diye gaye kisi bhi UPI app se payment karein</div>
+      </div>
+      <div class="upi-step">
+        <div class="us-num">2</div>
+        <div class="us-text">Payment ka screenshot lein</div>
+      </div>
+      <div class="upi-step">
+        <div class="us-num">3</div>
+        <div class="us-text">Neeche button dabayein — WhatsApp order ke saath screenshot bhejein</div>
+      </div>
+    </div>
+
+    <button class="upi-done-btn" onclick="upiDoneAndWhatsApp()">
+      ✅ Payment Ki, WhatsApp pe Order Bhejein
+    </button>
+  </div>
+</div>
+
 </body>
 </html>
