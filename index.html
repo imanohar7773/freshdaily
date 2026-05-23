@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fresh Daily — Order Now</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f5f5f5;color:#222}
+.header{background:#1b4d30;padding:16px;text-align:center}
+.header h1{color:#f4a228;font-size:28px;font-weight:900}
+.header p{color:#8ed46a;font-size:11px;letter-spacing:2px;margin-top:4px}
+.info-bar{background:#f4a228;padding:8px 16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.info-bar span{font-size:11px;font-weight:700;color:#1b4d30}
+.search-wrap{padding:12px 16px;background:#fff;border-bottom:1px solid #ddd}
+.search-wrap input{width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:14px;outline:none}
+.section-title{background:#245e38;color:#f4a228;font-size:12px;font-weight:800;padding:8px 16px;letter-spacing:1.5px;text-transform:uppercase}
+.item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #eee;background:#fff}
+.item-row:hover{background:#f9fef9}
+.item-info{flex:1}
+.item-name{font-size:13px;font-weight:700;color:#1b4d30}
+.item-uom{font-size:10px;color:#888}
+.item-price{display:flex;align-items:baseline;gap:6px;margin-top:2px}
+.mrp{font-size:10px;color:#aaa;text-decoration:line-through}
+.sp{font-size:14px;font-weight:800;color:#f4a228}
+.qty-ctrl{display:flex;align-items:center;gap:6px}
+.qty-ctrl button{width:28px;height:28px;border-radius:50%;border:none;font-size:16px;font-weight:700;cursor:pointer;background:#1b4d30;color:#fff;line-height:1}
+.qty-ctrl button:active{transform:scale(0.9)}
+.qty-num{min-width:22px;text-align:center;font-size:14px;font-weight:700;color:#1b4d30}
+.cart-bar{background:#1b4d30;color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;bottom:0;z-index:99}
+.cart-info{font-size:13px}
+.cart-info .ct{color:#8ed46a;font-size:11px}
+.cart-info .cv{font-size:16px;font-weight:800;color:#f4a228}
+.cart-btn{background:#25d366;color:#fff;border:none;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:800;cursor:pointer;letter-spacing:0.5px}
+.cart-btn:active{transform:scale(0.97)}
+.empty-cart{color:#8ed46a;font-size:12px;text-align:center;padding:8px}
+.no-results{padding:24px;text-align:center;color:#888;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌿 FRESH DAILY</h1>
+  <p>FARM FRESH · DAILY DELIVERY · BEST PRICES</p>
+</div>
+
+<div class="info-bar">
+  <span>🎁 1st Order: 1 Kg Potato FREE</span>
+  <span>🚚 Free delivery above ₹499</span>
+  <span>⏰ Next day before 4 PM</span>
+  <span>💵 Cash on Delivery</span>
+</div>
+
+<div class="search-wrap">
+  <input type="text" id="searchBox" placeholder="🔍 Search item e.g. Tomato, Mango..." oninput="renderItems()">
+</div>
+
+<div id="itemList"></div>
+
+<div class="cart-bar">
+  <div class="cart-info">
+    <div class="ct" id="cartCount">Cart is empty</div>
+    <div class="cv" id="cartTotal">₹0</div>
+  </div>
+  <button class="cart-btn" onclick="sendWhatsApp()">📱 Order on WhatsApp</button>
+</div>
+
+<script>
+const WA_NUMBER = "918000344554";
+
+const items = [
+  {cat:"🍊 Fruits",name:"Apple Green Imp.",uom:"Kg",mrp:280,sp:220},
+  {cat:"🍊 Fruits",name:"Apple Himachal",uom:"Kg",mrp:200,sp:160},
+  {cat:"🍊 Fruits",name:"Apple Imp.",uom:"Kg",mrp:280,sp:220},
+  {cat:"🍊 Fruits",name:"Avocado Local",uom:"Pc",mrp:150,sp:120},
+  {cat:"🍊 Fruits",name:"Banana",uom:"Kg",mrp:50,sp:40},
+  {cat:"🍊 Fruits",name:"Chikoo",uom:"Kg",mrp:80,sp:60},
+  {cat:"🍊 Fruits",name:"Coconut Dhab",uom:"Kg",mrp:100,sp:70},
+  {cat:"🍊 Fruits",name:"Coconut Fresh",uom:"Kg",mrp:60,sp:45},
+  {cat:"🍊 Fruits",name:"Dragon Fruit",uom:"Pc",mrp:110,sp:90},
+  {cat:"🍊 Fruits",name:"Guava Imp.",uom:"Kg",mrp:110,sp:80},
+  {cat:"🍊 Fruits",name:"Guava (Desi)",uom:"Kg",mrp:90,sp:60},
+  {cat:"🍊 Fruits",name:"Jamun",uom:"Kg",mrp:200,sp:140},
+  {cat:"🍊 Fruits",name:"Kiwi Fresh",uom:"Pc",mrp:45,sp:40},
+  {cat:"🍊 Fruits",name:"Mango Alphonso",uom:"Kg",mrp:220,sp:160},
+  {cat:"🍊 Fruits",name:"Mango Langra",uom:"Kg",mrp:130,sp:90},
+  {cat:"🍊 Fruits",name:"Mango Safeda",uom:"Kg",mrp:100,sp:70},
+  {cat:"🍊 Fruits",name:"Papaya Fresh",uom:"Kg",mrp:60,sp:45},
+  {cat:"🍊 Fruits",name:"Raw Papaya",uom:"Kg",mrp:60,sp:45},
+  {cat:"🍊 Fruits",name:"Pineapple Fresh",uom:"Kg",mrp:90,sp:70},
+  {cat:"🍊 Fruits",name:"Pomegranate (Anar)",uom:"Kg",mrp:260,sp:200},
+  {cat:"🍊 Fruits",name:"Sweet Lime (Mosambi)",uom:"Kg",mrp:80,sp:60},
+  {cat:"🍊 Fruits",name:"Watermelon (3–4 Kg)",uom:"Pc",mrp:80,sp:50},
+  {cat:"🥕 Root Vegetables",name:"Beetroot",uom:"Kg",mrp:50,sp:30},
+  {cat:"🥕 Root Vegetables",name:"Carrot",uom:"Kg",mrp:50,sp:30},
+  {cat:"🥕 Root Vegetables",name:"Garlic",uom:"Kg",mrp:150,sp:120},
+  {cat:"🥕 Root Vegetables",name:"Garlic Peeled",uom:"Kg",mrp:180,sp:140},
+  {cat:"🥕 Root Vegetables",name:"Ginger",uom:"Kg",mrp:200,sp:150},
+  {cat:"🥕 Root Vegetables",name:"Onion",uom:"Kg",mrp:40,sp:25},
+  {cat:"🥕 Root Vegetables",name:"Onion Small",uom:"Kg",mrp:35,sp:20},
+  {cat:"🥕 Root Vegetables",name:"Potato",uom:"Kg",mrp:30,sp:40},
+  {cat:"🥕 Root Vegetables",name:"Potato Small",uom:"Kg",mrp:20,sp:10},
+  {cat:"🥕 Root Vegetables",name:"Red Potato",uom:"Kg",mrp:40,sp:25},
+  {cat:"🥕 Root Vegetables",name:"Raw Mango",uom:"Kg",mrp:80,sp:50},
+  {cat:"🥬 Green Vegetables",name:"Arbi (Colocasia)",uom:"Kg",mrp:50,sp:40},
+  {cat:"🥬 Green Vegetables",name:"French Beans",uom:"Kg",mrp:120,sp:80},
+  {cat:"🥬 Green Vegetables",name:"Corn (Bhutta)",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Brinjal (Baingan)",uom:"Kg",mrp:40,sp:25},
+  {cat:"🥬 Green Vegetables",name:"Cabbage Green",uom:"Kg",mrp:40,sp:20},
+  {cat:"🥬 Green Vegetables",name:"Capsicum Green",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Cauliflower",uom:"Kg",mrp:70,sp:50},
+  {cat:"🥬 Green Vegetables",name:"Green Chilli",uom:"Kg",mrp:50,sp:30},
+  {cat:"🥬 Green Vegetables",name:"Green Chilli (Hot)",uom:"Kg",mrp:100,sp:60},
+  {cat:"🥬 Green Vegetables",name:"Chola Fali",uom:"Kg",mrp:60,sp:50},
+  {cat:"🥬 Green Vegetables",name:"Cucumber Chinese",uom:"Kg",mrp:70,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Curry Leaves",uom:"Kg",mrp:100,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Drumsticks (Sahjan)",uom:"Kg",mrp:140,sp:80},
+  {cat:"🥬 Green Vegetables",name:"Guar Phali",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Jackfruit (Kathal)",uom:"Kg",mrp:50,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Kachri",uom:"Kg",mrp:40,sp:30},
+  {cat:"🥬 Green Vegetables",name:"Kakri",uom:"Kg",mrp:50,sp:30},
+  {cat:"🥬 Green Vegetables",name:"Bitter Gourd (Karela)",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Lady Finger (Bhindi)",uom:"Kg",mrp:50,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Bottle Gourd (Lauki)",uom:"Kg",mrp:40,sp:30},
+  {cat:"🥬 Green Vegetables",name:"Parwal",uom:"Kg",mrp:80,sp:60},
+  {cat:"🥬 Green Vegetables",name:"Red Pumpkin",uom:"Kg",mrp:30,sp:20},
+  {cat:"🥬 Green Vegetables",name:"Spinach (Palak)",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Spring Onion",uom:"Kg",mrp:110,sp:60},
+  {cat:"🥬 Green Vegetables",name:"Tinda",uom:"Kg",mrp:50,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Tomato",uom:"Kg",mrp:40,sp:25},
+  {cat:"🥬 Green Vegetables",name:"Baby Corn Fresh",uom:"Kg",mrp:160,sp:140},
+  {cat:"🥬 Green Vegetables",name:"Broccoli",uom:"Kg",mrp:250,sp:180},
+  {cat:"🥬 Green Vegetables",name:"Lettuce Green",uom:"Kg",mrp:300,sp:220},
+  {cat:"🥬 Green Vegetables",name:"Red Capsicum",uom:"Kg",mrp:150,sp:100},
+  {cat:"🥬 Green Vegetables",name:"Yellow Capsicum",uom:"Kg",mrp:150,sp:100},
+  {cat:"🥬 Green Vegetables",name:"Zucchini Green/Yellow",uom:"Kg",mrp:200,sp:120},
+  {cat:"🍄 Exotic & Packed",name:"Mushroom Fresh 200g",uom:"Pkt",mrp:50,sp:40},
+  {cat:"🌿 Herbs & Leafy",name:"Coriander",uom:"Kg",mrp:80,sp:60},
+  {cat:"🌿 Herbs & Leafy",name:"Coriander Fresh",uom:"Kg",mrp:80,sp:60},
+  {cat:"🌿 Herbs & Leafy",name:"Mint (Pudina)",uom:"Kg",mrp:100,sp:80},
+  {cat:"🌿 Herbs & Leafy",name:"Lemon (Nimbu)",uom:"Kg",mrp:160,sp:120},
+  {cat:"🌿 Herbs & Leafy",name:"Banana Leaf",uom:"Kg",mrp:30,sp:25},
+];
+
+let cart = {};
+
+function changeQty(idx, delta) {
+  cart[idx] = Math.max(0, (cart[idx] || 0) + delta);
+  if (cart[idx] === 0) delete cart[idx];
+  updateCart();
+  renderItems();
+}
+
+function updateCart() {
+  let count = 0, total = 0;
+  for (let k in cart) { count += cart[k]; total += cart[k] * items[k].sp; }
+  document.getElementById('cartCount').textContent = count > 0 ? count + ' item(s) in cart' : 'Cart is empty';
+  document.getElementById('cartTotal').textContent = '₹' + total;
+}
+
+function renderItems() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const filtered = items.map((it,i)=>({...it,idx:i})).filter(it=>it.name.toLowerCase().includes(q));
+  let html = '', lastCat = '';
+  if (!filtered.length) { document.getElementById('itemList').innerHTML = '<div class="no-results">No items found 🥲</div>'; return; }
+  filtered.forEach(it => {
+    if (it.cat !== lastCat) { html += `<div class="section-title">${it.cat}</div>`; lastCat = it.cat; }
+    const qty = cart[it.idx] || 0;
+    html += `<div class="item-row">
+      <div class="item-info">
+        <div class="item-name">${it.name}</div>
+        <div class="item-uom">per ${it.uom}</div>
+        <div class="item-price"><span class="mrp">₹${it.mrp}</span><span class="sp">₹${it.sp}</span></div>
+      </div>
+      <div class="qty-ctrl">
+        <button onclick="changeQty(${it.idx},-1)">−</button>
+        <div class="qty-num">${qty}</div>
+        <button onclick="changeQty(${it.idx},1)">+</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('itemList').innerHTML = html;
+}
+
+function sendWhatsApp() {
+  const cartItems = Object.keys(cart);
+  if (!cartItems.length) { alert('Please add at least one item to your cart!'); return; }
+  let total = 0;
+  let msg = "Hello! I want to place an order from *Fresh Daily* 🌿\n\n*My Order:*\n";
+  cartItems.forEach(k => {
+    const it = items[k];
+    const amt = cart[k] * it.sp;
+    total += amt;
+    msg += `• ${it.name} — ${cart[k]} ${it.uom} × ₹${it.sp} = ₹${amt}\n`;
+  });
+  const delivery = total >= 499 ? 0 : 69;
+  msg += `\n*Order Total: ₹${total}*`;
+  msg += `\n*Delivery Charge: ₹${delivery}*`;
+  msg += `\n*Grand Total: ₹${total + delivery}*`;
+  msg += `\n\n📦 Please deliver next day before 4 PM.\n💵 Payment: Cash on Delivery.`;
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+renderItems();
+</script>
+</body>
+</html>
