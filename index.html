@@ -1025,4 +1025,907 @@ body {
   border-radius: 10px;
   padding: 8px 12px;
   font-size: 11px;
-  font
+  font-weight: 600;
+  color: #7a5000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.modal-body { padding: 16px 20px 8px; }
+.field-group { margin-bottom: 14px; }
+.field-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-mid);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.field-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-dark);
+  background: var(--white);
+  outline: none;
+  transition: all 0.2s;
+}
+.field-input:focus {
+  border-color: var(--green-bright);
+  box-shadow: 0 0 0 3px rgba(45,122,79,0.1);
+}
+.field-input::placeholder { color: var(--text-muted); }
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.modal-footer { padding: 8px 20px 0; }
+.confirm-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--green-mid), var(--green-bright));
+  color: var(--white);
+  border: none;
+  padding: 16px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 20px rgba(27,77,48,0.3);
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.3px;
+}
+.confirm-btn:active { transform: scale(0.98); }
+.saved-chip {
+  margin: 0 20px 12px;
+  background: var(--green-pale);
+  border: 1.5px solid var(--green-light);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+.saved-chip.show { display: flex; }
+.saved-chip-text { flex: 1; }
+.saved-chip-text .sc-name { font-size: 13px; font-weight: 700; color: var(--green-deep); }
+.saved-chip-text .sc-addr { font-size: 11px; color: var(--text-mid); margin-top: 1px; }
+.saved-chip-use {
+  background: var(--green-mid);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner">
+    <span>🎁 1st Order: 1 Kg Potato FREE</span>
+    <span>🚚 Free Delivery above ₹499</span>
+    <span>⏰ Next day before 4 PM</span>
+    <span>💵 Cash on Delivery</span>
+    <span>🌿 100% Farm Fresh</span>
+    <span>📱 Order via WhatsApp</span>
+    <span>🎁 1st Order: 1 Kg Potato FREE</span>
+    <span>🚚 Free Delivery above ₹499</span>
+    <span>⏰ Next day before 4 PM</span>
+    <span>💵 Cash on Delivery</span>
+    <span>🌿 100% Farm Fresh</span>
+    <span>📱 Order via WhatsApp</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="logo-row">
+      <div class="logo-block">
+        <h1>🌿 Fresh<span>Daily</span></h1>
+        <p>Farm Fresh · Daily Delivery</p>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span>OPEN</span>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="num">4 PM</div>
+        <div class="lbl">Delivery By</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100%</div>
+        <div class="lbl">Farm Fresh</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">₹0</div>
+        <div class="lbl">Above ₹499</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMO BANNER -->
+  <div class="promo-banner" style="margin: 16px 16px 0;">
+    <div>
+      <div class="ptitle">🥔 1st Order Special</div>
+      <div class="psub">Get 1 Kg Potato absolutely FREE<br>on your first order!</div>
+    </div>
+    <div class="promo-tag">NEW USER</div>
+  </div>
+</div>
+
+<!-- DELIVERY CHIPS -->
+<div class="delivery-strip">
+  <div class="dchip"><span class="icon">🚚</span><span class="text">Free above ₹499</span></div>
+  <div class="dchip"><span class="icon">⏰</span><span class="text">Next day 4 PM</span></div>
+  <div class="dchip"><span class="icon">💵</span><span class="text">Cash on Delivery</span></div>
+  <div class="dchip"><span class="icon">🌱</span><span class="text">Farm Fresh</span></div>
+  <div class="dchip"><span class="icon">🔄</span><span class="text">Daily Restock</span></div>
+</div>
+
+<!-- OFFERS CAROUSEL -->
+<div class="offers-section">
+  <div class="offers-title">🔥 Today's Offers</div>
+  <div class="offers-scroll">
+    <div class="offer-card oc1">
+      <div class="ot">Fresh Veggies</div>
+      <div class="os">Starting from</div>
+      <div class="obig">₹14</div>
+      <div class="os">Potato & more</div>
+    </div>
+    <div class="offer-card oc2">
+      <div class="ot">250g Orders</div>
+      <div class="os">Now available in</div>
+      <div class="obig">¼ Kg</div>
+      <div class="os">Try before you buy!</div>
+    </div>
+    <div class="offer-card oc3">
+      <div class="ot">Free Delivery</div>
+      <div class="os">Order above</div>
+      <div class="obig">₹499</div>
+      <div class="os">Save ₹69 on delivery</div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-section" style="padding: 16px 16px 8px;">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchBox" placeholder="Search sabzi, fruits, herbs..." oninput="isFullRender=true;renderItems();isFullRender=false;">
+  </div>
+</div>
+
+<!-- FILTER PILLS -->
+<div class="filter-row" id="filterRow">
+  <div class="fpill active" data-cat="all" onclick="setFilter('all', this)">🛒 All</div>
+  <div class="fpill" data-cat="🍊 Fruits" onclick="setFilter('🍊 Fruits', this)">🍊 Fruits</div>
+  <div class="fpill" data-cat="🥕 Root Vegetables" onclick="setFilter('🥕 Root Vegetables', this)">🥕 Root Vegs</div>
+  <div class="fpill" data-cat="🥬 Green Vegetables" onclick="setFilter('🥬 Green Vegetables', this)">🥬 Green Vegs</div>
+  <div class="fpill" data-cat="🍄 Exotic & Packed" onclick="setFilter('🍄 Exotic & Packed', this)">🍄 Exotic</div>
+  <div class="fpill" data-cat="🌿 Herbs & Leafy" onclick="setFilter('🌿 Herbs & Leafy', this)">🌿 Herbs</div>
+</div>
+
+<!-- ITEM LIST -->
+<div id="itemList"></div>
+
+<div class="bottom-spacer"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- CART PANEL -->
+<div class="cart-panel">
+  <!-- Drawer -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title">🛒 Your Cart</div>
+      <button class="clear-btn" onclick="clearCart()">Clear All</button>
+    </div>
+    <div id="drawerItems"></div>
+    <div id="freeDeliveryBar"></div>
+    <div id="billSummary"></div>
+  </div>
+
+  <!-- Sticky bar -->
+  <div class="cart-bar" onclick="toggleDrawer()">
+    <div class="cart-left">
+      <div class="cart-icon-wrap">
+        <div class="cart-icon">🛒</div>
+        <div class="cart-badge" id="cartBadge">0</div>
+      </div>
+      <div class="cart-info-text">
+        <div class="ct" id="cartCount">Cart is empty</div>
+        <div class="cv" id="cartTotal">₹0</div>
+      </div>
+    </div>
+    <div class="cart-actions" onclick="event.stopPropagation()">
+      <button class="expand-btn" onclick="toggleDrawer()">▲ View</button>
+      <button class="wa-btn" onclick="openAddressModal()">
+        <span>📱</span> Order
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WA_NUMBER = "918000344554";
+const WEIGHT_CATS = ["🥕 Root Vegetables", "🥬 Green Vegetables", "🌿 Herbs & Leafy"];
+const WEIGHT_OPTIONS = [{label:"250g",mult:0.25},{label:"500g",mult:0.5},{label:"1 Kg",mult:1}];
+
+// SVG icon map — clean flat illustrations, no external dependency
+const svgMap = {
+  "Apple": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="34" r="20" fill="#e8453c"/><ellipse cx="22" cy="30" rx="5" ry="8" fill="#f06b63" opacity="0.5"/><path d="M28 14 Q30 6 36 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="36" cy="11" rx="5" ry="3" fill="#4a7c3f" transform="rotate(-30 36 11)"/></svg>`,
+  "Apple Green": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="34" r="20" fill="#7cb83e"/><ellipse cx="22" cy="30" rx="5" ry="8" fill="#9dd054" opacity="0.5"/><path d="M28 14 Q30 6 36 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="36" cy="11" rx="5" ry="3" fill="#4a7c3f" transform="rotate(-30 36 11)"/></svg>`,
+  "Avocado": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="33" rx="16" ry="22" fill="#4a7c3f"/><ellipse cx="30" cy="35" rx="10" ry="14" fill="#c8e6a0"/><ellipse cx="30" cy="37" rx="6" ry="8" fill="#7b4f2e"/><path d="M30 12 Q32 6 30 4" stroke="#4a7c3f" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  "Banana": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M15 40 Q20 15 45 18 Q50 18 48 22 Q28 20 22 44 Z" fill="#f7c948"/><path d="M15 40 Q20 15 45 18" stroke="#c8a020" stroke-width="2" fill="none"/><path d="M13 40 Q11 42 15 44 Q19 46 22 44" fill="#e8b830"/></svg>`,
+  "Chikoo": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="32" r="20" fill="#a07850"/><ellipse cx="24" cy="28" rx="5" ry="7" fill="#b89060" opacity="0.5"/><path d="M28 12 Q30 6 32 12" stroke="#6b4c2a" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Coconut": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="34" rx="18" ry="20" fill="#8b6340"/><ellipse cx="30" cy="34" rx="14" ry="16" fill="#a07850"/><circle cx="30" cy="26" r="4" fill="#6b4c2a"/><path d="M30 6 Q36 12 30 18" stroke="#4a7c3f" stroke-width="3" fill="none"/></svg>`,
+  "Dragon Fruit": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="32" rx="18" ry="20" fill="#e040a0"/><ellipse cx="30" cy="32" rx="12" ry="14" fill="#fff0f8"/><circle cx="26" cy="30" r="1.5" fill="#333"/><circle cx="30" cy="26" r="1.5" fill="#333"/><circle cx="34" cy="30" r="1.5" fill="#333"/><circle cx="30" cy="34" r="1.5" fill="#333"/><path d="M20 18 Q14 10 20 14" stroke="#e040a0" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+  "Guava": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="33" r="19" fill="#c8e06a"/><ellipse cx="23" cy="29" rx="5" ry="7" fill="#d8f080" opacity="0.6"/><path d="M28 14 Q30 7 32 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="34" cy="10" rx="4" ry="2.5" fill="#4a7c3f" transform="rotate(-20 34 10)"/></svg>`,
+  "Jamun": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="34" rx="14" ry="18" fill="#4a1a6b"/><ellipse cx="25" cy="30" rx="4" ry="6" fill="#6a2a8b" opacity="0.5"/><path d="M30 16 Q33 8 30 6" stroke="#4a7c3f" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  "Kiwi": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="32" r="20" fill="#8b6340"/><circle cx="30" cy="32" r="16" fill="#c8e068"/><circle cx="30" cy="32" r="5" fill="#e8f0a0"/><line x1="30" y1="16" x2="30" y2="48" stroke="#a0b830" stroke-width="1.5"/><line x1="14" y1="32" x2="46" y2="32" stroke="#a0b830" stroke-width="1.5"/><line x1="19" y1="21" x2="41" y2="43" stroke="#a0b830" stroke-width="1.5"/><line x1="41" y1="21" x2="19" y2="43" stroke="#a0b830" stroke-width="1.5"/></svg>`,
+  "Mango": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 48 Q12 42 14 26 Q16 10 30 12 Q44 10 46 26 Q48 42 30 48Z" fill="#f7a020"/><path d="M30 48 Q12 42 14 26 Q16 10 30 12" fill="#f7c048" opacity="0.5"/><path d="M30 12 Q32 5 38 8" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Papaya": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="34" rx="16" ry="22" fill="#f7a848"/><ellipse cx="30" cy="36" rx="10" ry="14" fill="#f7c878" opacity="0.6"/><ellipse cx="30" cy="36" rx="5" ry="7" fill="#f09030"/><path d="M30 12 Q28 5 32 6" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Pineapple": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="24" width="28" height="28" rx="8" fill="#f7c020"/><path d="M16 30 Q22 26 30 30 Q38 26 44 30" fill="none" stroke="#c89010" stroke-width="1.5"/><path d="M16 38 Q22 34 30 38 Q38 34 44 38" fill="none" stroke="#c89010" stroke-width="1.5"/><path d="M24 24 Q22 14 30 8 Q38 14 36 24" fill="none" stroke="#4a7c3f" stroke-width="2.5"/><line x1="30" y1="8" x2="30" y2="24" stroke="#4a7c3f" stroke-width="2"/></svg>`,
+  "Pomegranate": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="34" r="20" fill="#c83030"/><rect x="24" y="14" width="12" height="8" rx="3" fill="#8b2020"/><path d="M22 30 Q30 26 38 30 Q30 34 22 30Z" fill="#f06060" opacity="0.4"/><circle cx="25" cy="36" r="2" fill="#8b0000"/><circle cx="30" cy="32" r="2" fill="#8b0000"/><circle cx="35" cy="36" r="2" fill="#8b0000"/><circle cx="28" cy="40" r="2" fill="#8b0000"/><circle cx="33" cy="40" r="2" fill="#8b0000"/></svg>`,
+  "Sweet Lime": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="32" r="20" fill="#e8e848"/><circle cx="30" cy="32" r="14" fill="#f0f070" opacity="0.6"/><path d="M28 12 Q30 7 32 10" stroke="#a0a020" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="16" y1="32" x2="44" y2="32" stroke="#c8c830" stroke-width="1.5"/><line x1="30" y1="18" x2="30" y2="46" stroke="#c8c830" stroke-width="1.5"/></svg>`,
+  "Watermelon": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M10 34 Q10 52 30 52 Q50 52 50 34 Z" fill="#e83838"/><path d="M10 34 Q10 52 30 52 Q50 52 50 34 Z" fill="#e83838"/><path d="M10 34 Q30 30 50 34" fill="#4a9a30"/><path d="M12 34 Q30 32 48 34" fill="#6aba40"/><circle cx="22" cy="44" r="2" fill="#1a1a1a"/><circle cx="30" cy="46" r="2" fill="#1a1a1a"/><circle cx="38" cy="44" r="2" fill="#1a1a1a"/><ellipse cx="25" cy="42" rx="4" ry="3" fill="#f06060" opacity="0.3"/></svg>`,
+  "Beetroot": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="36" r="18" fill="#8b1a4a"/><ellipse cx="24" cy="32" rx="5" ry="7" fill="#a02a5a" opacity="0.5"/><path d="M26 18 Q24 8 28 6 M30 18 Q30 6 34 8 M34 18 Q36 8 40 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Carrot": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M20 20 Q30 15 40 20 L34 52 Q30 56 26 52 Z" fill="#f07820"/><path d="M22 24 Q30 20 38 24" fill="none" stroke="#f09040" stroke-width="2"/><path d="M18 18 Q20 8 24 12 M26 16 Q28 6 30 10 M34 16 Q36 6 38 12" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Garlic": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="36" rx="16" ry="18" fill="#f0ece0"/><ellipse cx="22" cy="34" rx="7" ry="11" fill="#e8e4d8"/><ellipse cx="38" cy="34" rx="7" ry="11" fill="#e8e4d8"/><ellipse cx="30" cy="30" rx="6" ry="9" fill="#f0ece0"/><path d="M30 18 Q30 8 30 6" stroke="#a0a060" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Ginger": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M14 32 Q18 22 28 24 Q32 18 40 22 Q48 26 44 34 Q40 42 32 40 Q24 44 18 40 Q10 38 14 32Z" fill="#c8a060"/><path d="M28 24 Q30 16 36 18" stroke="#a08040" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M40 22 Q46 18 48 22" stroke="#a08040" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  "Onion": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="36" rx="18" ry="16" fill="#c878a0"/><ellipse cx="30" cy="36" rx="14" ry="12" fill="#d890b0" opacity="0.6"/><path d="M28 20 Q30 10 32 14 Q34 8 36 14" stroke="#a05080" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M30 20 Q30 12 30 8" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Potato": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="33" rx="20" ry="15" fill="#c8a860" transform="rotate(-10 30 33)"/><ellipse cx="30" cy="33" rx="15" ry="11" fill="#d8b870" opacity="0.4" transform="rotate(-10 30 33)"/><circle cx="22" cy="28" r="2.5" fill="#a08040"/><circle cx="36" cy="32" r="2" fill="#a08040"/><circle cx="28" cy="38" r="2" fill="#a08040"/></svg>`,
+  "Tomato": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="34" r="20" fill="#e83020"/><ellipse cx="22" cy="28" rx="6" ry="9" fill="#f04030" opacity="0.5"/><path d="M24 14 Q22 6 26 10 M30 13 Q30 4 32 8 M36 14 Q38 6 40 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M22 14 Q30 10 38 14" fill="#4a7c3f"/></svg>`,
+  "Brinjal": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="36" rx="16" ry="20" fill="#6030a0"/><ellipse cx="23" cy="30" rx="5" ry="9" fill="#7840b0" opacity="0.5"/><path d="M30 16 Q28 8 32 6 Q38 8 36 14" fill="#4a7c3f"/><path d="M30 16 Q32 8 34 10" stroke="#4a7c3f" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  "Cabbage": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="32" r="20" fill="#78c040"/><circle cx="30" cy="32" r="15" fill="#90d050"/><circle cx="30" cy="32" r="10" fill="#a0e060"/><circle cx="30" cy="32" r="5" fill="#b0f070"/></svg>`,
+  "Capsicum": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M20 22 Q16 30 18 40 Q22 52 30 52 Q38 52 42 40 Q44 30 40 22 Q36 14 30 16 Q24 14 20 22Z" fill="#40b830"/><path d="M20 22 Q22 16 26 20" fill="#50c840" opacity="0.5"/><path d="M28 16 Q30 8 32 12" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="30" y1="28" x2="30" y2="50" stroke="#309020" stroke-width="1.5"/></svg>`,
+  "Cauliflower": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="28" r="9" fill="#f8f4e8"/><circle cx="36" cy="28" r="9" fill="#f8f4e8"/><circle cx="30" cy="22" r="9" fill="#f8f4e8"/><circle cx="30" cy="32" r="8" fill="#f0ecdc"/><path d="M18 34 Q22 44 30 46 Q38 44 42 34" fill="#e8e0a0"/></svg>`,
+  "Chilli": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M32 14 Q40 20 42 32 Q44 44 36 50 Q30 54 26 48 Q20 42 24 30 Q26 18 32 14Z" fill="#e82020"/><path d="M32 14 Q34 8 38 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="32" rx="4" ry="10" fill="#f04040" opacity="0.4"/></svg>`,
+  "Corn": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="18" width="20" height="32" rx="10" fill="#f7c820"/><line x1="24" y1="22" x2="36" y2="22" stroke="#e8a810" stroke-width="2"/><line x1="24" y1="28" x2="36" y2="28" stroke="#e8a810" stroke-width="2"/><line x1="24" y1="34" x2="36" y2="34" stroke="#e8a810" stroke-width="2"/><line x1="24" y1="40" x2="36" y2="40" stroke="#e8a810" stroke-width="2"/><path d="M26 14 Q24 6 28 8 M30 12 Q30 4 34 6 M34 14 Q36 6 40 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Cucumber": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="32" rx="12" ry="20" fill="#48a030" transform="rotate(-15 30 32)"/><ellipse cx="28" cy="28" rx="5" ry="10" fill="#60b848" opacity="0.5" transform="rotate(-15 28 28)"/><path d="M38 14 Q42 10 44 14" stroke="#4a7c3f" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  "Mushroom": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M10 34 Q10 18 30 16 Q50 18 50 34Z" fill="#c09060"/><path d="M10 34 Q10 18 30 16 Q50 18 50 34Z" fill="#c09060"/><rect x="24" y="34" width="12" height="14" rx="4" fill="#e0c0a0"/><ellipse cx="20" cy="28" rx="4" ry="5" fill="#d0a070" opacity="0.5"/></svg>`,
+  "Spinach": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 50 Q16 42 14 28 Q12 14 24 12 Q30 10 30 18 Q30 10 36 12 Q48 14 46 28 Q44 42 30 50Z" fill="#2a8040"/><line x1="30" y1="18" x2="30" y2="50" stroke="#1a6030" stroke-width="2"/><path d="M30 28 Q22 26 18 30" stroke="#1a6030" stroke-width="1.5" fill="none"/><path d="M30 36 Q38 34 42 38" stroke="#1a6030" stroke-width="1.5" fill="none"/></svg>`,
+  "Broccoli": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="22" cy="26" r="10" fill="#3a8a28"/><circle cx="38" cy="26" r="10" fill="#3a8a28"/><circle cx="30" cy="20" r="10" fill="#3a8a28"/><circle cx="30" cy="28" r="8" fill="#2a7a18"/><rect x="26" y="34" width="8" height="16" rx="4" fill="#5a8040"/></svg>`,
+  "Pumpkin": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="20" cy="34" rx="10" ry="14" fill="#e87820"/><ellipse cx="30" cy="32" rx="12" ry="16" fill="#f09030"/><ellipse cx="40" cy="34" rx="10" ry="14" fill="#e87820"/><ellipse cx="25" cy="32" rx="8" ry="13" fill="#f0a040" opacity="0.4"/><path d="M30 16 Q32 8 36 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Lemon": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="32" rx="18" ry="16" fill="#f7e040"/><ellipse cx="24" cy="28" rx="6" ry="8" fill="#f8f060" opacity="0.5"/><path d="M46 28 Q52 26 50 30" stroke="#d8c020" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M14 28 Q8 26 10 30" stroke="#d8c020" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  "Coriander": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 50 Q20 40 22 28 Q24 16 30 14 Q36 16 38 28 Q40 40 30 50Z" fill="#3a9030"/><path d="M30 32 Q18 26 16 20 Q20 14 26 18 Q28 24 30 32Z" fill="#4aa040"/><path d="M30 32 Q42 26 44 20 Q40 14 34 18 Q32 24 30 32Z" fill="#4aa040"/><line x1="30" y1="14" x2="30" y2="50" stroke="#2a7020" stroke-width="1.5"/></svg>`,
+  "Mint": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 48 Q18 38 18 26 Q18 14 30 12 Q42 14 42 26 Q42 38 30 48Z" fill="#28a050"/><line x1="30" y1="12" x2="30" y2="48" stroke="#1a8040" stroke-width="2"/><path d="M30 22 Q22 20 20 24" stroke="#1a8040" stroke-width="1.5" fill="none"/><path d="M30 30 Q38 28 40 32" stroke="#1a8040" stroke-width="1.5" fill="none"/><path d="M30 38 Q22 36 20 40" stroke="#1a8040" stroke-width="1.5" fill="none"/></svg>`,
+  "Lettuce": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 48 Q10 40 10 26 Q10 10 22 12 Q30 14 30 22 Q30 14 38 12 Q50 10 50 26 Q50 40 30 48Z" fill="#60c040"/><path d="M30 22 Q20 18 16 22 Q20 28 30 30" fill="#78d058" opacity="0.6"/><line x1="30" y1="22" x2="30" y2="48" stroke="#40a020" stroke-width="2"/></svg>`,
+  "Jackfruit": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="34" rx="18" ry="22" fill="#c8a020"/><ellipse cx="30" cy="34" rx="14" ry="18" fill="#d8b030" opacity="0.5"/><circle cx="22" cy="28" r="3" fill="#b89010"/><circle cx="30" cy="24" r="3" fill="#b89010"/><circle cx="38" cy="28" r="3" fill="#b89010"/><circle cx="36" cy="36" r="3" fill="#b89010"/><circle cx="24" cy="36" r="3" fill="#b89010"/><circle cx="30" cy="40" r="3" fill="#b89010"/></svg>`,
+  "Bottle": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="34" rx="14" ry="20" fill="#78c040"/><ellipse cx="24" cy="30" rx="5" ry="10" fill="#90d050" opacity="0.5"/><path d="M26 14 Q24 8 28 6 M30 13 Q30 5 32 8" stroke="#4a7c3f" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  "Lady Finger": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M28 10 Q32 10 34 20 Q36 32 34 46 Q32 52 30 52 Q28 52 26 46 Q24 32 26 20 Q28 10 28 10Z" fill="#80c040"/><path d="M28 10 Q22 14 20 22" stroke="#60a030" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M32 10 Q38 14 40 22" stroke="#60a030" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  "French Beans": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M12 20 Q30 14 48 22 Q46 28 30 26 Q14 28 12 20Z" fill="#58a830"/><circle cx="20" cy="23" r="3.5" fill="#70c040"/><circle cx="28" cy="22" r="3.5" fill="#70c040"/><circle cx="36" cy="22" r="3.5" fill="#70c040"/><circle cx="44" cy="23" r="3.5" fill="#70c040"/></svg>`,
+  "Tomato": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="34" r="20" fill="#e83020"/><ellipse cx="22" cy="28" rx="6" ry="9" fill="#f04030" opacity="0.5"/><path d="M24 14 Q22 6 26 10 M30 13 Q30 4 32 8 M36 14 Q38 6 40 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M22 14 Q30 10 38 14" fill="#4a7c3f"/></svg>`,
+  "Spring Onion": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="44" rx="8" ry="10" fill="#f0f0e0"/><path d="M26 34 Q24 20 22 8" stroke="#4a9a30" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M30 34 Q30 18 30 6" stroke="#4a9a30" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M34 34 Q36 20 38 8" stroke="#4a9a30" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+  "Banana Leaf": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M8 30 Q20 8 52 28 Q40 52 8 30Z" fill="#3a9030"/><line x1="8" y1="30" x2="52" y2="28" stroke="#2a7020" stroke-width="2"/><path d="M30 18 Q28 30 26 42" stroke="#2a7020" stroke-width="1.5" fill="none"/><path d="M36 20 Q34 30 32 42" stroke="#2a7020" stroke-width="1.5" fill="none"/></svg>`,
+};
+
+function getImage(name) {
+  const lname = name.toLowerCase();
+  // Exact priority matches
+  if (lname.includes("apple green")) return svgMap["Apple Green"];
+  if (lname.includes("spring onion")) return svgMap["Spring Onion"];
+  if (lname.includes("dragon fruit")) return svgMap["Dragon Fruit"];
+  if (lname.includes("sweet lime")) return svgMap["Sweet Lime"];
+  if (lname.includes("french beans")) return svgMap["French Beans"];
+  if (lname.includes("lady finger") || lname.includes("bhindi")) return svgMap["Lady Finger"];
+  if (lname.includes("bottle gourd") || lname.includes("lauki")) return svgMap["Bottle"];
+  if (lname.includes("baby corn")) return svgMap["Corn"];
+  if (lname.includes("banana leaf")) return svgMap["Banana Leaf"];
+  if (lname.includes("bitter gourd") || lname.includes("karela")) return svgMap["Bottle"];
+  // General matches
+  for (let k in svgMap) {
+    if (lname.includes(k.toLowerCase())) return svgMap[k];
+  }
+  return svgMap["Broccoli"];
+}
+
+// Badges logic
+function getBadges(name, cat) {
+  const badges = [];
+  if (["Spinach","Coriander","Mint","Lettuce","Broccoli"].some(x=>name.includes(x))) badges.push({cls:'badge-organic',txt:'ORGANIC'});
+  if (["Chilli","Ginger","Garlic"].some(x=>name.includes(x))) badges.push({cls:'badge-hot',txt:'HOT'});
+  if (["Tomato","Cucumber","Lettuce","Baby Corn","Mushroom"].some(x=>name.includes(x))) badges.push({cls:'badge-fresh',txt:'FRESH'});
+  if (["Potato","Onion","Carrot","Banana"].some(x=>name.includes(x))) badges.push({cls:'badge-best',txt:'BESTSELLER'});
+  return badges;
+}
+
+const items = [
+  {cat:"🍊 Fruits",name:"Apple Green Imp.",uom:"Kg",mrp:280,sp:220},
+  {cat:"🍊 Fruits",name:"Apple Himachal",uom:"Kg",mrp:200,sp:160},
+  {cat:"🍊 Fruits",name:"Apple Imp.",uom:"Kg",mrp:280,sp:220},
+  {cat:"🍊 Fruits",name:"Avocado Local",uom:"Pc",mrp:150,sp:120},
+  {cat:"🍊 Fruits",name:"Banana",uom:"Kg",mrp:50,sp:40},
+  {cat:"🍊 Fruits",name:"Chikoo",uom:"Kg",mrp:80,sp:60},
+  {cat:"🍊 Fruits",name:"Coconut Dhab",uom:"Kg",mrp:100,sp:70},
+  {cat:"🍊 Fruits",name:"Coconut Fresh",uom:"Kg",mrp:60,sp:45},
+  {cat:"🍊 Fruits",name:"Dragon Fruit",uom:"Pc",mrp:110,sp:90},
+  {cat:"🍊 Fruits",name:"Guava Imp.",uom:"Kg",mrp:110,sp:80},
+  {cat:"🍊 Fruits",name:"Guava (Desi)",uom:"Kg",mrp:90,sp:60},
+  {cat:"🍊 Fruits",name:"Jamun",uom:"Kg",mrp:200,sp:140},
+  {cat:"🍊 Fruits",name:"Kiwi Fresh",uom:"Pc",mrp:45,sp:40},
+  {cat:"🍊 Fruits",name:"Mango Alphonso",uom:"Kg",mrp:220,sp:160},
+  {cat:"🍊 Fruits",name:"Mango Langra",uom:"Kg",mrp:130,sp:90},
+  {cat:"🍊 Fruits",name:"Mango Safeda",uom:"Kg",mrp:100,sp:70},
+  {cat:"🍊 Fruits",name:"Papaya Fresh",uom:"Kg",mrp:60,sp:45},
+  {cat:"🍊 Fruits",name:"Raw Papaya",uom:"Kg",mrp:60,sp:45},
+  {cat:"🍊 Fruits",name:"Pineapple Fresh",uom:"Kg",mrp:90,sp:70},
+  {cat:"🍊 Fruits",name:"Pomegranate (Anar)",uom:"Kg",mrp:260,sp:200},
+  {cat:"🍊 Fruits",name:"Sweet Lime (Mosambi)",uom:"Kg",mrp:80,sp:60},
+  {cat:"🍊 Fruits",name:"Watermelon (3–4 Kg)",uom:"Pc",mrp:80,sp:50},
+  {cat:"🥕 Root Vegetables",name:"Beetroot",uom:"Kg",mrp:50,sp:30},
+  {cat:"🥕 Root Vegetables",name:"Carrot",uom:"Kg",mrp:50,sp:30},
+  {cat:"🥕 Root Vegetables",name:"Garlic",uom:"Kg",mrp:150,sp:120},
+  {cat:"🥕 Root Vegetables",name:"Garlic Peeled",uom:"Kg",mrp:180,sp:140},
+  {cat:"🥕 Root Vegetables",name:"Ginger",uom:"Kg",mrp:200,sp:150},
+  {cat:"🥕 Root Vegetables",name:"Onion",uom:"Kg",mrp:40,sp:25},
+  {cat:"🥕 Root Vegetables",name:"Onion Small",uom:"Kg",mrp:35,sp:20},
+  {cat:"🥕 Root Vegetables",name:"Potato",uom:"Kg",mrp:30,sp:14},
+  {cat:"🥕 Root Vegetables",name:"Potato Small",uom:"Kg",mrp:20,sp:10},
+  {cat:"🥕 Root Vegetables",name:"Red Potato",uom:"Kg",mrp:40,sp:25},
+  {cat:"🥕 Root Vegetables",name:"Raw Mango",uom:"Kg",mrp:80,sp:50},
+  {cat:"🥬 Green Vegetables",name:"Arbi (Colocasia)",uom:"Kg",mrp:50,sp:40},
+  {cat:"🥬 Green Vegetables",name:"French Beans",uom:"Kg",mrp:120,sp:80},
+  {cat:"🥬 Green Vegetables",name:"Corn (Bhutta)",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Brinjal (Baingan)",uom:"Kg",mrp:40,sp:25},
+  {cat:"🥬 Green Vegetables",name:"Cabbage Green",uom:"Kg",mrp:40,sp:20},
+  {cat:"🥬 Green Vegetables",name:"Capsicum Green",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Cauliflower",uom:"Kg",mrp:70,sp:50},
+  {cat:"🥬 Green Vegetables",name:"Green Chilli",uom:"Kg",mrp:50,sp:30},
+  {cat:"🥬 Green Vegetables",name:"Green Chilli (Hot)",uom:"Kg",mrp:100,sp:60},
+  {cat:"🥬 Green Vegetables",name:"Chola Fali",uom:"Kg",mrp:60,sp:50},
+  {cat:"🥬 Green Vegetables",name:"Cucumber Chinese",uom:"Kg",mrp:70,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Curry Leaves",uom:"Kg",mrp:100,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Drumsticks (Sahjan)",uom:"Kg",mrp:140,sp:80},
+  {cat:"🥬 Green Vegetables",name:"Guar Phali",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Jackfruit (Kathal)",uom:"Kg",mrp:50,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Kachri",uom:"Kg",mrp:40,sp:30},
+  {cat:"🥬 Green Vegetables",name:"Kakri",uom:"Kg",mrp:50,sp:30},
+  {cat:"🥬 Green Vegetables",name:"Bitter Gourd (Karela)",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Lady Finger (Bhindi)",uom:"Kg",mrp:50,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Bottle Gourd (Lauki)",uom:"Kg",mrp:40,sp:30},
+  {cat:"🥬 Green Vegetables",name:"Parwal",uom:"Kg",mrp:80,sp:60},
+  {cat:"🥬 Green Vegetables",name:"Red Pumpkin",uom:"Kg",mrp:30,sp:20},
+  {cat:"🥬 Green Vegetables",name:"Spinach (Palak)",uom:"Kg",mrp:60,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Spring Onion",uom:"Kg",mrp:110,sp:60},
+  {cat:"🥬 Green Vegetables",name:"Tinda",uom:"Kg",mrp:50,sp:40},
+  {cat:"🥬 Green Vegetables",name:"Tomato",uom:"Kg",mrp:40,sp:25},
+  {cat:"🥬 Green Vegetables",name:"Baby Corn Fresh",uom:"Kg",mrp:160,sp:140},
+  {cat:"🥬 Green Vegetables",name:"Broccoli",uom:"Kg",mrp:250,sp:180},
+  {cat:"🥬 Green Vegetables",name:"Lettuce Green",uom:"Kg",mrp:300,sp:220},
+  {cat:"🥬 Green Vegetables",name:"Red Capsicum",uom:"Kg",mrp:150,sp:100},
+  {cat:"🥬 Green Vegetables",name:"Yellow Capsicum",uom:"Kg",mrp:150,sp:100},
+  {cat:"🥬 Green Vegetables",name:"Zucchini Green/Yellow",uom:"Kg",mrp:200,sp:120},
+  {cat:"🍄 Exotic & Packed",name:"Mushroom Fresh 200g",uom:"Pkt",mrp:50,sp:40},
+  {cat:"🌿 Herbs & Leafy",name:"Coriander",uom:"Kg",mrp:80,sp:60},
+  {cat:"🌿 Herbs & Leafy",name:"Coriander Fresh",uom:"Kg",mrp:80,sp:60},
+  {cat:"🌿 Herbs & Leafy",name:"Mint (Pudina)",uom:"Kg",mrp:100,sp:80},
+  {cat:"🌿 Herbs & Leafy",name:"Lemon (Nimbu)",uom:"Kg",mrp:160,sp:120},
+  {cat:"🌿 Herbs & Leafy",name:"Banana Leaf",uom:"Pc",mrp:30,sp:25},
+];
+
+let cart = {};
+let selWeight = {};
+let activeFilter = 'all';
+let drawerOpen = false;
+let isFullRender = true;
+
+function hasWeightOpts(item) {
+  return WEIGHT_CATS.includes(item.cat) && item.uom === "Kg";
+}
+
+function getCartKey(idx, wIdx) {
+  return wIdx !== undefined ? idx + "_" + wIdx : "" + idx;
+}
+
+function calcPrice(sp, mult) { return Math.round(sp * mult); }
+
+function changeQty(idx, delta, wIdx) {
+  const key = getCartKey(idx, wIdx);
+  const prev = cart[key] || 0;
+  cart[key] = Math.max(0, prev + delta);
+  if (cart[key] === 0) delete cart[key];
+  const isFirstAdd = (delta > 0 && prev === 0);
+  if (isFirstAdd) showToast('✅ Added to cart!');
+  updateCart();
+  // Smart re-render: only update this card's right section to avoid blink
+  const cardEl = document.querySelector(`.item-card[data-idx="${idx}"]`);
+  if (cardEl) {
+    updateCardInPlace(cardEl, idx, wIdx);
+    if (isFirstAdd) {
+      cardEl.classList.add('cart-added');
+      setTimeout(() => cardEl.classList.remove('cart-added'), 450);
+    }
+  } else {
+    renderItems();
+  }
+}
+
+function updateCardInPlace(cardEl, idx, wIdx) {
+  const it = items[idx];
+  const useWeight = hasWeightOpts(it);
+  const activeW = wIdx !== undefined ? wIdx : (selWeight[idx] !== undefined ? selWeight[idx] : 2);
+  const wMult = useWeight ? WEIGHT_OPTIONS[activeW].mult : 1;
+  const dispSP = calcPrice(it.sp, wMult);
+  const cartKey = useWeight ? getCartKey(idx, activeW) : getCartKey(idx);
+  const qty = cart[cartKey] || 0;
+  const inCart = qty > 0;
+
+  // Update in-cart class
+  if (inCart) cardEl.classList.add('in-cart');
+  else cardEl.classList.remove('in-cart');
+
+  // Update right side (add btn or stepper)
+  const rightEl = cardEl.querySelector('.item-right');
+  if (rightEl) {
+    rightEl.innerHTML = qty === 0
+      ? `<button class="add-btn" onclick="changeQty(${idx},1,${useWeight ? activeW : 'undefined'})">+</button>`
+      : `<div class="qty-stepper">
+           <button onclick="changeQty(${idx},-1,${useWeight ? activeW : 'undefined'})">−</button>
+           <div class="qty-num">${qty}</div>
+           <button onclick="changeQty(${idx},1,${useWeight ? activeW : 'undefined'})">+</button>
+         </div>`;
+  }
+
+  // Update subtotal
+  const existing = cardEl.querySelector('.item-subtotal');
+  if (qty > 0) {
+    const lineTotal = qty * dispSP;
+    if (existing) existing.textContent = `Subtotal: ₹${lineTotal}`;
+    else {
+      const bodyEl = cardEl.querySelector('.item-body');
+      if (bodyEl) {
+        const st = document.createElement('div');
+        st.className = 'item-subtotal';
+        st.textContent = `Subtotal: ₹${lineTotal}`;
+        bodyEl.appendChild(st);
+      }
+    }
+  } else if (existing) {
+    existing.remove();
+  }
+}
+
+function setWeight(idx, wIdx) {
+  selWeight[idx] = wIdx;
+  renderItems();
+}
+
+function setFilter(cat, el) {
+  activeFilter = cat;
+  isFullRender = true;
+  document.querySelectorAll('.fpill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderItems();
+  isFullRender = false;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function toggleDrawer() {
+  drawerOpen = !drawerOpen;
+  const d = document.getElementById('cartDrawer');
+  const btn = document.querySelector('.expand-btn');
+  if (drawerOpen) {
+    d.classList.add('open');
+    btn.textContent = '▼ Hide';
+    renderDrawer();
+  } else {
+    d.classList.remove('open');
+    btn.textContent = '▲ View';
+  }
+}
+
+function clearCart() {
+  cart = {};
+  updateCart();
+  renderItems();
+  renderDrawer();
+  if (drawerOpen) toggleDrawer();
+}
+
+function getCartTotals() {
+  let count = 0, total = 0, mrpTotal = 0;
+  for (let key in cart) {
+    const parts = key.split("_");
+    const idx = parseInt(parts[0]);
+    const wIdx = parts.length > 1 ? parseInt(parts[1]) : undefined;
+    const qty = cart[key];
+    const it = items[idx];
+    const mult = wIdx !== undefined ? WEIGHT_OPTIONS[wIdx].mult : 1;
+    total += qty * calcPrice(it.sp, mult);
+    mrpTotal += qty * calcPrice(it.mrp, mult);
+    count += qty;
+  }
+  return { count, total, mrpTotal, savings: mrpTotal - total };
+}
+
+function updateCart() {
+  const { count, total } = getCartTotals();
+  const badge = document.getElementById('cartBadge');
+  document.getElementById('cartCount').textContent = count > 0 ? count + ' item(s) in cart' : 'Cart is empty';
+  document.getElementById('cartTotal').textContent = '₹' + total;
+  badge.style.display = count > 0 ? 'flex' : 'none';
+  badge.textContent = count;
+  if (drawerOpen) renderDrawer();
+}
+
+function renderDrawer() {
+  const { count, total, mrpTotal, savings } = getCartTotals();
+  const delivery = total >= 499 ? 0 : 69;
+  const grandTotal = total + delivery;
+
+  // Items
+  let html = '';
+  if (count === 0) {
+    html = '<div style="padding:30px;text-align:center;color:#8aaa96;font-size:13px;">Your cart is empty</div>';
+    document.getElementById('drawerItems').innerHTML = html;
+    document.getElementById('freeDeliveryBar').innerHTML = '';
+    document.getElementById('billSummary').innerHTML = '';
+    return;
+  }
+
+  for (let key in cart) {
+    const parts = key.split("_");
+    const idx = parseInt(parts[0]);
+    const wIdx = parts.length > 1 ? parseInt(parts[1]) : undefined;
+    const qty = cart[key];
+    const it = items[idx];
+    const mult = wIdx !== undefined ? WEIGHT_OPTIONS[wIdx].mult : 1;
+    const unitPrice = calcPrice(it.sp, mult);
+    const uomLabel = wIdx !== undefined ? WEIGHT_OPTIONS[wIdx].label : it.uom;
+    const lineTotal = qty * unitPrice;
+    html += `<div class="cart-item-row">
+      <div style="width:36px;height:36px;flex-shrink:0">${getImage(it.name)}</div>
+      <div style="flex:1">
+        <div class="ci-name">${it.name}</div>
+        <div class="ci-detail">${qty} × ${uomLabel} @ ₹${unitPrice}</div>
+      </div>
+      <div class="ci-price">₹${lineTotal}</div>
+    </div>`;
+  }
+  document.getElementById('drawerItems').innerHTML = html;
+
+  // Free delivery bar
+  const needed = Math.max(0, 499 - total);
+  const pct = Math.min(100, (total / 499) * 100);
+  const fdb = needed > 0
+    ? `<div class="free-delivery-bar">🚚 Add ₹${needed} more for FREE delivery!
+        <div class="free-delivery-progress"><div class="fdp-fill" style="width:${pct}%"></div></div>
+       </div>`
+    : `<div class="free-delivery-bar" style="background:#e8f5ee;color:#1b4d30">🎉 You've unlocked FREE delivery!</div>`;
+  document.getElementById('freeDeliveryBar').innerHTML = fdb;
+
+  // Bill summary
+  const bs = `<div class="bill-summary">
+    <div class="bill-row"><span>Item Total (MRP)</span><span>₹${mrpTotal}</span></div>
+    <div class="bill-row savings"><span>💚 You Save</span><span>-₹${savings}</span></div>
+    <div class="bill-row"><span>Delivery Charge</span><span>${delivery === 0 ? '<span style="color:#1b7a3f;font-weight:800">FREE</span>' : '₹' + delivery}</span></div>
+    <div class="bill-row total"><span>Grand Total</span><span>₹${grandTotal}</span></div>
+  </div>`;
+  document.getElementById('billSummary').innerHTML = bs;
+}
+
+function renderItems() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  let filtered = items.map((it, i) => ({...it, idx: i}))
+    .filter(it => it.name.toLowerCase().includes(q));
+  if (activeFilter !== 'all') {
+    filtered = filtered.filter(it => it.cat === activeFilter);
+  }
+
+  let html = '', lastCat = '';
+  if (!filtered.length) {
+    document.getElementById('itemList').innerHTML = `
+      <div class="empty-state">
+        <div class="emoji">🥲</div>
+        <h3>Nothing Found</h3>
+        <p>Try searching something else</p>
+      </div>`;
+    return;
+  }
+
+  // Count per cat
+  const catCounts = {};
+  filtered.forEach(it => { catCounts[it.cat] = (catCounts[it.cat]||0)+1; });
+
+  filtered.forEach((it, arrIdx) => {
+    if (it.cat !== lastCat) {
+      if (lastCat) html += '<div class="section-divider"></div>';
+      html += `<div class="section-header">
+        <div class="sh-text">${it.cat}</div>
+        <div class="sh-count">${catCounts[it.cat]} items</div>
+      </div>`;
+      lastCat = it.cat;
+    }
+
+    const useWeight = hasWeightOpts(it);
+    const activeW = selWeight[it.idx] !== undefined ? selWeight[it.idx] : 2;
+    const wMult = useWeight ? WEIGHT_OPTIONS[activeW].mult : 1;
+    const dispSP = calcPrice(it.sp, wMult);
+    const dispMRP = calcPrice(it.mrp, wMult);
+    const discPct = Math.round((1 - it.sp/it.mrp)*100);
+    const cartKey = useWeight ? getCartKey(it.idx, activeW) : getCartKey(it.idx);
+    const qty = cart[cartKey] || 0;
+    const inCart = qty > 0;
+    const badges = getBadges(it.name, it.cat);
+    const imgSrc = getImage(it.name);
+    const lineTotal = qty > 0 ? `₹${qty * dispSP}` : '';
+
+    html += `<div class="item-card ${inCart ? 'in-cart' : ''} ${isFullRender ? 'animate-in' : ''}" data-idx="${it.idx}" style="animation-delay:${isFullRender ? arrIdx * 0.03 : 0}s">
+      <div class="item-emoji svg-icon">${imgSrc}</div>
+      <div class="item-body">
+        <div class="item-name">${it.name}</div>
+        ${badges.length ? `<div class="item-badges">${badges.map(b=>`<span class="badge ${b.cls}">${b.txt}</span>`).join('')}</div>` : ''}
+        ${useWeight ? `
+          <div class="weight-tabs">
+            ${WEIGHT_OPTIONS.map((w,wi)=>`<span class="wtab ${activeW===wi?'active':''}" onclick="setWeight(${it.idx},${wi})">${w.label}</span>`).join('')}
+          </div>` : ''}
+        <div class="price-row">
+          <span class="price-mrp">₹${dispMRP}</span>
+          <span class="price-sp">₹${dispSP}</span>
+          <span class="price-unit">/ ${useWeight ? WEIGHT_OPTIONS[activeW].label : it.uom}</span>
+          ${discPct > 0 ? `<span class="discount-tag">${discPct}% OFF</span>` : ''}
+        </div>
+        ${inCart ? `<div class="item-subtotal">Subtotal: ${lineTotal}</div>` : ''}
+      </div>
+      <div class="item-right">
+        ${qty === 0
+          ? `<button class="add-btn" onclick="changeQty(${it.idx},1,${useWeight ? activeW : 'undefined'})">+</button>`
+          : `<div class="qty-stepper">
+               <button onclick="changeQty(${it.idx},-1,${useWeight ? activeW : 'undefined'})">−</button>
+               <div class="qty-num">${qty}</div>
+               <button onclick="changeQty(${it.idx},1,${useWeight ? activeW : 'undefined'})">+</button>
+             </div>`
+        }
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('itemList').innerHTML = html;
+}
+
+function openWhatsApp(url) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function sendWhatsApp() {
+  const cartKeys = Object.keys(cart);
+  if (!cartKeys.length) { showToast('⚠️ Please add items first!'); return; }
+  const { total, savings } = getCartTotals();
+  const delivery = total >= 499 ? 0 : 69;
+  const grand = total + delivery;
+  let msg = "Hello! I want to place an order from *🌿 Fresh Daily*\n\n*My Order:*\n";
+  cartKeys.forEach(key => {
+    const parts = key.split("_");
+    const idx = parseInt(parts[0]);
+    const wIdx = parts.length > 1 ? parseInt(parts[1]) : undefined;
+    const it = items[idx];
+    const qty = cart[key];
+    const mult = wIdx !== undefined ? WEIGHT_OPTIONS[wIdx].mult : 1;
+    const unitPrice = calcPrice(it.sp, mult);
+    const uomLabel = wIdx !== undefined ? WEIGHT_OPTIONS[wIdx].label : it.uom;
+    msg += `• ${it.name} — ${qty} × ${uomLabel} @ ₹${unitPrice} = ₹${qty * unitPrice}\n`;
+  });
+  msg += `\n💰 *You Saved: ₹${savings}*`;
+  msg += `\n📦 *Order Total: ₹${total}*`;
+  msg += `\n🚚 *Delivery: ${delivery === 0 ? 'FREE 🎉' : '₹' + delivery}*`;
+  msg += `\n✅ *Grand Total: ₹${grand}*`;
+  msg += `\n\n⏰ Please deliver next day before 4 PM.\n💵 Payment: Cash on Delivery.`;
+  openWhatsApp(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`);
+}
+
+
+// ===== ADDRESS MODAL =====
+const STORAGE_KEY = 'freshdaily_customer';
+
+function openAddressModal() {
+  const cartKeys = Object.keys(cart);
+  if (!cartKeys.length) { showToast('⚠️ Pehle items add karein!'); return; }
+
+  const overlay = document.getElementById('addressModal');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Check saved data
+  const saved = getSavedCustomer();
+  if (saved) {
+    document.getElementById('skipNote').style.display = 'flex';
+    const chip = document.getElementById('savedChip');
+    chip.classList.add('show');
+    document.getElementById('chipName').textContent = '👤 ' + saved.name;
+    document.getElementById('chipAddr').textContent =
+      [saved.society, saved.block ? 'Block ' + saved.block : '', saved.flat ? 'Flat ' + saved.flat : ''].filter(Boolean).join(', ');
+    // Pre-fill fields
+    document.getElementById('f_name').value = saved.name || '';
+    document.getElementById('f_society').value = saved.society || '';
+    document.getElementById('f_block').value = saved.block || '';
+    document.getElementById('f_flat').value = saved.flat || '';
+    document.getElementById('f_address').value = saved.address || '';
+    document.getElementById('f_phone').value = saved.phone || '';
+  }
+}
+
+function closeAddressModal() {
+  document.getElementById('addressModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function getSavedCustomer() {
+  try {
+    const d = sessionStorage.getItem(STORAGE_KEY);
+    return d ? JSON.parse(d) : null;
+  } catch(e) { return null; }
+}
+
+function saveCustomer(data) {
+  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+function useSavedAndOrder() {
+  closeAddressModal();
+  const saved = getSavedCustomer();
+  if (saved) sendWhatsAppWithData(saved);
+}
+
+function confirmAndOrder() {
+  const name    = document.getElementById('f_name').value.trim();
+  const society = document.getElementById('f_society').value.trim();
+  const block   = document.getElementById('f_block').value.trim();
+  const flat    = document.getElementById('f_flat').value.trim();
+  const address = document.getElementById('f_address').value.trim();
+  const phone   = document.getElementById('f_phone').value.trim();
+
+  if (!name) { document.getElementById('f_name').focus(); showToast('⚠️ Naam likhein!'); return; }
+  if (!phone || phone.length < 10) { document.getElementById('f_phone').focus(); showToast('⚠️ Sahi number dalein!'); return; }
+
+  const data = { name, society, block, flat, address, phone };
+  saveCustomer(data);
+  closeAddressModal();
+  sendWhatsAppWithData(data);
+}
+
+function sendWhatsAppWithData(data) {
+  const cartKeys = Object.keys(cart);
+  if (!cartKeys.length) return;
+  const { total, savings } = getCartTotals();
+  const delivery = total >= 499 ? 0 : 69;
+  const grand = total + delivery;
+
+  let msg = "Hello! 🌿 *Fresh Daily* pe order dena tha\n";
+  msg += "━━━━━━━━━━━━━━━━━━\n";
+  msg += "👤 *Customer Details*\n";
+  msg += `📛 Naam: ${data.name}\n`;
+  if (data.phone) msg += `📞 Phone: ${data.phone}\n`;
+  if (data.society) msg += `🏘️ Society: ${data.society}\n`;
+  if (data.block) msg += `🏢 Block: ${data.block}\n`;
+  if (data.flat) msg += `🚪 Flat: ${data.flat}\n`;
+  if (data.address) msg += `📍 Address: ${data.address}\n`;
+  msg += "━━━━━━━━━━━━━━━━━━\n";
+  msg += "🛒 *My Order:*\n";
+  cartKeys.forEach(key => {
+    const parts = key.split('_');
+    const idx = parseInt(parts[0]);
+    const wIdx = parts.length > 1 ? parseInt(parts[1]) : undefined;
+    const it = items[idx];
+    const qty = cart[key];
+    const mult = wIdx !== undefined ? WEIGHT_OPTIONS[wIdx].mult : 1;
+    const unitPrice = calcPrice(it.sp, mult);
+    const uomLabel = wIdx !== undefined ? WEIGHT_OPTIONS[wIdx].label : it.uom;
+    msg += `• ${it.name} — ${qty} × ${uomLabel} @ ₹${unitPrice} = ₹${qty * unitPrice}\n`;
+  });
+  msg += "━━━━━━━━━━━━━━━━━━\n";
+  msg += `💰 *Aapki Bachat: ₹${savings}*\n`;
+  msg += `📦 *Order Total: ₹${total}*\n`;
+  msg += `🚚 *Delivery: ${delivery === 0 ? 'FREE 🎉' : '₹' + delivery}*\n`;
+  msg += `✅ *Grand Total: ₹${grand}*\n`;
+  msg += "━━━━━━━━━━━━━━━━━━\n";
+  msg += "⏰ Kal subah 4 PM se pehle deliver karein.\n💵 Payment: Cash on Delivery.";
+  openWhatsApp('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg));
+}
+
+// Close modal on overlay click — deferred so addressModal exists in DOM
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('addressModal').addEventListener('click', function(e) {
+    if (e.target === this) closeAddressModal();
+  });
+});
+
+isFullRender = true;
+renderItems();
+isFullRender = false;
+</script>
+
+<!-- ADDRESS MODAL -->
+<div class="modal-overlay" id="addressModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <div class="modal-title">🌿 Delivery <span>Details</span></div>
+      <button class="modal-close" onclick="closeAddressModal()">✕</button>
+    </div>
+
+    <div class="modal-skip-note" id="skipNote" style="display:none">
+      ⚡ Pehle ki details saved hain! Use karein ya badlein.
+    </div>
+
+    <div class="saved-chip" id="savedChip">
+      <div style="font-size:24px">👤</div>
+      <div class="saved-chip-text">
+        <div class="sc-name" id="chipName"></div>
+        <div class="sc-addr" id="chipAddr"></div>
+      </div>
+      <button class="saved-chip-use" onclick="useSavedAndOrder()">Use &amp; Order ▶</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="field-group">
+        <div class="field-label">👤 Full Name</div>
+        <input class="field-input" id="f_name" type="text" placeholder="Aapka naam likhein" />
+      </div>
+      <div class="field-group">
+        <div class="field-label">🏘️ Society / Colony Name</div>
+        <input class="field-input" id="f_society" type="text" placeholder="Society ya colony ka naam" />
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">🏢 Block</div>
+          <input class="field-input" id="f_block" type="text" placeholder="A, B, C..." />
+        </div>
+        <div class="field-group">
+          <div class="field-label">🚪 Flat No.</div>
+          <input class="field-input" id="f_flat" type="text" placeholder="101, 204..." />
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">📍 Full Address</div>
+        <input class="field-input" id="f_address" type="text" placeholder="Street, landmark, area..." />
+      </div>
+      <div class="field-group">
+        <div class="field-label">📞 Contact Number</div>
+        <input class="field-input" id="f_phone" type="tel" placeholder="10-digit mobile number" maxlength="10" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="confirm-btn" onclick="confirmAndOrder()">
+        <span>📱</span> WhatsApp pe Order Bhejein
+      </button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
