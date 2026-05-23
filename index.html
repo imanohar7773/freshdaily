@@ -3,206 +3,1026 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fresh Daily — Order Now</title>
+<title>Fresh Daily — Farm to Doorstep</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f5f5f5;color:#222}
-.header{background:#1b4d30;padding:16px;text-align:center}
-.header h1{color:#f4a228;font-size:28px;font-weight:900}
-.header p{color:#8ed46a;font-size:11px;letter-spacing:2px;margin-top:4px}
-.info-bar{background:#f4a228;padding:8px 16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.info-bar span{font-size:11px;font-weight:700;color:#1b4d30}
-.search-wrap{padding:12px 16px;background:#fff;border-bottom:1px solid #ddd}
-.search-wrap input{width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:14px;outline:none}
-.section-title{background:#245e38;color:#f4a228;font-size:12px;font-weight:800;padding:8px 16px;letter-spacing:1.5px;text-transform:uppercase}
-.item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #eee;background:#fff}
-.item-row:hover{background:#f9fef9}
-.item-info{flex:1}
-.item-name{font-size:13px;font-weight:700;color:#1b4d30}
-.item-uom{font-size:10px;color:#888}
-.item-price{display:flex;align-items:baseline;gap:6px;margin-top:2px}
-.mrp{font-size:10px;color:#aaa;text-decoration:line-through}
-.sp{font-size:14px;font-weight:800;color:#f4a228}
-.qty-ctrl{display:flex;align-items:center;gap:6px}
-.qty-ctrl button{width:28px;height:28px;border-radius:50%;border:none;font-size:16px;font-weight:700;cursor:pointer;background:#1b4d30;color:#fff;line-height:1}
-.qty-ctrl button:active{transform:scale(0.9)}
-.qty-num{min-width:22px;text-align:center;font-size:14px;font-weight:700;color:#1b4d30}
-.cart-bar{background:#1b4d30;color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;bottom:0;z-index:99}
-.cart-info{font-size:13px}
-.cart-info .ct{color:#8ed46a;font-size:11px}
-.cart-info .cv{font-size:16px;font-weight:800;color:#f4a228}
-.cart-btn{background:#25d366;color:#fff;border:none;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:800;cursor:pointer;letter-spacing:0.5px}
-.cart-btn:active{transform:scale(0.97)}
-.empty-cart{color:#8ed46a;font-size:12px;text-align:center;padding:8px}
-.no-results{padding:24px;text-align:center;color:#888;font-size:14px}
-</style>
-</head>
-<body>
-
-<div class="header">
-  <h1>🌿 FRESH DAILY</h1>
-  <p>FARM FRESH · DAILY DELIVERY · BEST PRICES</p>
-</div>
-
-<div class="info-bar">
-  <span>🎁 1st Order: 1 Kg Potato FREE</span>
-  <span>🚚 Free delivery above ₹499</span>
-  <span>⏰ Next day before 4 PM</span>
-  <span>💵 Cash on Delivery</span>
-</div>
-
-<div class="search-wrap">
-  <input type="text" id="searchBox" placeholder="🔍 Search item e.g. Tomato, Mango..." oninput="renderItems()">
-</div>
-
-<div id="itemList"></div>
-
-<div class="cart-bar">
-  <div class="cart-info">
-    <div class="ct" id="cartCount">Cart is empty</div>
-    <div class="cv" id="cartTotal">₹0</div>
-  </div>
-  <button class="cart-btn" onclick="sendWhatsApp()">📱 Order on WhatsApp</button>
-</div>
-
-<script>
-const WA_NUMBER = "918000344554";
-
-const items = [
-  {cat:"🍊 Fruits",name:"Apple Green Imp.",uom:"Kg",mrp:280,sp:220},
-  {cat:"🍊 Fruits",name:"Apple Himachal",uom:"Kg",mrp:200,sp:160},
-  {cat:"🍊 Fruits",name:"Apple Imp.",uom:"Kg",mrp:280,sp:220},
-  {cat:"🍊 Fruits",name:"Avocado Local",uom:"Pc",mrp:150,sp:120},
-  {cat:"🍊 Fruits",name:"Banana",uom:"Kg",mrp:50,sp:40},
-  {cat:"🍊 Fruits",name:"Chikoo",uom:"Kg",mrp:80,sp:60},
-  {cat:"🍊 Fruits",name:"Coconut Dhab",uom:"Kg",mrp:100,sp:70},
-  {cat:"🍊 Fruits",name:"Coconut Fresh",uom:"Kg",mrp:60,sp:45},
-  {cat:"🍊 Fruits",name:"Dragon Fruit",uom:"Pc",mrp:110,sp:90},
-  {cat:"🍊 Fruits",name:"Guava Imp.",uom:"Kg",mrp:110,sp:80},
-  {cat:"🍊 Fruits",name:"Guava (Desi)",uom:"Kg",mrp:90,sp:60},
-  {cat:"🍊 Fruits",name:"Jamun",uom:"Kg",mrp:200,sp:140},
-  {cat:"🍊 Fruits",name:"Kiwi Fresh",uom:"Pc",mrp:45,sp:40},
-  {cat:"🍊 Fruits",name:"Mango Alphonso",uom:"Kg",mrp:220,sp:160},
-  {cat:"🍊 Fruits",name:"Mango Langra",uom:"Kg",mrp:130,sp:90},
-  {cat:"🍊 Fruits",name:"Mango Safeda",uom:"Kg",mrp:100,sp:70},
-  {cat:"🍊 Fruits",name:"Papaya Fresh",uom:"Kg",mrp:60,sp:45},
-  {cat:"🍊 Fruits",name:"Raw Papaya",uom:"Kg",mrp:60,sp:45},
-  {cat:"🍊 Fruits",name:"Pineapple Fresh",uom:"Kg",mrp:90,sp:70},
-  {cat:"🍊 Fruits",name:"Pomegranate (Anar)",uom:"Kg",mrp:260,sp:200},
-  {cat:"🍊 Fruits",name:"Sweet Lime (Mosambi)",uom:"Kg",mrp:80,sp:60},
-  {cat:"🍊 Fruits",name:"Watermelon (3–4 Kg)",uom:"Pc",mrp:80,sp:50},
-  {cat:"🥕 Root Vegetables",name:"Beetroot",uom:"Kg",mrp:50,sp:30},
-  {cat:"🥕 Root Vegetables",name:"Carrot",uom:"Kg",mrp:50,sp:30},
-  {cat:"🥕 Root Vegetables",name:"Garlic",uom:"Kg",mrp:150,sp:120},
-  {cat:"🥕 Root Vegetables",name:"Garlic Peeled",uom:"Kg",mrp:180,sp:140},
-  {cat:"🥕 Root Vegetables",name:"Ginger",uom:"Kg",mrp:200,sp:150},
-  {cat:"🥕 Root Vegetables",name:"Onion",uom:"Kg",mrp:40,sp:25},
-  {cat:"🥕 Root Vegetables",name:"Onion Small",uom:"Kg",mrp:35,sp:20},
-  {cat:"🥕 Root Vegetables",name:"Potato",uom:"Kg",mrp:30,sp:40},
-  {cat:"🥕 Root Vegetables",name:"Potato Small",uom:"Kg",mrp:20,sp:10},
-  {cat:"🥕 Root Vegetables",name:"Red Potato",uom:"Kg",mrp:40,sp:25},
-  {cat:"🥕 Root Vegetables",name:"Raw Mango",uom:"Kg",mrp:80,sp:50},
-  {cat:"🥬 Green Vegetables",name:"Arbi (Colocasia)",uom:"Kg",mrp:50,sp:40},
-  {cat:"🥬 Green Vegetables",name:"French Beans",uom:"Kg",mrp:120,sp:80},
-  {cat:"🥬 Green Vegetables",name:"Corn (Bhutta)",uom:"Kg",mrp:60,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Brinjal (Baingan)",uom:"Kg",mrp:40,sp:25},
-  {cat:"🥬 Green Vegetables",name:"Cabbage Green",uom:"Kg",mrp:40,sp:20},
-  {cat:"🥬 Green Vegetables",name:"Capsicum Green",uom:"Kg",mrp:60,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Cauliflower",uom:"Kg",mrp:70,sp:50},
-  {cat:"🥬 Green Vegetables",name:"Green Chilli",uom:"Kg",mrp:50,sp:30},
-  {cat:"🥬 Green Vegetables",name:"Green Chilli (Hot)",uom:"Kg",mrp:100,sp:60},
-  {cat:"🥬 Green Vegetables",name:"Chola Fali",uom:"Kg",mrp:60,sp:50},
-  {cat:"🥬 Green Vegetables",name:"Cucumber Chinese",uom:"Kg",mrp:70,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Curry Leaves",uom:"Kg",mrp:100,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Drumsticks (Sahjan)",uom:"Kg",mrp:140,sp:80},
-  {cat:"🥬 Green Vegetables",name:"Guar Phali",uom:"Kg",mrp:60,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Jackfruit (Kathal)",uom:"Kg",mrp:50,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Kachri",uom:"Kg",mrp:40,sp:30},
-  {cat:"🥬 Green Vegetables",name:"Kakri",uom:"Kg",mrp:50,sp:30},
-  {cat:"🥬 Green Vegetables",name:"Bitter Gourd (Karela)",uom:"Kg",mrp:60,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Lady Finger (Bhindi)",uom:"Kg",mrp:50,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Bottle Gourd (Lauki)",uom:"Kg",mrp:40,sp:30},
-  {cat:"🥬 Green Vegetables",name:"Parwal",uom:"Kg",mrp:80,sp:60},
-  {cat:"🥬 Green Vegetables",name:"Red Pumpkin",uom:"Kg",mrp:30,sp:20},
-  {cat:"🥬 Green Vegetables",name:"Spinach (Palak)",uom:"Kg",mrp:60,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Spring Onion",uom:"Kg",mrp:110,sp:60},
-  {cat:"🥬 Green Vegetables",name:"Tinda",uom:"Kg",mrp:50,sp:40},
-  {cat:"🥬 Green Vegetables",name:"Tomato",uom:"Kg",mrp:40,sp:25},
-  {cat:"🥬 Green Vegetables",name:"Baby Corn Fresh",uom:"Kg",mrp:160,sp:140},
-  {cat:"🥬 Green Vegetables",name:"Broccoli",uom:"Kg",mrp:250,sp:180},
-  {cat:"🥬 Green Vegetables",name:"Lettuce Green",uom:"Kg",mrp:300,sp:220},
-  {cat:"🥬 Green Vegetables",name:"Red Capsicum",uom:"Kg",mrp:150,sp:100},
-  {cat:"🥬 Green Vegetables",name:"Yellow Capsicum",uom:"Kg",mrp:150,sp:100},
-  {cat:"🥬 Green Vegetables",name:"Zucchini Green/Yellow",uom:"Kg",mrp:200,sp:120},
-  {cat:"🍄 Exotic & Packed",name:"Mushroom Fresh 200g",uom:"Pkt",mrp:50,sp:40},
-  {cat:"🌿 Herbs & Leafy",name:"Coriander",uom:"Kg",mrp:80,sp:60},
-  {cat:"🌿 Herbs & Leafy",name:"Coriander Fresh",uom:"Kg",mrp:80,sp:60},
-  {cat:"🌿 Herbs & Leafy",name:"Mint (Pudina)",uom:"Kg",mrp:100,sp:80},
-  {cat:"🌿 Herbs & Leafy",name:"Lemon (Nimbu)",uom:"Kg",mrp:160,sp:120},
-  {cat:"🌿 Herbs & Leafy",name:"Banana Leaf",uom:"Kg",mrp:30,sp:25},
-];
-
-let cart = {};
-
-function changeQty(idx, delta) {
-  cart[idx] = Math.max(0, (cart[idx] || 0) + delta);
-  if (cart[idx] === 0) delete cart[idx];
-  updateCart();
-  renderItems();
+:root {
+  --green-deep: #0f2d1a;
+  --green-mid: #1b4d30;
+  --green-bright: #2d7a4f;
+  --green-light: #4caf7d;
+  --green-pale: #e8f5ee;
+  --amber: #f4a228;
+  --amber-light: #ffecc8;
+  --cream: #faf8f3;
+  --white: #ffffff;
+  --text-dark: #0f1a14;
+  --text-mid: #3d5a47;
+  --text-muted: #8aaa96;
+  --border: #d9ead3;
+  --red: #e84545;
+  --shadow-sm: 0 2px 8px rgba(15,45,26,0.08);
+  --shadow-md: 0 8px 24px rgba(15,45,26,0.12);
+  --shadow-lg: 0 20px 60px rgba(15,45,26,0.18);
+  --radius: 16px;
+  --radius-sm: 10px;
 }
 
-function updateCart() {
-  let count = 0, total = 0;
-  for (let k in cart) { count += cart[k]; total += cart[k] * items[k].sp; }
-  document.getElementById('cartCount').textContent = count > 0 ? count + ' item(s) in cart' : 'Cart is empty';
-  document.getElementById('cartTotal').textContent = '₹' + total;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-function renderItems() {
-  const q = document.getElementById('searchBox').value.toLowerCase();
-  const filtered = items.map((it,i)=>({...it,idx:i})).filter(it=>it.name.toLowerCase().includes(q));
-  let html = '', lastCat = '';
-  if (!filtered.length) { document.getElementById('itemList').innerHTML = '<div class="no-results">No items found 🥲</div>'; return; }
-  filtered.forEach(it => {
-    if (it.cat !== lastCat) { html += `<div class="section-title">${it.cat}</div>`; lastCat = it.cat; }
-    const qty = cart[it.idx] || 0;
-    html += `<div class="item-row">
-      <div class="item-info">
-        <div class="item-name">${it.name}</div>
-        <div class="item-uom">per ${it.uom}</div>
-        <div class="item-price"><span class="mrp">₹${it.mrp}</span><span class="sp">₹${it.sp}</span></div>
-      </div>
-      <div class="qty-ctrl">
-        <button onclick="changeQty(${it.idx},-1)">−</button>
-        <div class="qty-num">${qty}</div>
-        <button onclick="changeQty(${it.idx},1)">+</button>
-      </div>
-    </div>`;
-  });
-  document.getElementById('itemList').innerHTML = html;
+/* ===== HERO HEADER ===== */
+.hero {
+  background: var(--green-deep);
+  position: relative;
+  overflow: hidden;
+  padding: 0 0 24px;
 }
 
-function sendWhatsApp() {
-  const cartItems = Object.keys(cart);
-  if (!cartItems.length) { alert('Please add at least one item to your cart!'); return; }
-  let total = 0;
-  let msg = "Hello! I want to place an order from *Fresh Daily* 🌿\n\n*My Order:*\n";
-  cartItems.forEach(k => {
-    const it = items[k];
-    const amt = cart[k] * it.sp;
-    total += amt;
-    msg += `• ${it.name} — ${cart[k]} ${it.uom} × ₹${it.sp} = ₹${amt}\n`;
-  });
-  const delivery = total >= 499 ? 0 : 69;
-  msg += `\n*Order Total: ₹${total}*`;
-  msg += `\n*Delivery Charge: ₹${delivery}*`;
-  msg += `\n*Grand Total: ₹${total + delivery}*`;
-  msg += `\n\n📦 Please deliver next day before 4 PM.\n💵 Payment: Cash on Delivery.`;
-  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(76,175,125,0.18) 0%, transparent 70%);
+  border-radius: 50%;
 }
 
-renderItems();
-</script>
-</body>
-</html>
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -60px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(244,162,40,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* Ticker */
+.ticker-wrap {
+  background: var(--amber);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 7px 0;
+}
+
+.ticker-inner {
+  display: inline-block;
+  animation: ticker 28s linear infinite;
+}
+
+.ticker-inner span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green-deep);
+  letter-spacing: 0.5px;
+  padding: 0 32px;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Logo area */
+.hero-content {
+  padding: 20px 20px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.logo-block h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.logo-block h1 span { color: var(--amber); }
+
+.logo-block p {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--green-light);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(76,175,125,0.15);
+  border: 1px solid rgba(76,175,125,0.3);
+  border-radius: 20px;
+  padding: 6px 12px;
+}
+
+.live-dot {
+  width: 7px; height: 7px;
+  background: #4cff8d;
+  border-radius: 50%;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.live-badge span {
+  font-size: 10px;
+  font-weight: 700;
+  color: #4cff8d;
+  letter-spacing: 1px;
+}
+
+/* Stats cards */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.stat-card .num {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.stat-card .lbl {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--green-light);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* ===== PROMO BANNER ===== */
+.promo-banner {
+  margin: 16px 16px 0;
+  background: linear-gradient(135deg, #f4a228 0%, #e8850a 100%);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.promo-banner::before {
+  content: '🎁';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 48px;
+  opacity: 0.2;
+}
+
+.promo-banner .ptitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-deep);
+  line-height: 1.2;
+}
+
+.promo-banner .psub {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(15,45,26,0.7);
+  margin-top: 3px;
+}
+
+.promo-tag {
+  background: var(--green-deep);
+  color: var(--amber);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* ===== DELIVERY INFO STRIP ===== */
+.delivery-strip {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.delivery-strip::-webkit-scrollbar { display: none; }
+
+.dchip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.dchip .icon { font-size: 14px; }
+.dchip .text { font-size: 11px; font-weight: 600; color: var(--green-mid); }
+
+/* ===== SEARCH ===== */
+.search-section {
+  padding: 0 16px 12px;
+}
+
+.search-box {
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 13px 18px 13px 46px;
+  border: 2px solid var(--border);
+  border-radius: 50px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--text-dark);
+  outline: none;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-box input:focus {
+  border-color: var(--green-bright);
+  box-shadow: 0 0 0 4px rgba(45,122,79,0.1), var(--shadow-sm);
+}
+
+.search-box input::placeholder { color: var(--text-muted); }
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Filter pills */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+
+.fpill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.fpill.active {
+  background: var(--green-mid);
+  border-color: var(--green-mid);
+  color: var(--white);
+}
+
+/* ===== SECTION HEADER ===== */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 6px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--cream);
+}
+
+.section-header::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px;
+  background: var(--amber);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-header .sh-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green-deep);
+  flex: 1;
+}
+
+.section-header .sh-count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--green-pale);
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+/* ===== ITEM CARD ===== */
+.item-card {
+  background: var(--white);
+  margin: 4px 12px;
+  border-radius: var(--radius);
+  padding: 14px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(217,234,211,0.6);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.item-card:active { transform: scale(0.99); }
+
+.item-card.in-cart {
+  border-color: var(--green-bright);
+  background: linear-gradient(135deg, #fff 0%, #f0faf5 100%);
+}
+
+/* Item icon */
+.item-emoji {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.item-emoji.svg-icon {
+  padding: 6px;
+}
+.item-emoji.svg-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.item-body { flex: 1; min-width: 0; }
+
+.item-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+.item-badges {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.badge-organic { background: #e8f5ee; color: #1b7a3f; }
+.badge-hot { background: #fff0e8; color: #c04a00; }
+.badge-fresh { background: #e8f0ff; color: #2a50c0; }
+.badge-best { background: var(--amber-light); color: #a06200; }
+
+/* Weight tabs */
+.weight-tabs {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.wtab {
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--text-mid);
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.wtab.active {
+  background: var(--green-mid);
+  border-color: var(--green-mid);
+  color: var(--white);
+}
+
+/* Pricing */
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.price-mrp {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.price-sp {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-mid);
+}
+
+.price-unit {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.discount-tag {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--red);
+  background: #fff0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 2px;
+}
+
+/* Add to cart button area */
+.item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Add button */
+.add-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--green-mid);
+  border: none;
+  color: var(--white);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(27,77,48,0.3);
+  transition: all 0.15s;
+}
+
+.add-btn:active { transform: scale(0.9); }
+
+/* Qty stepper */
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--green-pale);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1.5px solid var(--green-light);
+}
+
+.qty-stepper button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--green-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.qty-stepper button:active { background: rgba(45,122,79,0.15); }
+
+.qty-stepper .qty-num {
+  min-width: 28px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--green-deep);
+  font-family: 'Playfair Display', serif;
+}
+
+/* Cart total on item */
+.item-subtotal {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--green-bright);
+}
+
+/* ===== SECTION DIVIDER ===== */
+.section-divider {
+  height: 10px;
+  background: var(--cream);
+}
+
+/* ===== CART PANEL ===== */
+.cart-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+/* Collapsed bar */
+.cart-bar {
+  background: var(--green-deep);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cart-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-icon-wrap {
+  position: relative;
+}
+
+.cart-icon {
+  font-size: 22px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+.cart-info-text .ct { font-size: 11px; color: var(--green-light); font-weight: 500; }
+.cart-info-text .cv {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.cart-actions { display: flex; gap: 8px; align-items: center; }
+
+.expand-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.wa-btn {
+  background: #25d366;
+  color: var(--white);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(37,211,102,0.4);
+  transition: all 0.2s;
+}
+
+.wa-btn:active { transform: scale(0.97); }
+
+/* Expanded cart drawer */
+.cart-drawer {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-drawer.open {
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.drawer-header {
+  padding: 16px 16px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.clear-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red);
+  background: #fff0f0;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.cart-item-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--green-pale);
+  gap: 10px;
+}
+
+.ci-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.ci-detail {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.ci-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green-mid);
+}
+
+/* Bill summary */
+.bill-summary {
+  padding: 14px 16px;
+  background: var(--green-pale);
+  margin: 0 12px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.bill-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-mid);
+  margin-bottom: 6px;
+}
+
+.bill-row.total {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--green-deep);
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.bill-row.savings {
+  color: var(--green-bright);
+  font-weight: 700;
+}
+
+.free-delivery-bar {
+  background: var(--amber-light);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #7a5000;
+}
+
+.free-delivery-progress {
+  height: 4px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.fdp-fill {
+  height: 100%;
+  background: var(--amber);
+  border-radius: 2px;
+  transition: width 0.4s;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  padding: 60px 30px;
+  text-align: center;
+}
+
+.empty-state .emoji { font-size: 56px; margin-bottom: 12px; }
+.empty-state h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+.empty-state p { font-size: 13px; color: var(--text-muted); }
+
+/* No results */
+.no-results {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Bottom spacer */
+.bottom-spacer { height: 100px; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.item-card { /* animation only applied via JS class */ }
+.item-card.animate-in { animation: slideUp 0.25s ease both; }
+
+/* ===== ADD TO CART ANIMATION ===== */
+@keyframes cartPop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.06); box-shadow: 0 0 0 4px rgba(76,175,125,0.25); }
+  60%  { transform: scale(0.97); }
+  100% { transform: scale(1); box-shadow: none; }
+}
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(4); opacity: 0; }
+}
+.item-card.cart-added {
+  animation: cartPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.add-ripple {
+  position: absolute;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(76,175,125,0.4);
+  pointer-events: none;
+  animation: ripple 0.5s ease-out both;
+  transform-origin: center;
+}
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--green-deep);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 200;
+  box-shadow: var(--shadow-md);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== OFFERS CAROUSEL ===== */
+.offers-section {
+  padding: 12px 0 4px;
+}
+
+.offers-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+  padding: 0 16px 10px;
+}
+
+.offers-scroll {
+  display: flex;
+  gap: 10px;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.offers-scroll::-webkit-scrollbar { display: none; }
+
+.offer-card {
+  flex-shrink: 0;
+  width: 200px;
+  border-radius: var(--radius);
+  padding: 14px 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.offer-card.oc1 { background: linear-gradient(135deg, #0f2d1a, #1b4d30); }
+.offer-card.oc2 { background: linear-gradient(135deg, #7a3800, #c06010); }
+.offer-card.oc3 { background: linear-gradient(135deg, #1a1060, #3030a0); }
+
+.offer-card .ot {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+.offer-card .os {
+  font-size: 10px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.offer-card .obig {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--amber);
+  line-height: 1;
+  margin-top: 4px;
+}
+
+
+/* ===== ADDRESS MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,25,15,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal-sheet {
+  background: var(--white);
+  width: 100%;
+  border-radius: 28px 28px 0 0;
+  padding: 0 0 32px;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  max-height: 92vh;
+  overflow-y: auto;
+}
+.modal-overlay.open .modal-sheet {
+  transform: translateY(0);
+}
+.modal-handle {
+  width: 40px; height: 4px;
+  background: #d0d0d0;
+  border-radius: 2px;
+  margin: 12px auto 0;
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--green-deep);
+}
+.modal-title span { color: var(--amber); }
+.modal-close {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--green-pale);
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green-mid);
+  font-weight: 700;
+  transition: background 0.2s;
+}
+.modal-close:active { background: #d0ead8; }
+.modal-skip-note {
+  margin: 8px 20px 0;
+  background: var(--amber-light);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font
