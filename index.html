@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fresh Daily — Farm to Doorstep</title>
+<title>HariyaliBasket — Farm to Doorstep</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1988,7 +1988,7 @@ body {
   <div class="hero-content">
     <div class="logo-row">
       <div class="logo-block">
-        <h1>🌿 Fresh<span>Daily</span></h1>
+        <h1>🌿 Hariyali<span>Basket</span></h1>
         <p>Farm Fresh · Daily Delivery</p>
       </div>
       <div class="live-badge">
@@ -2220,7 +2220,7 @@ body {
       </div>
       <div class="field-group">
         <div class="field-label">💬 Aapka Anubhav</div>
-        <textarea class="field-input" id="rv_text" rows="3" placeholder="Fresh Daily ke baare mein batayein..." style="resize:none;height:80px;"></textarea>
+        <textarea class="field-input" id="rv_text" rows="3" placeholder="HariyaliBasket ke baare mein batayein..." style="resize:none;height:80px;"></textarea>
       </div>
     </div>
     <div class="modal-footer">
@@ -2233,7 +2233,7 @@ body {
 
 <!-- TRUST FOOTER -->
 <div class="trust-footer">
-  <div class="tf-title">🌿 About Fresh Daily</div>
+  <div class="tf-title">🌿 About HariyaliBasket</div>
   <div class="tf-sub">Farm to doorstep — har din, bilkul fresh</div>
   <div class="tf-grid">
     <div class="tf-item"><div class="tf-icon">🚜</div><div class="tf-text">Directly sourced from local farms</div></div>
@@ -2246,7 +2246,7 @@ body {
   <div class="tf-divider"></div>
   <div class="tf-bottom">
     <div>
-      <div class="tf-brand">🌿 FreshDaily</div>
+      <div class="tf-brand">🌿 HariyaliBasket</div>
       <div class="tf-copy">© 2025 · All rights reserved</div>
     </div>
     <a class="tf-wa-link" href="https://wa.me/918000344554" target="_blank" rel="noopener">
@@ -2829,7 +2829,7 @@ function sendWhatsApp() {
   const { total, savings } = getCartTotals();
   const delivery = total >= 499 ? 0 : 69;
   const grand = total + delivery;
-  let msg = "Hello! I want to place an order from *🌿 Fresh Daily*\n\n*My Order:*\n";
+  let msg = "Hello! I want to place an order from *🌿 HariyaliBasket*\n\n*My Order:*\n";
   cartKeys.forEach(key => {
     const parts = key.split("_");
     const idx = parseInt(parts[0]);
@@ -2851,7 +2851,7 @@ function sendWhatsApp() {
 
 
 // ===== ADDRESS MODAL =====
-const STORAGE_KEY = 'freshdaily_customer';
+const STORAGE_KEY = 'hariyalibasket_customer';
 
 function openAddressModal() {
   const cartKeys = Object.keys(cart);
@@ -2937,7 +2937,7 @@ function sendWhatsAppWithData(data, paymentMode) {
   const grand = total + delivery;
   const isPaid = paymentMode === 'upi';
 
-  let msg = "Hello! 🌿 *Fresh Daily* pe order dena tha\n";
+  let msg = "Hello! 🌿 *HariyaliBasket* pe order dena tha\n";
   msg += "━━━━━━━━━━━━━━━━━━\n";
   msg += "👤 *Customer Details*\n";
   msg += `📛 Naam: ${data.name}\n`;
@@ -3300,7 +3300,7 @@ setInterval(updateCountdown, 1000);
 
 // ===== PAYMENT METHOD =====
 const UPI_ID = 'imanohar07773@ybl';
-const UPI_NAME = 'Fresh Daily';
+const UPI_NAME = 'HariyaliBasket';
 let selectedPayment = 'cod';
 let pendingOrderData = null;
 
@@ -3332,7 +3332,7 @@ function buildUpiUrl(app) {
   const { total } = getCartTotals();
   const delivery = total >= 499 ? 0 : 69;
   const grand = total + delivery;
-  const note = encodeURIComponent('Fresh Daily Order');
+  const note = encodeURIComponent('HariyaliBasket Order');
   const base = 'pa=' + UPI_ID + '&pn=' + encodeURIComponent(UPI_NAME) + '&am=' + grand + '&cu=INR&tn=' + note;
   const urls = {
     gpay:    'tez://upi/pay?' + base,
