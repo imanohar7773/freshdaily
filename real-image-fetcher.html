@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HariyaliBasket — Real Image Fetcher</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+    background: #0a1a0e;
+    color: #fff;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  .header { text-align: center; padding: 14px 0 18px; }
+  .header h1 { color: #f4a228; font-size: 22px; margin-bottom: 4px; }
+  .header p { color: #8ed46a; font-size: 12px; }
+  .container { max-width: 920px; margin: 0 auto; }
+  .info {
+    background: rgba(244,162,40,0.12);
+    border: 1px solid #f4a228;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #f4d28a;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .info b { color: #f4a228; }
+  .stats-bar {
+    background: #0f2d18;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .progress {
+    flex: 1; min-width: 150px;
+    height: 8px; background: rgba(255,255,255,0.1);
+    border-radius: 6px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #25d366, #8ed46a);
+    border-radius: 6px; transition: width 0.4s;
+    width: 0%;
+  }
+  .stats-text { color: #8ed46a; font-size: 13px; font-weight: 700; }
+  .actions-top {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .btn-action {
+    background: #25d366; color: #fff; border: none;
+    padding: 10px 14px; border-radius: 8px;
+    font-size: 12px; font-weight: 800; cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-action.btn-clear { background: #e74c3c; }
+  .btn-action.btn-csv { background: #f4a228; }
+
+  .product-row {
+    background: #0f2d18;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(142,212,106,0.15);
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .product-row.done {
+    border-color: #25d366;
+    background: rgba(37,211,102,0.05);
+  }
+  .product-num {
+    background: #1a4d2e;
+    color: #8ed46a;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 13px;
+  }
+  .product-row.done .product-num {
+    background: #25d366; color: #fff;
+  }
+  .product-info { min-width: 0; }
+  .product-header {
+    display: flex; justify-content: space-between;
+    align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .product-name {
+    font-size: 14px; font-weight: 800;
+    color: #fff;
+  }
+  .product-cat {
+    font-size: 10px; color: #8ed46a;
+    background: rgba(142,212,106,0.1);
+    padding: 3px 8px; border-radius: 12px;
+    font-weight: 700;
+  }
+  .search-links {
+    display: flex; gap: 6px; margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .search-links a {
+    background: #1a4d2e;
+    color: #8ed46a;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 14px;
+    font-size: 10px;
+    font-weight: 700;
+    border: 1px solid #2d6b42;
+  }
+  .search-links a:hover {
+    background: #2d6b42;
+    color: #fff;
+  }
+  .url-row {
+    display: flex; gap: 6px; align-items: stretch;
+    margin-bottom: 6px;
+  }
+  .url-input {
+    flex: 1;
+    padding: 8px 10px;
+    background: #1a4d2e;
+    border: 1px solid #2d6b42;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 11px;
+    font-family: inherit;
+    outline: none;
+    min-width: 0;
+  }
+  .url-input:focus { border-color: #8ed46a; }
+  .save-btn {
+    background: #25d366; color: #fff;
+    border: none; padding: 0 14px;
+    border-radius: 6px; font-size: 11px;
+    font-weight: 800; cursor: pointer;
+    white-space: nowrap;
+  }
+  .save-btn.saved { background: #1a4d2e; color: #8ed46a; }
+  .preview-img {
+    width: 80px; height: 80px;
+    border-radius: 8px; object-fit: cover;
+    background: #1a4d2e;
+    border: 1px solid #2d6b42;
+    display: none;
+  }
+  .preview-img.shown { display: block; margin-top: 4px; }
+  .preview-row {
+    display: flex; align-items: flex-end;
+    gap: 8px;
+  }
+  .help-row {
+    font-size: 10px;
+    color: #8ed46a;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  @media (max-width: 600px) {
+    .product-row { grid-template-columns: 1fr; }
+    .product-num { width: 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>📸 Real Image Fetcher</h1>
+    <p>Har product ki asli photo — Pexels/Unsplash se</p>
+  </div>
+
+  <div class="info">
+    <b>📋 Kaise Use Karein (Sirf 4 Step):</b><br>
+    1️⃣ Har product ke saamne <b>"Pexels"</b> ya <b>"Unsplash"</b> button dabao → naya tab khulega<br>
+    2️⃣ Wahaan se accha image dekho → image par right-click → <b>"Copy image address"</b><br>
+    3️⃣ Wapas yahaan aake URL paste karo → <b>"Save"</b> dabao → preview dikhega<br>
+    4️⃣ Sab products done hone ke baad <b>"📥 Download CSV"</b> dabao → WooCommerce mein import!<br>
+    <br>
+    <b>💡 Pro Tip:</b> Aapka progress automatic save hota hai — kabhi bhi continue kar sakte ho!
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats-text" id="stats-text">0 / 71 done</div>
+    <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="actions-top">
+      <button class="btn-action btn-csv" onclick="downloadCSV()">📥 Download CSV</button>
+      <button class="btn-action btn-clear" onclick="clearAll()">🗑 Clear All</button>
+    </div>
+  </div>
+
+  <div id="products-container"></div>
+
+</div>
+
+<script>
+const PRODUCTS = [
+  // Fruits
+  { sku: 'HB-FR-001', name: 'Apple Green Imp.',     cat: 'Fruits',           unit: 'per Kg', search: 'green apple fruit' },
+  { sku: 'HB-FR-002', name: 'Apple Himachal',       cat: 'Fruits',           unit: 'per Kg', search: 'red apple fresh' },
+  { sku: 'HB-FR-003', name: 'Apple Imp.',           cat: 'Fruits',           unit: 'per Kg', search: 'apple fresh' },
+  { sku: 'HB-FR-004', name: 'Avocado Local',        cat: 'Fruits',           unit: 'per Pc', search: 'avocado fresh' },
+  { sku: 'HB-FR-005', name: 'Banana',               cat: 'Fruits',           unit: 'per Kg', search: 'banana yellow ripe' },
+  { sku: 'HB-FR-006', name: 'Chikoo',               cat: 'Fruits',           unit: 'per Kg', search: 'sapota chikoo fruit' },
+  { sku: 'HB-FR-007', name: 'Coconut Dhab',         cat: 'Fruits',           unit: 'per Kg', search: 'tender coconut green' },
+  { sku: 'HB-FR-008', name: 'Coconut Fresh',        cat: 'Fruits',           unit: 'per Kg', search: 'coconut whole' },
+  { sku: 'HB-FR-009', name: 'Dragon Fruit',         cat: 'Fruits',           unit: 'per Pc', search: 'dragon fruit pink' },
+  { sku: 'HB-FR-010', name: 'Guava (Desi)',         cat: 'Fruits',           unit: 'per Kg', search: 'guava fresh green' },
+  { sku: 'HB-FR-011', name: 'Guava Imp.',           cat: 'Fruits',           unit: 'per Kg', search: 'guava pink imported' },
+  { sku: 'HB-FR-012', name: 'Jamun',                cat: 'Fruits',           unit: 'per Kg', search: 'jamun black plum fruit' },
+  { sku: 'HB-FR-013', name: 'Kiwi Fresh',           cat: 'Fruits',           unit: 'per Pc', search: 'kiwi fruit' },
+  { sku: 'HB-FR-014', name: 'Mango Alphonso',       cat: 'Fruits',           unit: 'per Kg', search: 'alphonso mango' },
+  { sku: 'HB-FR-015', name: 'Mango Langra',         cat: 'Fruits',           unit: 'per Kg', search: 'langra mango' },
+  { sku: 'HB-FR-016', name: 'Mango Safeda',         cat: 'Fruits',           unit: 'per Kg', search: 'mango yellow indian' },
+  { sku: 'HB-FR-017', name: 'Papaya Fresh',         cat: 'Fruits',           unit: 'per Kg', search: 'papaya fresh ripe' },
+  { sku: 'HB-FR-018', name: 'Pineapple Fresh',      cat: 'Fruits',           unit: 'per Kg', search: 'pineapple fresh whole' },
+  { sku: 'HB-FR-019', name: 'Pomegranate (Anar)',   cat: 'Fruits',           unit: 'per Kg', search: 'pomegranate red' },
+  { sku: 'HB-FR-020', name: 'Raw Papaya',           cat: 'Fruits',           unit: 'per Kg', search: 'green raw papaya' },
+  { sku: 'HB-FR-021', name: 'Sweet Lime (Mosambi)', cat: 'Fruits',           unit: 'per Kg', search: 'sweet lime mosambi' },
+  { sku: 'HB-FR-022', name: 'Watermelon (3-4 Kg)',  cat: 'Fruits',           unit: 'per Pc', search: 'watermelon whole' },
+  // Root Vegetables
+  { sku: 'HB-RV-001', name: 'Beetroot',             cat: 'Root Vegetables',  unit: 'per Kg', search: 'beetroot fresh' },
+  { sku: 'HB-RV-002', name: 'Carrot',               cat: 'Root Vegetables',  unit: 'per Kg', search: 'carrot fresh orange' },
+  { sku: 'HB-RV-003', name: 'Garlic',               cat: 'Root Vegetables',  unit: 'per Kg', search: 'garlic fresh' },
+  { sku: 'HB-RV-004', name: 'Garlic Peeled',        cat: 'Root Vegetables',  unit: 'per Kg', search: 'peeled garlic cloves' },
+  { sku: 'HB-RV-005', name: 'Ginger',               cat: 'Root Vegetables',  unit: 'per Kg', search: 'ginger root fresh' },
+  { sku: 'HB-RV-006', name: 'Onion',                cat: 'Root Vegetables',  unit: 'per Kg', search: 'red onion fresh' },
+  { sku: 'HB-RV-007', name: 'Onion Small',          cat: 'Root Vegetables',  unit: 'per Kg', search: 'small onion shallot' },
+  { sku: 'HB-RV-008', name: 'Potato',               cat: 'Root Vegetables',  unit: 'per Kg', search: 'potato fresh' },
+  { sku: 'HB-RV-009', name: 'Potato Small',         cat: 'Root Vegetables',  unit: 'per Kg', search: 'baby potato small' },
+  { sku: 'HB-RV-010', name: 'Raw Mango',            cat: 'Root Vegetables',  unit: 'per Kg', search: 'green raw mango' },
+  { sku: 'HB-RV-011', name: 'Red Potato',           cat: 'Root Vegetables',  unit: 'per Kg', search: 'red potato skin' },
+  // Green Vegetables
+  { sku: 'HB-VG-001', name: 'Arbi (Colocasia)',     cat: 'Green Vegetables', unit: 'per Kg', search: 'arbi colocasia taro root' },
+  { sku: 'HB-VG-002', name: 'Baby Corn Fresh',      cat: 'Green Vegetables', unit: 'per Kg', search: 'baby corn fresh' },
+  { sku: 'HB-VG-003', name: 'Bitter Gourd (Karela)',cat: 'Green Vegetables', unit: 'per Kg', search: 'bitter gourd karela' },
+  { sku: 'HB-VG-004', name: 'Bottle Gourd (Lauki)', cat: 'Green Vegetables', unit: 'per Kg', search: 'bottle gourd lauki' },
+  { sku: 'HB-VG-005', name: 'Brinjal (Baingan)',    cat: 'Green Vegetables', unit: 'per Kg', search: 'brinjal eggplant purple' },
+  { sku: 'HB-VG-006', name: 'Broccoli',             cat: 'Exotic & Packed',  unit: 'per Kg', search: 'broccoli fresh green' },
+  { sku: 'HB-VG-007', name: 'Cabbage Green',        cat: 'Green Vegetables', unit: 'per Kg', search: 'green cabbage fresh' },
+  { sku: 'HB-VG-008', name: 'Capsicum Green',       cat: 'Green Vegetables', unit: 'per Kg', search: 'green bell pepper capsicum' },
+  { sku: 'HB-VG-009', name: 'Cauliflower',          cat: 'Green Vegetables', unit: 'per Kg', search: 'cauliflower fresh white' },
+  { sku: 'HB-VG-010', name: 'Chola Fali',           cat: 'Green Vegetables', unit: 'per Kg', search: 'chawla beans green long' },
+  { sku: 'HB-VG-011', name: 'Corn (Bhutta)',        cat: 'Green Vegetables', unit: 'per Kg', search: 'sweet corn cob' },
+  { sku: 'HB-VG-012', name: 'Cucumber Chinese',     cat: 'Green Vegetables', unit: 'per Kg', search: 'long cucumber green' },
+  { sku: 'HB-VG-013', name: 'Curry Leaves',         cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'curry leaves fresh' },
+  { sku: 'HB-VG-014', name: 'Drumsticks (Sahjan)',  cat: 'Green Vegetables', unit: 'per Kg', search: 'drumstick moringa pods' },
+  { sku: 'HB-VG-015', name: 'French Beans',         cat: 'Green Vegetables', unit: 'per Kg', search: 'french beans green' },
+  { sku: 'HB-VG-016', name: 'Green Chilli',         cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'green chilli fresh' },
+  { sku: 'HB-VG-017', name: 'Green Chilli (Hot)',   cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'hot green chilli pepper' },
+  { sku: 'HB-VG-018', name: 'Guar Phali',           cat: 'Green Vegetables', unit: 'per Kg', search: 'cluster beans guar' },
+  { sku: 'HB-VG-019', name: 'Jackfruit (Kathal)',   cat: 'Green Vegetables', unit: 'per Kg', search: 'raw jackfruit kathal' },
+  { sku: 'HB-VG-020', name: 'Kachri',               cat: 'Green Vegetables', unit: 'per Kg', search: 'kachri wild cucumber' },
+  { sku: 'HB-VG-021', name: 'Kakri',                cat: 'Green Vegetables', unit: 'per Kg', search: 'kakri armenian cucumber' },
+  { sku: 'HB-VG-022', name: 'Lady Finger (Bhindi)', cat: 'Green Vegetables', unit: 'per Kg', search: 'lady finger okra bhindi' },
+  { sku: 'HB-VG-023', name: 'Lettuce Green',        cat: 'Exotic & Packed',  unit: 'per Kg', search: 'lettuce green iceberg' },
+  { sku: 'HB-VG-024', name: 'Parwal',               cat: 'Green Vegetables', unit: 'per Kg', search: 'parwal pointed gourd' },
+  { sku: 'HB-VG-025', name: 'Red Capsicum',         cat: 'Exotic & Packed',  unit: 'per Kg', search: 'red bell pepper capsicum' },
+  { sku: 'HB-VG-026', name: 'Red Pumpkin',          cat: 'Green Vegetables', unit: 'per Kg', search: 'red pumpkin orange' },
+  { sku: 'HB-VG-027', name: 'Spinach (Palak)',      cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'spinach fresh palak' },
+  { sku: 'HB-VG-028', name: 'Spring Onion',         cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'spring onion green' },
+  { sku: 'HB-VG-029', name: 'Tinda',                cat: 'Green Vegetables', unit: 'per Kg', search: 'tinda apple gourd' },
+  { sku: 'HB-VG-030', name: 'Tomato',               cat: 'Green Vegetables', unit: 'per Kg', search: 'tomato fresh red' },
+  { sku: 'HB-VG-031', name: 'Yellow Capsicum',      cat: 'Exotic & Packed',  unit: 'per Kg', search: 'yellow bell pepper' },
+  { sku: 'HB-VG-032', name: 'Zucchini Green/Yellow',cat: 'Exotic & Packed',  unit: 'per Kg', search: 'zucchini green yellow' },
+  { sku: 'HB-VG-033', name: 'Mushroom Fresh 200g',  cat: 'Exotic & Packed',  unit: 'per Packet', search: 'button mushroom fresh' },
+  // Herbs
+  { sku: 'HB-HR-001', name: 'Banana Leaf',          cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'banana leaf fresh green' },
+  { sku: 'HB-HR-002', name: 'Coriander',            cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'coriander cilantro fresh' },
+  { sku: 'HB-HR-003', name: 'Coriander Fresh',      cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'fresh coriander leaves' },
+  { sku: 'HB-HR-004', name: 'Lemon (Nimbu)',        cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'lemon fresh yellow' },
+  { sku: 'HB-HR-005', name: 'Mint (Pudina)',        cat: 'Herbs & Leafy',    unit: 'per Kg', search: 'mint pudina leaves' }
+];
+
+const STORAGE_KEY = 'hb_image_urls_v1';
+
+function loadSaved() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch { return {}; }
+}
+
+function saveProgress() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedUrls));
+  updateStats();
+}
+
+let savedUrls = loadSaved();
+
+function updateStats() {
+  const total = PRODUCTS.length;
+  const done = Object.keys(savedUrls).filter(k => savedUrls[k]).length;
+  document.getElementById('stats-text').textContent = done + ' / ' + total + ' done';
+  document.getElementById('progress-fill').style.width = (done / total * 100) + '%';
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                  .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function renderProducts() {
+  const container = document.getElementById('products-container');
+  container.innerHTML = PRODUCTS.map((p, i) => {
+    const saved = savedUrls[p.sku] || '';
+    const safeSearch = encodeURIComponent(p.search);
+    const isDone = saved ? 'done' : '';
+    const previewClass = saved ? 'shown' : '';
+    return `
+      <div class="product-row ${isDone}" id="row-${p.sku}">
+        <div class="product-num">${i + 1}</div>
+        <div class="product-info">
+          <div class="product-header">
+            <div class="product-name">${escapeHtml(p.name)} <span style="color:#8ed46a;font-size:11px">· ${escapeHtml(p.unit)}</span></div>
+            <div class="product-cat">${escapeHtml(p.cat)}</div>
+          </div>
+          <div class="search-links">
+            <a href="https://www.pexels.com/search/${safeSearch}/" target="_blank" rel="noopener">📸 Pexels</a>
+            <a href="https://unsplash.com/s/photos/${safeSearch}" target="_blank" rel="noopener">🌅 Unsplash</a>
+            <a href="https://pixabay.com/images/search/${safeSearch}/" target="_blank" rel="noopener">🎨 Pixabay</a>
+            <a href="https://www.google.com/search?q=${safeSearch}&tbm=isch" target="_blank" rel="noopener">🔍 Google</a>
+          </div>
+          <div class="preview-row">
+            <img class="preview-img ${previewClass}" id="img-${p.sku}" src="${saved ? escapeHtml(saved) : ''}" alt="" onerror="this.classList.remove('shown')">
+            <div style="flex:1;min-width:0">
+              <div class="url-row">
+                <input type="text" class="url-input" id="url-${p.sku}" value="${escapeHtml(saved)}" placeholder="Image URL paste karo (.jpg / .png / .webp)" oninput="livePreview('${p.sku}')">
+                <button class="save-btn ${saved ? 'saved' : ''}" id="btn-${p.sku}" onclick="saveUrl('${p.sku}')">${saved ? '✓ Saved' : 'Save'}</button>
+              </div>
+              <div class="help-row">💡 Image par right-click → "Copy image address" → yahaan paste karo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function livePreview(sku) {
+  const url = document.getElementById('url-' + sku).value.trim();
+  const img = document.getElementById('img-' + sku);
+  if (url && /^https?:\/\//.test(url)) {
+    img.src = url;
+    img.classList.add('shown');
+  } else {
+    img.classList.remove('shown');
+  }
+}
+
+function saveUrl(sku) {
+  const url = document.getElementById('url-' + sku).value.trim();
+  if (url && !/^https?:\/\//.test(url)) {
+    alert('⚠️ Sahi URL paste karo (https:// se start hona chahiye)');
+    return;
+  }
+  if (url) {
+    savedUrls[sku] = url;
+  } else {
+    delete savedUrls[sku];
+  }
+  saveProgress();
+
+  const btn = document.getElementById('btn-' + sku);
+  const row = document.getElementById('row-' + sku);
+  if (url) {
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved';
+    row.classList.add('done');
+    livePreview(sku);
+  } else {
+    btn.classList.remove('saved');
+    btn.textContent = 'Save';
+    row.classList.remove('done');
+    document.getElementById('img-' + sku).classList.remove('shown');
+  }
+}
+
+function clearAll() {
+  if (!confirm('Saari image URLs delete karna chahte ho?')) return;
+  savedUrls = {};
+  localStorage.removeItem(STORAGE_KEY);
+  renderProducts();
+  updateStats();
+}
+
+function downloadCSV() {
+  const done = Object.keys(savedUrls).filter(k => savedUrls[k]).length;
+  if (done === 0) {
+    alert('Pehle kuch products ke liye URLs save karo!');
+    return;
+  }
+  if (done < PRODUCTS.length) {
+    if (!confirm(`Sirf ${done} / ${PRODUCTS.length} products done hain. Phir bhi CSV download karna hai?`)) {
+      return;
+    }
+  }
+
+  const headers = ['SKU', 'Name', 'Categories', 'Regular price', 'Sale price', 'Tax status', 'In stock?', 'Short description', 'Description', 'Images'];
+  const rows = [headers];
+
+  // Default prices map per category
+  const defaultPrices = {
+    'Fruits':           { reg: 100, sale: 80 },
+    'Root Vegetables':  { reg: 50,  sale: 40 },
+    'Green Vegetables': { reg: 60,  sale: 50 },
+    'Herbs & Leafy':    { reg: 60,  sale: 50 },
+    'Exotic & Packed':  { reg: 140, sale: 120 }
+  };
+
+  PRODUCTS.forEach(p => {
+    const url = savedUrls[p.sku] || '';
+    const dp = defaultPrices[p.cat] || { reg: 60, sale: 50 };
+    rows.push([
+      p.sku,
+      p.name,
+      p.cat,
+      dp.reg,
+      dp.sale,
+      'taxable',
+      1,
+      `Fresh ${p.name} - ${p.unit}`,
+      `Farm-fresh ${p.name} delivered to your doorstep. 100% quality guarantee.`,
+      url
+    ]);
+  });
+
+  const csv = rows.map(row =>
+    row.map(cell => {
+      const s = String(cell == null ? '' : cell);
+      if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    }).join(',')
+  ).join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'hariyalibasket-products-with-images.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  alert(`✅ CSV download ho gaya!\n\nAb WordPress mein jao:\nProducts → Import → CSV upload karo`);
+}
+
+// Init
+renderProducts();
+updateStats();
+</script>
+
+</body>
+</html>
