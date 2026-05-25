@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HariyaliBasket — Preview with Real Images</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+    background: #0a1a0e;
+    color: #fff;
+    min-height: 100vh;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a4d2e, #0f2d18);
+    padding: 24px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(142,212,106,0.3);
+  }
+  .header h1 { color: #f4a228; font-size: 24px; margin-bottom: 4px; }
+  .header .sub { color: #8ed46a; font-size: 12px; letter-spacing: 1px; }
+  .header .info {
+    background: rgba(244,162,40,0.15);
+    border: 1px solid #f4a228;
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #f4d28a;
+    font-size: 12px;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 14px auto 0;
+    text-align: left;
+  }
+  .header .info b { color: #f4a228; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  .stats-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    justify-content: center;
+  }
+  .stat {
+    background: #0f2d18;
+    border: 1px solid rgba(142,212,106,0.2);
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #8ed46a;
+  }
+  .stat strong { color: #f4a228; }
+
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    background: #1a4d2e;
+    color: #8ed46a;
+    border: 2px solid transparent;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+  .filter-btn.active {
+    background: #f4a228;
+    color: #fff;
+    border-color: #f4a228;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .prod-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px;
+    color: #1a1a1a;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+  .prod-card:hover { transform: translateY(-3px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+
+  .prod-img-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #f5f5f5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .prod-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+  }
+  .prod-card:hover .prod-img-wrap img { transform: scale(1.08); }
+
+  .prod-img-wrap .loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    font-size: 24px;
+    color: #999;
+  }
+  .prod-img-wrap.error {
+    background: #ffebee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #c62828;
+    font-size: 11px;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .source-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: 800;
+    color: #fff;
+    z-index: 2;
+  }
+  .source-badge.pexels { background: #05a081; }
+  .source-badge.wiki { background: #3366cc; }
+
+  .sku-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: rgba(26,77,46,0.9);
+    color: #8ed46a;
+    font-size: 8px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: 800;
+    z-index: 2;
+  }
+
+  .prod-name {
+    font-size: 12px;
+    font-weight: 800;
+    color: #1a4d2e;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    min-height: 32px;
+  }
+  .prod-cat {
+    font-size: 9px;
+    color: #f4a228;
+    font-weight: 700;
+    background: #fff8e1;
+    padding: 2px 6px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+  .prod-unit {
+    font-size: 10px;
+    color: #888;
+  }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal.shown { display: flex; }
+  .modal-content {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 100%;
+    overflow: hidden;
+    color: #1a1a1a;
+  }
+  .modal-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: #f5f5f5;
+  }
+  .modal-body { padding: 16px; }
+  .modal-body h2 { color: #1a4d2e; font-size: 18px; margin-bottom: 8px; }
+  .modal-body p { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 6px; }
+  .modal-close {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .prod-name { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌿 HariyaliBasket — Image Preview</h1>
+  <div class="sub">Saari 71 photos — bilkul vaisi jo download hongi</div>
+  <div class="info">
+    <b>📋 Ye Kya Hai?</b><br>
+    Ye preview hai aapki <code>hb-permanent-image-downloader.php</code> script ka.
+    Saari Pexels/Wikipedia images yahaan dikh rahi hain — <b>bilkul vaisi jaisi aapki website pe download hone ke baad dikhengi.</b><br>
+    💡 Click karke kisi bhi product ko zoom mein dekho. Agar koi image accha nahi laga toh script mein URL change kar sakte ho.
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="stats-bar">
+    <div class="stat">Total: <strong id="stat-total">71</strong></div>
+    <div class="stat">✅ Loaded: <strong id="stat-loaded">0</strong></div>
+    <div class="stat">❌ Failed: <strong id="stat-failed">0</strong></div>
+    <div class="stat">📸 Pexels: <strong>54</strong></div>
+    <div class="stat">📚 Wikipedia: <strong>17</strong></div>
+  </div>
+
+  <div class="filter-bar" id="filter-bar"></div>
+
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<div class="modal" id="modal" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <img id="modal-img" class="modal-img" src="" alt="">
+    <div class="modal-body">
+      <h2 id="modal-name">—</h2>
+      <p><b>SKU:</b> <span id="modal-sku">—</span></p>
+      <p><b>Category:</b> <span id="modal-cat">—</span></p>
+      <p><b>Unit:</b> <span id="modal-unit">—</span></p>
+      <p><b>Source:</b> <span id="modal-src">—</span></p>
+      <p style="font-size:11px;word-break:break-all"><b>URL:</b> <a id="modal-url" href="#" target="_blank" style="color:#1a4d2e">—</a></p>
+      <button class="modal-close" onclick="closeModal()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRODUCTS = [
+  // FRUITS
+  {sku:'HB-FR-001',name:'Apple Green Imp.',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/9427265/pexels-photo-9427265.jpeg'},
+  {sku:'HB-FR-002',name:'Apple Himachal',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/34844892/pexels-photo-34844892.jpeg'},
+  {sku:'HB-FR-003',name:'Apple Imp.',cat:'Fruits',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Pink_lady_and_cross_section.jpg/960px-Pink_lady_and_cross_section.jpg'},
+  {sku:'HB-FR-004',name:'Avocado Local',cat:'Fruits',unit:'per Pc',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Persea_americana_fruit_2.JPG/960px-Persea_americana_fruit_2.JPG'},
+  {sku:'HB-FR-005',name:'Banana',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/6848574/pexels-photo-6848574.jpeg'},
+  {sku:'HB-FR-006',name:'Chikoo',cat:'Fruits',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/%E0%B4%B8%E0%B4%AA%E0%B5%8D%E0%B4%AA%E0%B5%8B%E0%B4%9F%E0%B5%8D%E0%B4%9F.jpg/960px-%E0%B4%B8%E0%B4%AA%E0%B5%8D%E0%B4%AA%E0%B5%8B%E0%B4%9F%E0%B5%8D%E0%B4%9F.jpg'},
+  {sku:'HB-FR-007',name:'Coconut Dhab',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/34528211/pexels-photo-34528211.jpeg'},
+  {sku:'HB-FR-008',name:'Coconut Fresh',cat:'Fruits',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Cocos_nucifera_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-187.jpg/960px-Cocos_nucifera_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-187.jpg'},
+  {sku:'HB-FR-009',name:'Dragon Fruit',cat:'Fruits',unit:'per Pc',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Pitaya_cross_section_ed2.jpg/960px-Pitaya_cross_section_ed2.jpg'},
+  {sku:'HB-FR-010',name:'Guava (Desi)',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/8668727/pexels-photo-8668727.jpeg'},
+  {sku:'HB-FR-011',name:'Guava Imp.',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/5945840/pexels-photo-5945840.jpeg'},
+  {sku:'HB-FR-012',name:'Jamun',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/37043794/pexels-photo-37043794.jpeg'},
+  {sku:'HB-FR-013',name:'Kiwi Fresh',cat:'Fruits',unit:'per Pc',url:'https://images.pexels.com/photos/6411505/pexels-photo-6411505.jpeg'},
+  {sku:'HB-FR-014',name:'Mango Alphonso',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/4687187/pexels-photo-4687187.jpeg'},
+  {sku:'HB-FR-015',name:'Mango Langra',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/33079558/pexels-photo-33079558.jpeg'},
+  {sku:'HB-FR-016',name:'Mango Safeda',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/37744364/pexels-photo-37744364.jpeg'},
+  {sku:'HB-FR-017',name:'Papaya Fresh',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/28613331/pexels-photo-28613331.jpeg'},
+  {sku:'HB-FR-018',name:'Pineapple Fresh',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/12471181/pexels-photo-12471181.jpeg'},
+  {sku:'HB-FR-019',name:'Pomegranate (Anar)',cat:'Fruits',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pomegranate_Juice_%282019%29.jpg/960px-Pomegranate_Juice_%282019%29.jpg'},
+  {sku:'HB-FR-020',name:'Raw Papaya',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/13306351/pexels-photo-13306351.jpeg'},
+  {sku:'HB-FR-021',name:'Sweet Lime (Mosambi)',cat:'Fruits',unit:'per Kg',url:'https://images.pexels.com/photos/16105462/pexels-photo-16105462.jpeg'},
+  {sku:'HB-FR-022',name:'Watermelon (3-4 Kg)',cat:'Fruits',unit:'per Pc',url:'https://images.pexels.com/photos/15975999/pexels-photo-15975999.jpeg'},
+  // ROOT VEGETABLES
+  {sku:'HB-RV-001',name:'Beetroot',cat:'Root Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Detroitdarkredbeets.png/960px-Detroitdarkredbeets.png'},
+  {sku:'HB-RV-002',name:'Carrot',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/1306559/pexels-photo-1306559.jpeg'},
+  {sku:'HB-RV-003',name:'Garlic',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/12955789/pexels-photo-12955789.jpeg'},
+  {sku:'HB-RV-004',name:'Garlic Peeled',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/750948/pexels-photo-750948.jpeg'},
+  {sku:'HB-RV-005',name:'Ginger',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/7657087/pexels-photo-7657087.jpeg'},
+  {sku:'HB-RV-006',name:'Onion',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/12999831/pexels-photo-12999831.jpeg'},
+  {sku:'HB-RV-007',name:'Onion Small',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/34961607/pexels-photo-34961607.jpeg'},
+  {sku:'HB-RV-008',name:'Potato',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/144248/potatoes-vegetables-erdfrucht-bio-144248.jpeg'},
+  {sku:'HB-RV-009',name:'Potato Small',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/35595249/pexels-photo-35595249.jpeg'},
+  {sku:'HB-RV-010',name:'Raw Mango',cat:'Root Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/37490138/pexels-photo-37490138.jpeg'},
+  {sku:'HB-RV-011',name:'Red Potato',cat:'Root Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Patates.jpg/960px-Patates.jpg'},
+  // VEGETABLES
+  {sku:'HB-VG-001',name:'Arbi (Colocasia)',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/7543152/pexels-photo-7543152.jpeg'},
+  {sku:'HB-VG-002',name:'Baby Corn Fresh',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/a/a1/Baby_corn.jpg'},
+  {sku:'HB-VG-003',name:'Bitter Gourd (Karela)',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/28909474/pexels-photo-28909474.jpeg'},
+  {sku:'HB-VG-004',name:'Bottle Gourd (Lauki)',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/a/a2/Courge_encore_verte.jpg'},
+  {sku:'HB-VG-005',name:'Brinjal (Baingan)',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Solanum_melongena_24_08_2012_%281%29.JPG/960px-Solanum_melongena_24_08_2012_%281%29.JPG'},
+  {sku:'HB-VG-006',name:'Broccoli',cat:'Exotic & Packed',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Broccoli_and_cross_section_edit.jpg/960px-Broccoli_and_cross_section_edit.jpg'},
+  {sku:'HB-VG-007',name:'Cabbage Green',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/37404971/pexels-photo-37404971.jpeg'},
+  {sku:'HB-VG-008',name:'Capsicum Green',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/36935461/pexels-photo-36935461.jpeg'},
+  {sku:'HB-VG-009',name:'Cauliflower',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Chou-fleur_02.jpg/960px-Chou-fleur_02.jpg'},
+  {sku:'HB-VG-010',name:'Chola Fali',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/17975550/pexels-photo-17975550.jpeg'},
+  {sku:'HB-VG-011',name:'Corn (Bhutta)',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/7/79/VegCorn.jpg'},
+  {sku:'HB-VG-012',name:'Cucumber Chinese',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/17975573/pexels-photo-17975573.jpeg'},
+  {sku:'HB-VG-013',name:'Curry Leaves',cat:'Herbs & Leafy',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Curry_Trees.jpg/960px-Curry_Trees.jpg'},
+  {sku:'HB-VG-014',name:'Drumsticks (Sahjan)',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/20466259/pexels-photo-20466259.jpeg'},
+  {sku:'HB-VG-015',name:'French Beans',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Heaps_of_beans.jpg/960px-Heaps_of_beans.jpg'},
+  {sku:'HB-VG-016',name:'Green Chilli',cat:'Herbs & Leafy',unit:'per Kg',url:'https://images.pexels.com/photos/10899475/pexels-photo-10899475.jpeg'},
+  {sku:'HB-VG-017',name:'Green Chilli (Hot)',cat:'Herbs & Leafy',unit:'per Kg',url:'https://images.pexels.com/photos/5678084/pexels-photo-5678084.jpeg'},
+  {sku:'HB-VG-018',name:'Guar Phali',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/9/9b/Cluster_bean-guar-Cyamopsis_psoralioides-Cyamopsis_tetragonolobus-TAMIL_NADU73.jpg'},
+  {sku:'HB-VG-019',name:'Jackfruit (Kathal)',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/The_jackfruit_is_holding_on_to_the_tree.jpg/960px-The_jackfruit_is_holding_on_to_the_tree.jpg'},
+  {sku:'HB-VG-020',name:'Kachri',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/30876616/pexels-photo-30876616.jpeg'},
+  {sku:'HB-VG-021',name:'Kakri',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/21644440/pexels-photo-21644440.jpeg'},
+  {sku:'HB-VG-022',name:'Lady Finger (Bhindi)',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Hong_Kong_Okra_Aug_25_2012.JPG/960px-Hong_Kong_Okra_Aug_25_2012.JPG'},
+  {sku:'HB-VG-023',name:'Lettuce Green',cat:'Exotic & Packed',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Iceberg_lettuce_in_SB.jpg/960px-Iceberg_lettuce_in_SB.jpg'},
+  {sku:'HB-VG-024',name:'Parwal',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Pointed_gourd.jpg/960px-Pointed_gourd.jpg'},
+  {sku:'HB-VG-025',name:'Red Capsicum',cat:'Exotic & Packed',unit:'per Kg',url:'https://images.pexels.com/photos/34997142/pexels-photo-34997142.jpeg'},
+  {sku:'HB-VG-026',name:'Red Pumpkin',cat:'Green Vegetables',unit:'per Kg',url:'https://images.pexels.com/photos/18509545/pexels-photo-18509545.jpeg'},
+  {sku:'HB-VG-027',name:'Spinach (Palak)',cat:'Herbs & Leafy',unit:'per Kg',url:'https://images.pexels.com/photos/11064917/pexels-photo-11064917.jpeg'},
+  {sku:'HB-VG-028',name:'Spring Onion',cat:'Herbs & Leafy',unit:'per Kg',url:'https://images.pexels.com/photos/7456538/pexels-photo-7456538.jpeg'},
+  {sku:'HB-VG-029',name:'Tinda',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/8/80/Tinda.jpg'},
+  {sku:'HB-VG-030',name:'Tomato',cat:'Green Vegetables',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tomato_je.jpg/960px-Tomato_je.jpg'},
+  {sku:'HB-VG-031',name:'Yellow Capsicum',cat:'Exotic & Packed',unit:'per Kg',url:'https://images.pexels.com/photos/32934476/pexels-photo-32934476.jpeg'},
+  {sku:'HB-VG-032',name:'Zucchini Green/Yellow',cat:'Exotic & Packed',unit:'per Kg',url:'https://images.pexels.com/photos/13656392/pexels-photo-13656392.jpeg'},
+  {sku:'HB-VG-033',name:'Mushroom Fresh 200g',cat:'Exotic & Packed',unit:'per Packet',url:'https://images.pexels.com/photos/5950405/pexels-photo-5950405.jpeg'},
+  // HERBS
+  {sku:'HB-HR-001',name:'Banana Leaf',cat:'Herbs & Leafy',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Banana-leaf-1.JPG/960px-Banana-leaf-1.JPG'},
+  {sku:'HB-HR-002',name:'Coriander',cat:'Herbs & Leafy',unit:'per Kg',url:'https://upload.wikimedia.org/wikipedia/commons/1/13/Coriandrum_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-193.jpg'},
+  {sku:'HB-HR-003',name:'Coriander Fresh',cat:'Herbs & Leafy',unit:'per Kg',url:'https://images.pexels.com/photos/12178852/pexels-photo-12178852.jpeg'},
+  {sku:'HB-HR-004',name:'Lemon (Nimbu)',cat:'Herbs & Leafy',unit:'per Kg',url:'https://images.pexels.com/photos/37113424/pexels-photo-37113424.jpeg'},
+  {sku:'HB-HR-005',name:'Mint (Pudina)',cat:'Herbs & Leafy',unit:'per Kg',url:'https://images.pexels.com/photos/12717629/pexels-photo-12717629.jpeg'},
+];
+
+const CATS = [
+  { name: 'all', label: '🛒 All (' + PRODUCTS.length + ')' },
+  { name: 'Fruits', label: '🍉 Fruits' },
+  { name: 'Root Vegetables', label: '🥕 Root Veg' },
+  { name: 'Green Vegetables', label: '🥬 Green Veg' },
+  { name: 'Herbs & Leafy', label: '🌿 Herbs' },
+  { name: 'Exotic & Packed', label: '🍄 Exotic' },
+];
+
+let currentCat = 'all';
+let loaded = 0, failed = 0;
+
+function getSource(url) {
+  if (url.includes('pexels.com')) return 'pexels';
+  if (url.includes('wikimedia.org')) return 'wiki';
+  return 'other';
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function buildFilters() {
+  const bar = document.getElementById('filter-bar');
+  bar.innerHTML = CATS.map(c => {
+    const count = c.name === 'all' ? PRODUCTS.length : PRODUCTS.filter(p => p.cat === c.name).length;
+    return `<button class="filter-btn ${c.name === 'all' ? 'active' : ''}" onclick="setCat('${c.name}')">${c.label} (${count})</button>`;
+  }).join('');
+}
+
+function setCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  render();
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  const items = currentCat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === currentCat);
+
+  grid.innerHTML = items.map((p, i) => {
+    const src = getSource(p.url);
+    return `
+      <div class="prod-card" onclick="showModal('${p.sku}')">
+        <div class="prod-img-wrap" id="wrap-${p.sku}">
+          <span class="sku-badge">${p.sku}</span>
+          <span class="source-badge ${src}">${src === 'pexels' ? '📸 Pexels' : '📚 Wiki'}</span>
+          <img src="${escapeHtml(p.url)}" alt="${escapeHtml(p.name)}"
+               onload="onLoad('${p.sku}')" onerror="onError('${p.sku}')"
+               loading="lazy">
+        </div>
+        <div class="prod-name">${escapeHtml(p.name)}</div>
+        <div class="prod-cat">${escapeHtml(p.cat)}</div>
+        <div class="prod-unit">${escapeHtml(p.unit)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function onLoad(sku) {
+  loaded++;
+  document.getElementById('stat-loaded').textContent = loaded;
+}
+
+function onError(sku) {
+  failed++;
+  document.getElementById('stat-failed').textContent = failed;
+  const wrap = document.getElementById('wrap-' + sku);
+  if (wrap) {
+    wrap.classList.add('error');
+    wrap.innerHTML = '<span class="sku-badge">' + sku + '</span>❌<br>Image load failed';
+  }
+}
+
+function showModal(sku) {
+  const p = PRODUCTS.find(x => x.sku === sku);
+  if (!p) return;
+  document.getElementById('modal-img').src = p.url;
+  document.getElementById('modal-name').textContent = p.name;
+  document.getElementById('modal-sku').textContent = p.sku;
+  document.getElementById('modal-cat').textContent = p.cat;
+  document.getElementById('modal-unit').textContent = p.unit;
+  document.getElementById('modal-src').textContent = getSource(p.url) === 'pexels' ? '📸 Pexels' : '📚 Wikipedia';
+  const a = document.getElementById('modal-url');
+  a.href = p.url;
+  a.textContent = p.url;
+  document.getElementById('modal').classList.add('shown');
+}
+
+function closeModal(e) {
+  if (e && e.target.id !== 'modal') return;
+  document.getElementById('modal').classList.remove('shown');
+}
+
+buildFilters();
+render();
+</script>
+
+</body>
+</html>
