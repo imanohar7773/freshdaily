@@ -1,0 +1,72 @@
+SKU,Name,Categories,Regular price,Sale price,Tax status,In stock?,Stock,Weight (kg),Short description,Description,Unit,Emoji,Type
+HB-FR-001,Apple Green Imp.,Fruits,250,220,taxable,1,,,Imported green apple - crisp & tangy,"Premium imported green apples - perfect for snacking and salads. 100% fresh, hand-picked.",per Kg,🍏,simple
+HB-FR-002,Apple Himachal,Fruits,200,180,taxable,1,,,Fresh Himachal red apples,"Sweet & juicy Himachal apples - direct from orchards. Rich in fiber and antioxidants.",per Kg,🍎,simple
+HB-FR-003,Apple Imp.,Fruits,280,250,taxable,1,,,Imported premium apples,"Premium imported apples - extra crisp and sweet. Perfect for kids' lunchbox.",per Kg,🍎,simple
+HB-FR-004,Avocado Local,Fruits,80,70,taxable,1,,,Fresh local avocado,"Creamy local avocados - rich in healthy fats. Perfect for toast, salads, and shakes.",per Pc,🥑,simple
+HB-FR-005,Banana,Fruits,60,50,taxable,1,,,Sweet ripe bananas,"Farm-fresh ripe bananas - natural energy boost. Ideal for breakfast and post-workout.",per Kg,🍌,simple
+HB-FR-006,Chikoo,Fruits,80,70,taxable,1,,,Sweet sapota (chikoo),"Naturally sweet chikoo - rich source of fiber. Hand-picked at perfect ripeness.",per Kg,🟤,simple
+HB-FR-007,Coconut Dhab,Fruits,60,50,taxable,1,,,Tender coconut water,"Fresh tender coconut - natural electrolyte drink. Perfect for hot summer days.",per Kg,🥥,simple
+HB-FR-008,Coconut Fresh,Fruits,50,45,taxable,1,,,Whole fresh coconut,"Whole fresh coconut - perfect for cooking and pooja. Naturally cracked daily.",per Kg,🥥,simple
+HB-FR-009,Dragon Fruit,Fruits,120,100,taxable,1,,,Exotic dragon fruit,"Vibrant pink dragon fruit - exotic & nutritious. Rich in vitamin C and fiber.",per Pc,🐉,simple
+HB-FR-010,Guava (Desi),Fruits,80,70,taxable,1,,,Sweet desi guava,"Local desi guava - sweet & fragrant. Loaded with vitamin C.",per Kg,🍈,simple
+HB-FR-011,Guava Imp.,Fruits,140,120,taxable,1,,,Premium imported guava,"Imported premium guava - extra sweet pulp. Soft and juicy texture.",per Kg,🍈,simple
+HB-FR-012,Jamun,Fruits,200,180,taxable,1,,,Fresh seasonal jamun,"Fresh jamun - good for diabetes. Tangy-sweet seasonal fruit.",per Kg,🫐,simple
+HB-FR-013,Kiwi Fresh,Fruits,40,35,taxable,1,,,Fresh kiwi fruit,"Imported fresh kiwi - vitamin C powerhouse. Boost your immunity daily.",per Pc,🥝,simple
+HB-FR-014,Mango Alphonso,Fruits,400,350,taxable,1,,,King of mangoes - Alphonso,"Premium Alphonso mangoes from Ratnagiri - the king of mangoes. Sweet aromatic pulp.",per Kg,🥭,simple
+HB-FR-015,Mango Langra,Fruits,180,160,taxable,1,,,Sweet UP Langra mango,"Famous Langra mangoes from UP - juicy and pulpy. Perfect for shakes.",per Kg,🥭,simple
+HB-FR-016,Mango Safeda,Fruits,150,130,taxable,1,,,Sweet Safeda mango,"Sweet Safeda mangoes - mild flavor, smooth texture. Great for kids.",per Kg,🥭,simple
+HB-FR-017,Papaya Fresh,Fruits,60,50,taxable,1,,,Ripe sweet papaya,"Ripe orange papaya - good for digestion. Rich in papain and vitamins.",per Kg,🍈,simple
+HB-FR-018,Pineapple Fresh,Fruits,80,70,taxable,1,,,Sweet juicy pineapple,"Sweet pineapple - tangy and refreshing. Great in juices and salads.",per Kg,🍍,simple
+HB-FR-019,Pomegranate (Anar),Fruits,180,160,taxable,1,,,Fresh red anar,"Fresh anar - ruby red juicy seeds. Boosts blood and immunity.",per Kg,🍑,simple
+HB-FR-020,Raw Papaya,Fruits,40,35,taxable,1,,,Green raw papaya,"Raw green papaya - perfect for sabzi and thai salad. Aids digestion.",per Kg,🟢,simple
+HB-FR-021,Sweet Lime (Mosambi),Fruits,80,70,taxable,1,,,Sweet mosambi,"Fresh mosambi - refreshing juice. Rich in vitamin C.",per Kg,🍋,simple
+HB-FR-022,Watermelon (3-4 Kg),Fruits,80,60,taxable,1,,,Whole 3-4 kg watermelon,"Whole watermelon (3-4 kg) - perfect summer hydration. Sweet red flesh.",per Pc,🍉,simple
+HB-RV-001,Beetroot,Root Vegetables,60,50,taxable,1,,,Fresh red beetroot,"Fresh beetroot - boosts blood and stamina. Perfect for juices and salads.",per Kg,🫀,simple
+HB-RV-002,Carrot,Root Vegetables,50,40,taxable,1,,,Fresh orange carrots,"Sweet farm fresh carrots - rich in vitamin A. Great for salads, juices, sabzi.",per Kg,🥕,simple
+HB-RV-003,Garlic,Root Vegetables,200,180,taxable,1,,,Fresh whole garlic,"Fresh whole garlic - aromatic and flavorful. Essential for Indian cooking.",per Kg,🧄,simple
+HB-RV-004,Garlic Peeled,Root Vegetables,300,280,taxable,1,,,Pre-peeled garlic - time saver,"Ready-to-use peeled garlic - saves cooking time. Hygienically packed.",per Kg,🧄,simple
+HB-RV-005,Ginger,Root Vegetables,120,100,taxable,1,,,Fresh ginger root,"Fresh ginger - essential for tea and tadka. Boosts immunity.",per Kg,🫚,simple
+HB-RV-006,Onion,Root Vegetables,40,35,taxable,1,,,Fresh red onions,"Farm fresh red onions - daily essential. Perfect size for cooking.",per Kg,🧅,simple
+HB-RV-007,Onion Small,Root Vegetables,80,70,taxable,1,,,Sambar onions,"Small sambar onions - perfect for South Indian cooking and pickles.",per Kg,🧅,simple
+HB-RV-008,Potato,Root Vegetables,30,25,taxable,1,,,Fresh aloo,"Fresh farm potatoes - daily essential. Perfect for sabzi, fries, and curries.",per Kg,🥔,simple
+HB-RV-009,Potato Small,Root Vegetables,50,40,taxable,1,,,Baby potato (small aloo),"Baby potatoes - perfect for dum aloo and tikka. Tender and flavorful.",per Kg,🥔,simple
+HB-RV-010,Raw Mango,Root Vegetables,80,70,taxable,1,,,Green kacha aam,"Raw green mango - perfect for chutney, pickle, and aam panna.",per Kg,🥭,simple
+HB-RV-011,Red Potato,Root Vegetables,50,40,taxable,1,,,Premium red skin potato,"Red skin potatoes - smooth and creamy. Great for roasting and salads.",per Kg,🥔,simple
+HB-VG-001,Arbi (Colocasia),Green Vegetables,60,50,taxable,1,,,Fresh arbi,"Fresh arbi - perfect for sukha sabzi and besan curry. Earthy flavor.",per Kg,🥔,simple
+HB-VG-002,Baby Corn Fresh,Green Vegetables,120,100,taxable,1,,,Tender baby corn,"Fresh baby corn - perfect for stir-fry, manchurian, and salads.",per Kg,🌽,simple
+HB-VG-003,Bitter Gourd (Karela),Green Vegetables,60,50,taxable,1,,,Fresh karela,"Fresh karela - excellent for diabetes. Bitter but healthy.",per Kg,🥒,simple
+HB-VG-004,Bottle Gourd (Lauki),Green Vegetables,40,30,taxable,1,,,Fresh lauki,"Fresh lauki - light and digestible. Perfect for sabzi, kofta, and juice.",per Kg,🥒,simple
+HB-VG-005,Brinjal (Baingan),Green Vegetables,50,40,taxable,1,,,Fresh purple baingan,"Fresh brinjal - perfect for bharta, sabzi, and curry. Multiple varieties.",per Kg,🍆,simple
+HB-VG-006,Broccoli,Exotic & Packed,140,120,taxable,1,,,Fresh green broccoli,"Fresh broccoli - superfood loaded with vitamins. Great in stir-fry and pasta.",per Kg,🥦,simple
+HB-VG-007,Cabbage Green,Green Vegetables,40,30,taxable,1,,,Fresh green cabbage,"Fresh patta gobhi - perfect for sabzi, salad, and chowmein.",per Kg,🥬,simple
+HB-VG-008,Capsicum Green,Green Vegetables,80,70,taxable,1,,,Fresh green capsicum,"Fresh green capsicum - crunchy and aromatic. Perfect for stir-fry and stuffing.",per Kg,🫑,simple
+HB-VG-009,Cauliflower,Green Vegetables,50,40,taxable,1,,,Fresh phool gobhi,"Fresh cauliflower - tight white florets. Perfect for aloo gobhi and pakora.",per Kg,🥦,simple
+HB-VG-010,Chola Fali,Green Vegetables,80,70,taxable,1,,,Fresh chola fali (chawla),"Fresh chola fali - tender beans. Traditional Rajasthani sabzi favorite.",per Kg,🫘,simple
+HB-VG-011,Corn (Bhutta),Green Vegetables,60,50,taxable,1,,,Fresh sweet corn,"Fresh corn (bhutta) - sweet and juicy. Perfect roasted with butter.",per Kg,🌽,simple
+HB-VG-012,Cucumber Chinese,Green Vegetables,50,40,taxable,1,,,Long Chinese cucumber,"Long Chinese cucumber - crunchy and seedless. Perfect for salads and raita.",per Kg,🥒,simple
+HB-VG-013,Curry Leaves,Herbs & Leafy,80,60,taxable,1,,,Fresh kadi patta,"Fresh curry leaves - aromatic tadka essential. South Indian cooking must.",per Kg,🌿,simple
+HB-VG-014,Drumsticks (Sahjan),Green Vegetables,80,70,taxable,1,,,Fresh sahjan / moringa,"Fresh drumsticks - moringa pods. Perfect for sambar and dal.",per Kg,🌿,simple
+HB-VG-015,French Beans,Green Vegetables,80,70,taxable,1,,,Fresh french beans,"Fresh french beans - tender and crisp. Great in mix veg and stir-fry.",per Kg,🫘,simple
+HB-VG-016,Green Chilli,Herbs & Leafy,60,50,taxable,1,,,Fresh hari mirch,"Fresh green chillies - medium heat. Daily cooking essential.",per Kg,🌶️,simple
+HB-VG-017,Green Chilli (Hot),Herbs & Leafy,80,70,taxable,1,,,Extra hot green chilli,"Extra hot green chillies - for spice lovers. Use sparingly!",per Kg,🌶️,simple
+HB-VG-018,Guar Phali,Green Vegetables,80,70,taxable,1,,,Fresh cluster beans,"Fresh guar phali (cluster beans) - traditional Rajasthani favorite.",per Kg,🫘,simple
+HB-VG-019,Jackfruit (Kathal),Green Vegetables,80,70,taxable,1,,,Raw kathal,"Raw jackfruit - perfect for sabzi and biryani. Meaty texture.",per Kg,🍈,simple
+HB-VG-020,Kachri,Green Vegetables,200,180,taxable,1,,,Wild desert kachri,"Wild kachri - traditional Rajasthani delicacy. Tangy mild flavor.",per Kg,🥒,simple
+HB-VG-021,Kakri,Green Vegetables,40,30,taxable,1,,,Fresh kakri,"Fresh kakri - cooling cucumber-family vegetable. Great in salads.",per Kg,🥒,simple
+HB-VG-022,Lady Finger (Bhindi),Green Vegetables,60,50,taxable,1,,,Fresh tender bhindi,"Fresh tender bhindi - hand-picked daily. Perfect for sabzi and bhindi do pyaza.",per Kg,🫛,simple
+HB-VG-023,Lettuce Green,Exotic & Packed,120,100,taxable,1,,,Fresh iceberg lettuce,"Fresh green lettuce - crisp and crunchy. Perfect for burgers and salads.",per Kg,🥗,simple
+HB-VG-024,Parwal,Green Vegetables,80,70,taxable,1,,,Fresh parwal (pointed gourd),"Fresh parwal - traditional sabzi vegetable. Mild and easy to digest.",per Kg,🥒,simple
+HB-VG-025,Red Capsicum,Exotic & Packed,180,160,taxable,1,,,Sweet red bell pepper,"Sweet red capsicum - perfect for pasta, pizza, and salad. Sweeter than green.",per Kg,🌶️,simple
+HB-VG-026,Red Pumpkin,Green Vegetables,40,30,taxable,1,,,Sweet kaddu,"Sweet red pumpkin (kaddu) - perfect for sabzi, halwa, and soup.",per Kg,🎃,simple
+HB-VG-027,Spinach (Palak),Herbs & Leafy,40,30,taxable,1,,,Fresh palak bunches,"Fresh palak - iron-rich superfood. Perfect for palak paneer, dal, and juice.",per Kg,🥬,simple
+HB-VG-028,Spring Onion,Herbs & Leafy,50,40,taxable,1,,,Fresh hara pyaaz,"Fresh spring onion - perfect for chowmein, momos, and garnish.",per Kg,🧅,simple
+HB-VG-029,Tinda,Green Vegetables,60,50,taxable,1,,,Fresh tinda,"Fresh tinda (apple gourd) - light and digestible. Traditional sabzi.",per Kg,🥒,simple
+HB-VG-030,Tomato,Green Vegetables,40,30,taxable,1,,,Fresh red tomatoes,"Fresh ripe tomatoes - daily essential. Perfect for curry and salad.",per Kg,🍅,simple
+HB-VG-031,Yellow Capsicum,Exotic & Packed,180,160,taxable,1,,,Sweet yellow bell pepper,"Sweet yellow capsicum - perfect for stir-fry and salad. Mild and sweet.",per Kg,🌶️,simple
+HB-VG-032,Zucchini Green/Yellow,Exotic & Packed,140,120,taxable,1,,,Fresh zucchini,"Fresh zucchini (green/yellow) - perfect for stir-fry, pasta, and grilling.",per Kg,🥒,simple
+HB-VG-033,Mushroom Fresh 200g,Exotic & Packed,80,70,taxable,1,,,Button mushroom 200g pack,"Fresh button mushrooms - 200g hygienic pack. Perfect for sabzi and pizza.",per Packet,🍄,simple
+HB-HR-001,Banana Leaf,Herbs & Leafy,60,50,taxable,1,,,Fresh banana leaves,"Fresh banana leaves - for South Indian meals and pooja. Authentic dining.",per Kg,🍃,simple
+HB-HR-002,Coriander,Herbs & Leafy,40,30,taxable,1,,,Fresh dhaniya bunch,"Fresh coriander - aromatic garnish for every dish. Perfect for chutney.",per Kg,🌿,simple
+HB-HR-003,Coriander Fresh,Herbs & Leafy,40,30,taxable,1,,,Fresh hara dhaniya,"Fresh coriander leaves - extra fragrant. Daily cooking essential.",per Kg,🌿,simple
+HB-HR-004,Lemon (Nimbu),Herbs & Leafy,80,70,taxable,1,,,Fresh juicy lemons,"Fresh lemons - juicy and tangy. Perfect for nimbu pani, dal, and pickles.",per Kg,🍋,simple
+HB-HR-005,Mint (Pudina),Herbs & Leafy,60,50,taxable,1,,,Fresh pudina,"Fresh mint leaves - cooling and aromatic. Perfect for chutney, raita, and tea.",per Kg,🌿,simple

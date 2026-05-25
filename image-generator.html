@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HariyaliBasket — Product Image Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+    background: #0a1a0e;
+    color: #fff;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  .header { text-align: center; padding: 20px 0; }
+  .header h1 { color: #f4a228; font-size: 22px; margin-bottom: 4px; }
+  .header p { color: #8ed46a; font-size: 12px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .card {
+    background: #0f2d18; border-radius: 14px;
+    padding: 18px; margin-bottom: 16px;
+    border: 1px solid rgba(142,212,106,0.2);
+  }
+  .card h2 { color: #8ed46a; font-size: 14px; margin-bottom: 10px; letter-spacing: 0.5px; }
+  textarea {
+    width: 100%; min-height: 180px; padding: 12px;
+    background: #1a4d2e; border: 1px solid #2d6b42;
+    border-radius: 10px; color: #fff; font-size: 13px;
+    font-family: inherit; outline: none; resize: vertical;
+  }
+  textarea:focus { border-color: #8ed46a; }
+  .opts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px; margin-top: 10px;
+  }
+  .opt label {
+    display: block; font-size: 10px; color: #8ed46a;
+    font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px;
+  }
+  .opt select, .opt input {
+    width: 100%; padding: 9px 10px;
+    background: #1a4d2e; border: 1px solid #2d6b42;
+    border-radius: 8px; color: #fff; font-size: 12px;
+    font-family: inherit; outline: none;
+  }
+  .btn {
+    width: 100%; padding: 13px; border: none;
+    border-radius: 10px; font-size: 14px; font-weight: 800;
+    cursor: pointer; font-family: inherit; margin-top: 12px;
+  }
+  .btn-primary { background: #25d366; color: #fff; }
+  .btn-secondary { background: #f4a228; color: #fff; }
+  .btn-tertiary { background: #1a4d2e; color: #8ed46a; border: 1px solid #2d6b42; }
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px; margin-top: 12px;
+  }
+  .preview-item {
+    background: #1a4d2e; border-radius: 10px;
+    padding: 8px; text-align: center;
+  }
+  .preview-item canvas {
+    width: 100%; height: auto; border-radius: 8px;
+    display: block; background: #fff;
+  }
+  .preview-item .pname {
+    font-size: 11px; color: #8ed46a; margin-top: 6px;
+    font-weight: 700; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+  }
+  .preview-item .pdl {
+    margin-top: 6px; background: #25d366; color: #fff;
+    border: none; padding: 6px 10px; border-radius: 16px;
+    font-size: 10px; font-weight: 700; cursor: pointer; width: 100%;
+  }
+  .stats { color: #8ed46a; font-size: 11px; text-align: center; margin-top: 8px; }
+  .examples { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .example-tag {
+    background: #1a4d2e; color: #8ed46a;
+    padding: 6px 12px; border-radius: 16px;
+    font-size: 11px; cursor: pointer; border: 1px solid #2d6b42;
+  }
+  .example-tag:hover { background: #2d6b42; }
+  .actions-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-top: 10px;
+  }
+  .info-box {
+    background: rgba(244, 162, 40, 0.1);
+    border: 1px solid #f4a228; border-radius: 10px;
+    padding: 12px; color: #f4d28a; font-size: 12px;
+    line-height: 1.6; margin-top: 12px;
+  }
+  .info-box b { color: #f4a228; }
+  @media (max-width: 600px) {
+    .actions-row { grid-template-columns: 1fr; }
+    .preview-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>🌿 HariyaliBasket — Image Generator</h1>
+    <p>Har product ki professional emoji image — auto download!</p>
+  </div>
+
+  <div class="card">
+    <h2>📝 STEP 1 — Product Names Daalo</h2>
+    <textarea id="products" placeholder="Har line mein ek product likho:
+
+Aloo
+Pyaaz
+Tamatar
+Bhindi
+Gobhi
+Palak
+Mango
+Apple
+Banana"></textarea>
+
+    <div class="examples">
+      <span class="example-tag" onclick="loadExample('vegetables')">🥬 Vegetables</span>
+      <span class="example-tag" onclick="loadExample('fruits')">🍎 Fruits</span>
+      <span class="example-tag" onclick="loadExample('herbs')">🌿 Herbs</span>
+      <span class="example-tag" onclick="loadExample('all')">🌟 All Common</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎨 STEP 2 — Image Style Choose Karo</h2>
+
+    <div class="opts">
+      <div class="opt">
+        <label>Background Style</label>
+        <select id="bgStyle" onchange="renderAll()">
+          <option value="green-gradient">🌿 Green Gradient (Brand)</option>
+          <option value="white">⚪ White Clean</option>
+          <option value="cream">🟡 Cream Soft</option>
+          <option value="dark">⚫ Dark Premium</option>
+          <option value="rainbow">🌈 Colorful</option>
+        </select>
+      </div>
+      <div class="opt">
+        <label>Image Size</label>
+        <select id="imgSize" onchange="renderAll()">
+          <option value="512">512 × 512 (Square)</option>
+          <option value="800">800 × 800 (HD)</option>
+          <option value="1024">1024 × 1024 (Large)</option>
+          <option value="600x400">600 × 400 (Banner)</option>
+        </select>
+      </div>
+      <div class="opt">
+        <label>Emoji Size</label>
+        <select id="emojiSize" onchange="renderAll()">
+          <option value="0.55">Big</option>
+          <option value="0.45" selected>Medium</option>
+          <option value="0.35">Small</option>
+        </select>
+      </div>
+      <div class="opt">
+        <label>Show Brand Watermark</label>
+        <select id="showBrand" onchange="renderAll()">
+          <option value="yes" selected>Haan</option>
+          <option value="no">Nahi</option>
+        </select>
+      </div>
+      <div class="opt">
+        <label>Show Fresh Badge</label>
+        <select id="showBadge" onchange="renderAll()">
+          <option value="yes" selected>Haan (✓ Fresh)</option>
+          <option value="no">Nahi</option>
+        </select>
+      </div>
+      <div class="opt">
+        <label>Show Product Name</label>
+        <select id="showName" onchange="renderAll()">
+          <option value="yes" selected>Haan</option>
+          <option value="no">Sirf Emoji</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="renderAll()">🎨 Images Generate Karo</button>
+  </div>
+
+  <div class="card" id="preview-card" style="display:none">
+    <h2>📥 STEP 3 — Download Karo</h2>
+    <div class="actions-row">
+      <button class="btn btn-secondary" onclick="downloadAll(event)" style="margin-top:0">📦 Download ALL (ZIP)</button>
+      <button class="btn btn-tertiary" onclick="renderAll()" style="margin-top:0">🔄 Re-Generate</button>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="preview-grid" id="preview-grid"></div>
+
+    <div class="info-box">
+      <b>💡 WordPress Mein Kaise Use Karein:</b><br>
+      1. Sab images download karo (ZIP)<br>
+      2. ZIP extract karo<br>
+      3. WordPress Admin → <b>Media → Add New</b> → sab images upload<br>
+      4. Product edit karte time "Featured Image" se select kar lo<br>
+      5. Bas! Aapke products pe sundar emoji images dikhne lagengi 🎉
+    </div>
+  </div>
+
+</div>
+
+<script>
+const EMOJI_MAP = {
+  'apple': '🍎', 'green apple': '🍏', 'pear': '🍐', 'orange': '🍊',
+  'mango': '🥭', 'banana': '🍌', 'watermelon': '🍉', 'tarbuj': '🍉',
+  'pomegranate': '🍑', 'anar': '🍑', 'guava': '🍈', 'amrood': '🍈',
+  'papaya': '🍈', 'papita': '🍈', 'pineapple': '🍍', 'ananas': '🍍',
+  'coconut': '🥥', 'nariyal': '🥥', 'kiwi': '🥝', 'avocado': '🥑',
+  'dragon fruit': '🐉', 'chikoo': '🟤', 'sapota': '🟤', 'jamun': '🫐',
+  'blueberry': '🫐', 'lime': '🍋', 'mosambi': '🍋', 'lemon': '🍋',
+  'nimbu': '🍋', 'cherry': '🍒', 'grapes': '🍇', 'angoor': '🍇',
+  'strawberry': '🍓', 'peach': '🍑', 'plum': '🍑', 'aloo bukhara': '🍑',
+  'litchi': '🍒', 'lychee': '🍒', 'fig': '🟣', 'anjeer': '🟣',
+  'dates': '🟫', 'khajur': '🟫', 'raw mango': '🥭', 'kacha aam': '🥭',
+  'tender coconut': '🥥', 'sitaphal': '🥬', 'custard apple': '🥬',
+  'jackfruit': '🍈', 'kathal': '🍈',
+
+  'potato': '🥔', 'aloo': '🥔', 'sweet potato': '🍠', 'shakarkand': '🍠',
+  'onion': '🧅', 'pyaaz': '🧅', 'pyaz': '🧅', 'red onion': '🧅',
+  'garlic': '🧄', 'lahsun': '🧄', 'lasun': '🧄', 'ginger': '🫚',
+  'adrak': '🫚', 'carrot': '🥕', 'gajar': '🥕', 'beetroot': '🫀',
+  'chukandar': '🫀', 'radish': '🥕', 'mooli': '🥕', 'turnip': '🥕',
+  'shalgam': '🥕', 'arbi': '🥔', 'colocasia': '🥔', 'yam': '🥔',
+  'jimikand': '🥔',
+
+  'tomato': '🍅', 'tamatar': '🍅', 'capsicum': '🫑', 'shimla mirch': '🫑',
+  'green capsicum': '🫑', 'red capsicum': '🌶️', 'yellow capsicum': '🌶️',
+  'broccoli': '🥦', 'cauliflower': '🥦', 'gobhi': '🥦', 'phool gobhi': '🥦',
+  'cabbage': '🥬', 'patta gobhi': '🥬', 'corn': '🌽',
+  'bhutta': '🌽', 'makka': '🌽', 'mushroom': '🍄', 'khumb': '🍄',
+  'chilli': '🌶️', 'mirch': '🌶️', 'green chilli': '🌶️', 'hari mirch': '🌶️',
+  'lady finger': '🫛', 'bhindi': '🫛', 'okra': '🫛', 'beans': '🫘',
+  'french beans': '🫘', 'green beans': '🫘', 'cluster beans': '🫘',
+  'gawar': '🫘', 'guvar': '🫘', 'pumpkin': '🎃', 'kaddu': '🎃',
+  'gourd': '🥒', 'lauki': '🥒', 'doodhi': '🥒',
+  'bottle gourd': '🥒', 'cucumber': '🥒', 'kheera': '🥒', 'kakri': '🥒',
+  'zucchini': '🥒', 'tinda': '🥒', 'parwal': '🥒', 'pointed gourd': '🥒',
+  'bitter gourd': '🥒', 'karela': '🥒', 'ridge gourd': '🥒', 'turai': '🥒',
+  'tori': '🥒', 'snake gourd': '🥒', 'apple gourd': '🥒',
+  'drumstick': '🌿', 'sahjan': '🌿', 'moringa': '🌿',
+  'brinjal': '🍆', 'baingan': '🍆', 'eggplant': '🍆',
+  'spring onion': '🧅', 'hara pyaaz': '🧅', 'leek': '🧅',
+  'green peas': '🟢', 'matar': '🟢', 'peas': '🟢',
+  'banana flower': '🌸', 'kele ka phool': '🌸',
+
+  'spinach': '🥬', 'palak': '🥬', 'fenugreek': '🥬', 'methi': '🥬',
+  'amaranth': '🥬', 'chaulai': '🥬', 'mustard greens': '🥬', 'sarson': '🥬',
+  'dill': '🌿', 'soya': '🌿', 'coriander': '🌿', 'dhaniya': '🌿',
+  'hara dhaniya': '🌿', 'mint': '🌿', 'pudina': '🌿', 'curry leaves': '🌿',
+  'curry patta': '🌿', 'kadi patta': '🌿', 'basil': '🌿', 'tulsi': '🌿',
+  'lemon grass': '🌿', 'banana leaf': '🍃', 'kele ka patta': '🍃',
+  'bay leaf': '🍃', 'tej patta': '🍃',
+
+  'lettuce': '🥗', 'iceberg': '🥗', 'celery': '🌿', 'parsley': '🌿',
+  'rosemary': '🌿', 'thyme': '🌿', 'oregano': '🌿',
+  'asparagus': '🌿', 'artichoke': '🌿',
+  'red cabbage': '🥬', 'kale': '🥬', 'pak choi': '🥬',
+  'cherry tomato': '🍅', 'plum tomato': '🍅',
+  'olives': '🫒', 'jalapeno': '🌶️', 'leeks': '🧅',
+
+  'sabzi': '🥬', 'fal': '🍎', 'phal': '🍎', 'fruit': '🍎', 'vegetable': '🥬',
+
+  // === Specific HariyaliBasket products ===
+  'apple green': '🍏', 'green apple imp': '🍏', 'apple green imp': '🍏',
+  'apple himachal': '🍎', 'apple imp': '🍎', 'apple imported': '🍎',
+  'baby corn': '🌽', 'baby corn fresh': '🌽',
+  'chola': '🫘', 'chola fali': '🫘', 'chawla': '🫘',
+  'kachri': '🥒', 'cucumber chinese': '🥒', 'chinese cucumber': '🥒',
+  'red potato': '🥔', 'potato small': '🥔', 'small potato': '🥔',
+  'onion small': '🧅', 'small onion': '🧅', 'sambar onion': '🧅',
+  'garlic peeled': '🧄', 'peeled garlic': '🧄',
+  'coconut dhab': '🥥', 'dhab': '🥥', 'tender': '🥥',
+  'mango alphonso': '🥭', 'mango langra': '🥭', 'mango safeda': '🥭',
+  'alphonso': '🥭', 'langra': '🥭', 'safeda': '🥭',
+  'mosambi': '🍋', 'sweet lime': '🍋',
+  'pomegranate': '🍑', 'red pumpkin': '🎃',
+  'mushroom fresh': '🍄', 'mushroom 200g': '🍄',
+  'guar phali': '🫘', 'guar fali': '🫘', 'gawar phali': '🫘',
+  'cluster bean': '🫘',
+  'lettuce green': '🥗', 'green lettuce': '🥗',
+  'cabbage green': '🥬', 'green cabbage': '🥬',
+  'capsicum green': '🫑', 'green capsicum': '🫑',
+  'red capsicum': '🌶️', 'yellow capsicum': '🌶️',
+  'zucchini green': '🥒', 'zucchini yellow': '🥒',
+  'green chilli': '🌶️', 'green chilli hot': '🌶️',
+  'banana leaf': '🍃',
+  'coriander fresh': '🌿',
+  'avocado local': '🥑'
+};
+
+// Sort keys by length (longest first) for better matching
+const EMOJI_KEYS_SORTED = Object.keys(EMOJI_MAP).sort((a, b) => b.length - a.length);
+
+function getEmoji(name) {
+  // Clean name: remove parentheses content like "(Bhindi)", units, weights
+  let n = name.toLowerCase().trim();
+  // Try exact match first
+  if (EMOJI_MAP[n]) return EMOJI_MAP[n];
+  // Remove common suffixes that confuse matching
+  n = n.replace(/\([^)]*\)/g, ' ')          // remove "(Bhindi)"
+       .replace(/\b\d+\s*(g|kg|gm|gms|grams)\b/gi, ' ')  // remove "200g"
+       .replace(/\b(per|fresh|imp|imported|local)\b/gi, ' ')
+       .replace(/[^a-z0-9 ]/g, ' ')
+       .replace(/\s+/g, ' ')
+       .trim();
+  if (EMOJI_MAP[n]) return EMOJI_MAP[n];
+  // Longest-match-first
+  for (const k of EMOJI_KEYS_SORTED) {
+    if (n.includes(k)) return EMOJI_MAP[k];
+  }
+  return '🌿';
+}
+
+const EXAMPLES = {
+  vegetables: ['Aloo','Pyaaz','Tamatar','Bhindi','Gobhi','Phool Gobhi','Patta Gobhi','Baingan','Lauki','Tori','Karela','Tinda','Kheera','Shimla Mirch','Hari Mirch','Adrak','Lahsun','Gajar','Mooli','Chukandar','Matar','Sahjan','Arbi','Bhutta'].join('\n'),
+  fruits: ['Apple','Banana','Mango','Orange','Watermelon','Anar','Papita','Pineapple','Nariyal','Kiwi','Mosambi','Nimbu','Angoor','Strawberry','Cherry','Litchi','Anjeer','Khajur','Chikoo','Jamun','Avocado','Dragon Fruit','Kathal'].join('\n'),
+  herbs: ['Dhaniya','Pudina','Methi','Palak','Curry Patta','Tulsi','Sarson','Chaulai','Soya','Banana Leaf'].join('\n'),
+  all: ''
+};
+EXAMPLES.all = [EXAMPLES.vegetables, EXAMPLES.fruits, EXAMPLES.herbs].join('\n');
+
+function loadExample(type) {
+  document.getElementById('products').value = EXAMPLES[type] || '';
+  renderAll();
+}
+
+function applyBg(ctx, w, h, style, emoji) {
+  if (style === 'green-gradient') {
+    const g = ctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, '#1a4d2e');
+    g.addColorStop(1, '#0f2d18');
+    ctx.fillStyle = g;
+  } else if (style === 'white') {
+    ctx.fillStyle = '#ffffff';
+  } else if (style === 'cream') {
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#fff8e1');
+    g.addColorStop(1, '#ffe9b5');
+    ctx.fillStyle = g;
+  } else if (style === 'dark') {
+    const g = ctx.createRadialGradient(w/2, h/2, w/4, w/2, h/2, w);
+    g.addColorStop(0, '#2d2d2d');
+    g.addColorStop(1, '#0a0a0a');
+    ctx.fillStyle = g;
+  } else if (style === 'rainbow') {
+    const palettes = {
+      '🍎': ['#ff6b6b', '#c92a2a'], '🥭': ['#ffd93d', '#fab005'],
+      '🍌': ['#ffec99', '#fcc419'], '🥕': ['#ff922b', '#e8590c'],
+      '🥒': ['#69db7c', '#2f9e44'], '🍅': ['#ff6b6b', '#e03131'],
+      '🥔': ['#ffd8a8', '#d9480f'], '🧅': ['#f8e3c4', '#a06d4f'],
+      '🥬': ['#8ce99a', '#2b8a3e'], '🍇': ['#9775fa', '#5f3dc4']
+    };
+    const colors = palettes[emoji] || ['#8ed46a', '#1a4d2e'];
+    const g = ctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, colors[0]);
+    g.addColorStop(1, colors[1]);
+    ctx.fillStyle = g;
+  }
+  ctx.fillRect(0, 0, w, h);
+}
+
+function getTextColor(style) {
+  if (style === 'white' || style === 'cream') return '#1a4d2e';
+  return '#ffffff';
+}
+
+function getAccentColor(style) {
+  if (style === 'white' || style === 'cream') return '#f4a228';
+  if (style === 'rainbow') return '#fff';
+  return '#8ed46a';
+}
+
+function drawCard(canvas, productName) {
+  const sizeOpt = document.getElementById('imgSize').value;
+  let w, h;
+  if (sizeOpt.includes('x')) {
+    [w, h] = sizeOpt.split('x').map(Number);
+  } else {
+    w = h = parseInt(sizeOpt);
+  }
+
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  const bgStyle = document.getElementById('bgStyle').value;
+  const emojiRel = parseFloat(document.getElementById('emojiSize').value);
+  const showBrand = document.getElementById('showBrand').value === 'yes';
+  const showBadge = document.getElementById('showBadge').value === 'yes';
+  const showName = document.getElementById('showName').value === 'yes';
+
+  const emoji = getEmoji(productName);
+  const txtColor = getTextColor(bgStyle);
+  const accent = getAccentColor(bgStyle);
+
+  applyBg(ctx, w, h, bgStyle, emoji);
+
+  if (bgStyle !== 'white' && bgStyle !== 'cream') {
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    ctx.font = (w * 0.15) + 'px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('🌿', 10, w * 0.18);
+    ctx.textAlign = 'right';
+    ctx.fillText('🍃', w - 10, h - 20);
+    ctx.restore();
+  }
+
+  const emojiSize = Math.floor(w * emojiRel);
+  ctx.font = emojiSize + 'px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const emojiY = showName ? (h * 0.42) : (h * 0.5);
+  ctx.fillText(emoji, w / 2, emojiY);
+
+  if (showName) {
+    const nameSize = Math.floor(w * 0.075);
+    ctx.font = '900 ' + nameSize + 'px "Segoe UI", "Poppins", sans-serif';
+    ctx.fillStyle = txtColor;
+    ctx.textAlign = 'center';
+
+    const displayName = productName.split(' ')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+
+    const nameY = h * 0.78;
+    ctx.fillText(displayName, w / 2, nameY);
+
+    ctx.fillStyle = accent;
+    const lineW = Math.min(ctx.measureText(displayName).width * 0.4, w * 0.15);
+    ctx.fillRect(w/2 - lineW/2, nameY + nameSize * 0.7, lineW, 3);
+  }
+
+  if (showBadge) {
+    const bx = w - w * 0.22 - 12;
+    const by = 12;
+    const bw = w * 0.22;
+    const bh = w * 0.07;
+    ctx.fillStyle = '#25d366';
+    roundRect(ctx, bx, by, bw, bh, bh / 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '800 ' + Math.floor(bw * 0.18) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('FRESH', bx + bw / 2, by + bh / 2);
+  }
+
+  if (showBrand) {
+    ctx.fillStyle = accent;
+    ctx.font = '700 ' + Math.floor(w * 0.025) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    const brandY = h - 10;
+    ctx.fillText('HARIYALIBASKET · FARM TO DOORSTEP', w / 2, brandY);
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+let currentCanvases = [];
+
+function renderAll() {
+  const text = document.getElementById('products').value.trim();
+  const products = text.split('\n').map(s => s.trim()).filter(Boolean);
+
+  const grid = document.getElementById('preview-grid');
+  grid.innerHTML = '';
+  currentCanvases = [];
+
+  if (!products.length) {
+    document.getElementById('preview-card').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('preview-card').style.display = 'block';
+  document.getElementById('stats').textContent = '✅ ' + products.length + ' images generate hue';
+
+  products.forEach(name => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'preview-item';
+
+    const canvas = document.createElement('canvas');
+    drawCard(canvas, name);
+
+    const label = document.createElement('div');
+    label.className = 'pname';
+    label.textContent = name;
+
+    const dlBtn = document.createElement('button');
+    dlBtn.className = 'pdl';
+    dlBtn.textContent = '⬇️ Download';
+    dlBtn.onclick = () => downloadCanvas(canvas, name);
+
+    wrapper.appendChild(canvas);
+    wrapper.appendChild(label);
+    wrapper.appendChild(dlBtn);
+    grid.appendChild(wrapper);
+
+    currentCanvases.push({ canvas, name });
+  });
+}
+
+function safeFileName(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function downloadCanvas(canvas, name) {
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = safeFileName(name) + '.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+}
+
+async function downloadAll(ev) {
+  if (!currentCanvases.length) {
+    alert('Pehle products generate karo!');
+    return;
+  }
+  if (typeof JSZip === 'undefined') {
+    alert('ZIP library load nahi hui. Internet check karo aur page refresh karo.');
+    return;
+  }
+
+  const btn = ev.target;
+  const oldText = btn.textContent;
+  btn.textContent = '📦 ZIP banaya jaa raha hai...';
+  btn.disabled = true;
+
+  const zip = new JSZip();
+  const folder = zip.folder('hariyalibasket-images');
+
+  for (const item of currentCanvases) {
+    const blob = await new Promise(r => item.canvas.toBlob(r, 'image/png'));
+    folder.file(safeFileName(item.name) + '.png', blob);
+  }
+
+  const zipBlob = await zip.generateAsync({ type: 'blob' });
+  const url = URL.createObjectURL(zipBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'hariyalibasket-images.zip';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  btn.textContent = oldText;
+  btn.disabled = false;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('products').value = `Apple Green Imp.
+Apple Himachal
+Apple Imp.
+Avocado Local
+Banana
+Chikoo
+Coconut Dhab
+Coconut Fresh
+Dragon Fruit
+Guava (Desi)
+Guava Imp.
+Jamun
+Kiwi Fresh
+Mango Alphonso
+Mango Langra
+Mango Safeda
+Papaya Fresh
+Pineapple Fresh
+Pomegranate (Anar)
+Raw Papaya
+Sweet Lime (Mosambi)
+Watermelon
+Beetroot
+Carrot
+Garlic
+Garlic Peeled
+Ginger
+Onion
+Onion Small
+Potato
+Potato Small
+Raw Mango
+Red Potato
+Arbi (Colocasia)
+Baby Corn Fresh
+Bitter Gourd (Karela)
+Bottle Gourd (Lauki)
+Brinjal (Baingan)
+Broccoli
+Cabbage Green
+Capsicum Green
+Cauliflower
+Chola Fali
+Corn (Bhutta)
+Cucumber Chinese
+Curry Leaves
+Drumsticks (Sahjan)
+French Beans
+Green Chilli
+Green Chilli (Hot)
+Guar Phali
+Jackfruit (Kathal)
+Kachri
+Kakri
+Lady Finger (Bhindi)
+Lettuce Green
+Parwal
+Red Capsicum
+Red Pumpkin
+Spinach (Palak)
+Spring Onion
+Tinda
+Tomato
+Yellow Capsicum
+Zucchini Green/Yellow
+Mushroom Fresh 200g
+Banana Leaf
+Coriander
+Coriander Fresh
+Lemon (Nimbu)
+Mint (Pudina)`;
+  renderAll();
+});
+</script>
+
+</body>
+</html>
