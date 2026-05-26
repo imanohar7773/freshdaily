@@ -54,7 +54,7 @@ function hb_run_image_download() {
         'HB-FR-016' => ['name' => 'Mango Safeda',            'url' => 'https://images.pexels.com/photos/37744364/pexels-photo-37744364.jpeg'],
         'HB-FR-017' => ['name' => 'Papaya Fresh',            'url' => 'https://images.pexels.com/photos/28613331/pexels-photo-28613331.jpeg'],
         'HB-FR-018' => ['name' => 'Pineapple Fresh',         'url' => 'https://images.pexels.com/photos/12471181/pexels-photo-12471181.jpeg'],
-        'HB-FR-019' => ['name' => 'Pomegranate (Anar)',      'url' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pomegranate_Juice_%282019%29.jpg/960px-Pomegranate_Juice_%282019%29.jpg'],
+        'HB-FR-019' => ['name' => 'Pomegranate (Anar)',      'url' => 'https://images.pexels.com/photos/2906108/pexels-photo-2906108.jpeg'],
         'HB-FR-020' => ['name' => 'Raw Papaya',              'url' => 'https://images.pexels.com/photos/13306351/pexels-photo-13306351.jpeg'],
         'HB-FR-021' => ['name' => 'Sweet Lime (Mosambi)',    'url' => 'https://images.pexels.com/photos/16105462/pexels-photo-16105462.jpeg'],
         'HB-FR-022' => ['name' => 'Watermelon (3-4 Kg)',     'url' => 'https://images.pexels.com/photos/15975999/pexels-photo-15975999.jpeg'],

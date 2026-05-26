@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HariyaliBasket — Image ZIP Builder</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+    background: #0a1a0e;
+    color: #fff;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a4d2e, #0f2d18);
+    padding: 24px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(142,212,106,0.3);
+  }
+  .header h1 { color: #f4a228; font-size: 24px; margin-bottom: 4px; }
+  .header p { color: #8ed46a; font-size: 12px; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+  .info-box {
+    background: linear-gradient(135deg, rgba(37,211,102,0.15), rgba(244,162,40,0.15));
+    border: 1px solid #25d366;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #d4ffea;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .info-box b { color: #f4a228; }
+
+  .controls {
+    background: #0f2d18;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(142,212,106,0.2);
+  }
+  .control-row {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+  .btn {
+    padding: 13px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    flex: 1;
+    min-width: 160px;
+  }
+  .btn-zip { background: #f4a228; color: #fff; }
+  .btn-zip:disabled { background: #555; cursor: not-allowed; }
+  .btn-clear { background: #e74c3c; color: #fff; flex: 0 1 auto; min-width: 100px; }
+
+  .progress-row {
+    margin-top: 14px;
+    display: none;
+  }
+  .progress-row.shown { display: block; }
+  .progress-text {
+    font-size: 12px; color: #8ed46a; margin-bottom: 6px;
+    font-weight: 700; display: flex; justify-content: space-between;
+  }
+  .progress {
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #25d366, #8ed46a, #f4a228);
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .stats {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px;
+    font-size: 12px; font-weight: 700;
+  }
+  .stat-item {
+    background: #1a4d2e; padding: 6px 12px;
+    border-radius: 16px; color: #8ed46a;
+  }
+  .stat-item.ready { background: rgba(37,211,102,0.2); color: #25d366; }
+  .stat-item.failed { background: rgba(231,76,60,0.2); color: #e74c3c; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px;
+    color: #1a1a1a;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .card.zipped { border-color: #25d366; }
+  .card.failed { border-color: #e74c3c; }
+
+  .card-img-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #f5f5f5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .card-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .sku-tag {
+    position: absolute;
+    top: 6px; left: 6px;
+    background: rgba(26,77,46,0.9);
+    color: #8ed46a;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: 800;
+    z-index: 2;
+  }
+  .status-tag {
+    position: absolute;
+    top: 6px; right: 6px;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: 800;
+    z-index: 2;
+    color: #fff;
+  }
+  .status-tag.zipped { background: #25d366; }
+  .status-tag.failed { background: #e74c3c; }
+  .status-tag.loading { background: #f4a228; }
+
+  .card-name {
+    font-size: 12px; font-weight: 800; color: #1a4d2e;
+    line-height: 1.3; margin-bottom: 4px; min-height: 32px;
+  }
+  .card-cat {
+    font-size: 9px; color: #888; margin-bottom: 6px;
+  }
+  .card-actions {
+    display: flex; gap: 4px;
+  }
+  .card-actions button {
+    flex: 1;
+    background: #1a4d2e; color: #fff;
+    border: none; padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 10px; font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .card-actions button.upload-btn {
+    background: #f4a228;
+  }
+  .card-actions input[type="file"] { display: none; }
+
+  /* Replace Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal.shown { display: flex; }
+  .modal-box {
+    background: #0f2d18;
+    border-radius: 14px;
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    border: 1px solid #2d6b42;
+  }
+  .modal-box h3 { color: #f4a228; font-size: 16px; margin-bottom: 12px; }
+  .modal-box .links {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .modal-box .links a {
+    background: #1a4d2e; color: #8ed46a;
+    padding: 8px 14px; border-radius: 16px;
+    font-size: 11px; text-decoration: none; font-weight: 700;
+  }
+  .modal-box p { color: #8ed46a; font-size: 11px; margin-bottom: 8px; }
+  .modal-box input[type="text"] {
+    width: 100%; padding: 10px 12px;
+    background: #1a4d2e; border: 1px solid #2d6b42;
+    border-radius: 8px; color: #fff; font-size: 12px;
+    font-family: inherit; outline: none; margin-bottom: 12px;
+  }
+  .modal-actions {
+    display: flex; gap: 8px;
+  }
+  .modal-actions button {
+    flex: 1; padding: 10px; border: none;
+    border-radius: 8px; font-size: 12px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
+  }
+  .btn-save { background: #25d366; color: #fff; }
+  .btn-cancel { background: #e74c3c; color: #fff; }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .card-name { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📦 Image ZIP Builder</h1>
+  <p>Saari 71 images — ek ZIP mein download!</p>
+</div>
+
+<div class="container">
+
+  <div class="info-box">
+    <b>📋 Kaise Use Karein:</b><br>
+    1️⃣ Saari images preview mein dikh rahin hain<br>
+    2️⃣ Koi image accha na lage toh <b>"🔄 Change"</b> dabake doosri pick karo<br>
+    3️⃣ <b>"📤 Upload"</b> dabake apni khud ki photo bhi daal sakte ho<br>
+    4️⃣ <b>"📦 Download All as ZIP"</b> dabao → ek ZIP file mein 71 images!<br>
+    5️⃣ ZIP extract karo → WordPress Media Library mein bulk upload!
+  </div>
+
+  <div class="controls">
+    <div class="control-row">
+      <button class="btn btn-zip" id="download-btn" onclick="downloadAllZip()">📦 Download All as ZIP</button>
+      <button class="btn btn-clear" onclick="clearAll()">🗑 Reset</button>
+    </div>
+
+    <div class="progress-row" id="progress-row">
+      <div class="progress-text">
+        <span id="progress-status">Preparing...</span>
+        <span id="progress-counter">0 / 71</span>
+      </div>
+      <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">Total: <span id="stat-total">71</span></div>
+      <div class="stat-item ready">✓ ZIP Added: <span id="stat-zipped">0</span></div>
+      <div class="stat-item failed">✗ Failed: <span id="stat-failed">0</span></div>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- Replace Modal -->
+<div class="modal" id="modal" onclick="closeModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <h3 id="modal-title">🔄 Replace Image</h3>
+    <div class="links" id="modal-links"></div>
+    <p>💡 Image par right-click → "Copy image address" → niche paste karo</p>
+    <input type="text" id="modal-input" placeholder="Image URL paste karo (https://...)">
+    <div class="modal-actions">
+      <button class="btn-save" onclick="saveReplace()">✓ Save</button>
+      <button class="btn-cancel" onclick="closeModal()">✕ Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// PRODUCTS LIST WITH IMAGE URLs
+// (Same as your script — Pomegranate URL fixed)
+// ============================================================
+const PRODUCTS = [
+  // FRUITS
+  {sku:'HB-FR-001',name:'Apple Green Imp.',cat:'Fruits',unit:'per Kg',pexels:'green apple',url:'https://images.pexels.com/photos/9427265/pexels-photo-9427265.jpeg'},
+  {sku:'HB-FR-002',name:'Apple Himachal',cat:'Fruits',unit:'per Kg',pexels:'red apple',url:'https://images.pexels.com/photos/34844892/pexels-photo-34844892.jpeg'},
+  {sku:'HB-FR-003',name:'Apple Imp.',cat:'Fruits',unit:'per Kg',pexels:'apple fruit',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Pink_lady_and_cross_section.jpg/960px-Pink_lady_and_cross_section.jpg'},
+  {sku:'HB-FR-004',name:'Avocado Local',cat:'Fruits',unit:'per Pc',pexels:'avocado',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Persea_americana_fruit_2.JPG/960px-Persea_americana_fruit_2.JPG'},
+  {sku:'HB-FR-005',name:'Banana',cat:'Fruits',unit:'per Kg',pexels:'banana',url:'https://images.pexels.com/photos/6848574/pexels-photo-6848574.jpeg'},
+  {sku:'HB-FR-006',name:'Chikoo',cat:'Fruits',unit:'per Kg',pexels:'sapota chikoo',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/%E0%B4%B8%E0%B4%AA%E0%B5%8D%E0%B4%AA%E0%B5%8B%E0%B4%9F%E0%B5%8D%E0%B4%9F.jpg/960px-%E0%B4%B8%E0%B4%AA%E0%B5%8D%E0%B4%AA%E0%B5%8B%E0%B4%9F%E0%B5%8D%E0%B4%9F.jpg'},
+  {sku:'HB-FR-007',name:'Coconut Dhab',cat:'Fruits',unit:'per Kg',pexels:'tender coconut',url:'https://images.pexels.com/photos/34528211/pexels-photo-34528211.jpeg'},
+  {sku:'HB-FR-008',name:'Coconut Fresh',cat:'Fruits',unit:'per Kg',pexels:'coconut whole',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Cocos_nucifera_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-187.jpg/960px-Cocos_nucifera_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-187.jpg'},
+  {sku:'HB-FR-009',name:'Dragon Fruit',cat:'Fruits',unit:'per Pc',pexels:'dragon fruit',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Pitaya_cross_section_ed2.jpg/960px-Pitaya_cross_section_ed2.jpg'},
+  {sku:'HB-FR-010',name:'Guava (Desi)',cat:'Fruits',unit:'per Kg',pexels:'guava green',url:'https://images.pexels.com/photos/8668727/pexels-photo-8668727.jpeg'},
+  {sku:'HB-FR-011',name:'Guava Imp.',cat:'Fruits',unit:'per Kg',pexels:'guava pink',url:'https://images.pexels.com/photos/5945840/pexels-photo-5945840.jpeg'},
+  {sku:'HB-FR-012',name:'Jamun',cat:'Fruits',unit:'per Kg',pexels:'jamun fruit',url:'https://images.pexels.com/photos/37043794/pexels-photo-37043794.jpeg'},
+  {sku:'HB-FR-013',name:'Kiwi Fresh',cat:'Fruits',unit:'per Pc',pexels:'kiwi',url:'https://images.pexels.com/photos/6411505/pexels-photo-6411505.jpeg'},
+  {sku:'HB-FR-014',name:'Mango Alphonso',cat:'Fruits',unit:'per Kg',pexels:'alphonso mango',url:'https://images.pexels.com/photos/4687187/pexels-photo-4687187.jpeg'},
+  {sku:'HB-FR-015',name:'Mango Langra',cat:'Fruits',unit:'per Kg',pexels:'mango',url:'https://images.pexels.com/photos/33079558/pexels-photo-33079558.jpeg'},
+  {sku:'HB-FR-016',name:'Mango Safeda',cat:'Fruits',unit:'per Kg',pexels:'yellow mango',url:'https://images.pexels.com/photos/37744364/pexels-photo-37744364.jpeg'},
+  {sku:'HB-FR-017',name:'Papaya Fresh',cat:'Fruits',unit:'per Kg',pexels:'papaya ripe',url:'https://images.pexels.com/photos/28613331/pexels-photo-28613331.jpeg'},
+  {sku:'HB-FR-018',name:'Pineapple Fresh',cat:'Fruits',unit:'per Kg',pexels:'pineapple',url:'https://images.pexels.com/photos/12471181/pexels-photo-12471181.jpeg'},
+  {sku:'HB-FR-019',name:'Pomegranate (Anar)',cat:'Fruits',unit:'per Kg',pexels:'pomegranate',url:'https://images.pexels.com/photos/2906108/pexels-photo-2906108.jpeg'},
+  {sku:'HB-FR-020',name:'Raw Papaya',cat:'Fruits',unit:'per Kg',pexels:'green papaya',url:'https://images.pexels.com/photos/13306351/pexels-photo-13306351.jpeg'},
+  {sku:'HB-FR-021',name:'Sweet Lime (Mosambi)',cat:'Fruits',unit:'per Kg',pexels:'mosambi',url:'https://images.pexels.com/photos/16105462/pexels-photo-16105462.jpeg'},
+  {sku:'HB-FR-022',name:'Watermelon (3-4 Kg)',cat:'Fruits',unit:'per Pc',pexels:'watermelon',url:'https://images.pexels.com/photos/15975999/pexels-photo-15975999.jpeg'},
+  // ROOT VEGETABLES
+  {sku:'HB-RV-001',name:'Beetroot',cat:'Root Vegetables',unit:'per Kg',pexels:'beetroot',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Detroitdarkredbeets.png/960px-Detroitdarkredbeets.png'},
+  {sku:'HB-RV-002',name:'Carrot',cat:'Root Vegetables',unit:'per Kg',pexels:'carrot',url:'https://images.pexels.com/photos/1306559/pexels-photo-1306559.jpeg'},
+  {sku:'HB-RV-003',name:'Garlic',cat:'Root Vegetables',unit:'per Kg',pexels:'garlic',url:'https://images.pexels.com/photos/12955789/pexels-photo-12955789.jpeg'},
+  {sku:'HB-RV-004',name:'Garlic Peeled',cat:'Root Vegetables',unit:'per Kg',pexels:'peeled garlic',url:'https://images.pexels.com/photos/750948/pexels-photo-750948.jpeg'},
+  {sku:'HB-RV-005',name:'Ginger',cat:'Root Vegetables',unit:'per Kg',pexels:'ginger root',url:'https://images.pexels.com/photos/7657087/pexels-photo-7657087.jpeg'},
+  {sku:'HB-RV-006',name:'Onion',cat:'Root Vegetables',unit:'per Kg',pexels:'red onion',url:'https://images.pexels.com/photos/12999831/pexels-photo-12999831.jpeg'},
+  {sku:'HB-RV-007',name:'Onion Small',cat:'Root Vegetables',unit:'per Kg',pexels:'shallot',url:'https://images.pexels.com/photos/34961607/pexels-photo-34961607.jpeg'},
+  {sku:'HB-RV-008',name:'Potato',cat:'Root Vegetables',unit:'per Kg',pexels:'potato',url:'https://images.pexels.com/photos/144248/potatoes-vegetables-erdfrucht-bio-144248.jpeg'},
+  {sku:'HB-RV-009',name:'Potato Small',cat:'Root Vegetables',unit:'per Kg',pexels:'baby potato',url:'https://images.pexels.com/photos/35595249/pexels-photo-35595249.jpeg'},
+  {sku:'HB-RV-010',name:'Raw Mango',cat:'Root Vegetables',unit:'per Kg',pexels:'green raw mango',url:'https://images.pexels.com/photos/37490138/pexels-photo-37490138.jpeg'},
+  {sku:'HB-RV-011',name:'Red Potato',cat:'Root Vegetables',unit:'per Kg',pexels:'red potato',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Patates.jpg/960px-Patates.jpg'},
+  // VEGETABLES
+  {sku:'HB-VG-001',name:'Arbi (Colocasia)',cat:'Green Vegetables',unit:'per Kg',pexels:'taro arbi',url:'https://images.pexels.com/photos/7543152/pexels-photo-7543152.jpeg'},
+  {sku:'HB-VG-002',name:'Baby Corn Fresh',cat:'Green Vegetables',unit:'per Kg',pexels:'baby corn',url:'https://upload.wikimedia.org/wikipedia/commons/a/a1/Baby_corn.jpg'},
+  {sku:'HB-VG-003',name:'Bitter Gourd (Karela)',cat:'Green Vegetables',unit:'per Kg',pexels:'bitter gourd karela',url:'https://images.pexels.com/photos/28909474/pexels-photo-28909474.jpeg'},
+  {sku:'HB-VG-004',name:'Bottle Gourd (Lauki)',cat:'Green Vegetables',unit:'per Kg',pexels:'bottle gourd',url:'https://upload.wikimedia.org/wikipedia/commons/a/a2/Courge_encore_verte.jpg'},
+  {sku:'HB-VG-005',name:'Brinjal (Baingan)',cat:'Green Vegetables',unit:'per Kg',pexels:'eggplant',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Solanum_melongena_24_08_2012_%281%29.JPG/960px-Solanum_melongena_24_08_2012_%281%29.JPG'},
+  {sku:'HB-VG-006',name:'Broccoli',cat:'Exotic & Packed',unit:'per Kg',pexels:'broccoli',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Broccoli_and_cross_section_edit.jpg/960px-Broccoli_and_cross_section_edit.jpg'},
+  {sku:'HB-VG-007',name:'Cabbage Green',cat:'Green Vegetables',unit:'per Kg',pexels:'green cabbage',url:'https://images.pexels.com/photos/37404971/pexels-photo-37404971.jpeg'},
+  {sku:'HB-VG-008',name:'Capsicum Green',cat:'Green Vegetables',unit:'per Kg',pexels:'green capsicum',url:'https://images.pexels.com/photos/36935461/pexels-photo-36935461.jpeg'},
+  {sku:'HB-VG-009',name:'Cauliflower',cat:'Green Vegetables',unit:'per Kg',pexels:'cauliflower',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Chou-fleur_02.jpg/960px-Chou-fleur_02.jpg'},
+  {sku:'HB-VG-010',name:'Chola Fali',cat:'Green Vegetables',unit:'per Kg',pexels:'long beans',url:'https://images.pexels.com/photos/17975550/pexels-photo-17975550.jpeg'},
+  {sku:'HB-VG-011',name:'Corn (Bhutta)',cat:'Green Vegetables',unit:'per Kg',pexels:'sweet corn',url:'https://upload.wikimedia.org/wikipedia/commons/7/79/VegCorn.jpg'},
+  {sku:'HB-VG-012',name:'Cucumber Chinese',cat:'Green Vegetables',unit:'per Kg',pexels:'long cucumber',url:'https://images.pexels.com/photos/17975573/pexels-photo-17975573.jpeg'},
+  {sku:'HB-VG-013',name:'Curry Leaves',cat:'Herbs & Leafy',unit:'per Kg',pexels:'curry leaves',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Curry_Trees.jpg/960px-Curry_Trees.jpg'},
+  {sku:'HB-VG-014',name:'Drumsticks (Sahjan)',cat:'Green Vegetables',unit:'per Kg',pexels:'drumstick moringa',url:'https://images.pexels.com/photos/20466259/pexels-photo-20466259.jpeg'},
+  {sku:'HB-VG-015',name:'French Beans',cat:'Green Vegetables',unit:'per Kg',pexels:'green beans',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Heaps_of_beans.jpg/960px-Heaps_of_beans.jpg'},
+  {sku:'HB-VG-016',name:'Green Chilli',cat:'Herbs & Leafy',unit:'per Kg',pexels:'green chilli',url:'https://images.pexels.com/photos/10899475/pexels-photo-10899475.jpeg'},
+  {sku:'HB-VG-017',name:'Green Chilli (Hot)',cat:'Herbs & Leafy',unit:'per Kg',pexels:'hot chilli',url:'https://images.pexels.com/photos/5678084/pexels-photo-5678084.jpeg'},
+  {sku:'HB-VG-018',name:'Guar Phali',cat:'Green Vegetables',unit:'per Kg',pexels:'cluster beans',url:'https://upload.wikimedia.org/wikipedia/commons/9/9b/Cluster_bean-guar-Cyamopsis_psoralioides-Cyamopsis_tetragonolobus-TAMIL_NADU73.jpg'},
+  {sku:'HB-VG-019',name:'Jackfruit (Kathal)',cat:'Green Vegetables',unit:'per Kg',pexels:'jackfruit',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/The_jackfruit_is_holding_on_to_the_tree.jpg/960px-The_jackfruit_is_holding_on_to_the_tree.jpg'},
+  {sku:'HB-VG-020',name:'Kachri',cat:'Green Vegetables',unit:'per Kg',pexels:'kachri',url:'https://images.pexels.com/photos/30876616/pexels-photo-30876616.jpeg'},
+  {sku:'HB-VG-021',name:'Kakri',cat:'Green Vegetables',unit:'per Kg',pexels:'armenian cucumber',url:'https://images.pexels.com/photos/21644440/pexels-photo-21644440.jpeg'},
+  {sku:'HB-VG-022',name:'Lady Finger (Bhindi)',cat:'Green Vegetables',unit:'per Kg',pexels:'okra bhindi',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Hong_Kong_Okra_Aug_25_2012.JPG/960px-Hong_Kong_Okra_Aug_25_2012.JPG'},
+  {sku:'HB-VG-023',name:'Lettuce Green',cat:'Exotic & Packed',unit:'per Kg',pexels:'lettuce',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Iceberg_lettuce_in_SB.jpg/960px-Iceberg_lettuce_in_SB.jpg'},
+  {sku:'HB-VG-024',name:'Parwal',cat:'Green Vegetables',unit:'per Kg',pexels:'pointed gourd',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Pointed_gourd.jpg/960px-Pointed_gourd.jpg'},
+  {sku:'HB-VG-025',name:'Red Capsicum',cat:'Exotic & Packed',unit:'per Kg',pexels:'red capsicum',url:'https://images.pexels.com/photos/34997142/pexels-photo-34997142.jpeg'},
+  {sku:'HB-VG-026',name:'Red Pumpkin',cat:'Green Vegetables',unit:'per Kg',pexels:'pumpkin',url:'https://images.pexels.com/photos/18509545/pexels-photo-18509545.jpeg'},
+  {sku:'HB-VG-027',name:'Spinach (Palak)',cat:'Herbs & Leafy',unit:'per Kg',pexels:'spinach',url:'https://images.pexels.com/photos/11064917/pexels-photo-11064917.jpeg'},
+  {sku:'HB-VG-028',name:'Spring Onion',cat:'Herbs & Leafy',unit:'per Kg',pexels:'spring onion',url:'https://images.pexels.com/photos/7456538/pexels-photo-7456538.jpeg'},
+  {sku:'HB-VG-029',name:'Tinda',cat:'Green Vegetables',unit:'per Kg',pexels:'tinda',url:'https://upload.wikimedia.org/wikipedia/commons/8/80/Tinda.jpg'},
+  {sku:'HB-VG-030',name:'Tomato',cat:'Green Vegetables',unit:'per Kg',pexels:'tomato',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tomato_je.jpg/960px-Tomato_je.jpg'},
+  {sku:'HB-VG-031',name:'Yellow Capsicum',cat:'Exotic & Packed',unit:'per Kg',pexels:'yellow capsicum',url:'https://images.pexels.com/photos/32934476/pexels-photo-32934476.jpeg'},
+  {sku:'HB-VG-032',name:'Zucchini Green/Yellow',cat:'Exotic & Packed',unit:'per Kg',pexels:'zucchini',url:'https://images.pexels.com/photos/13656392/pexels-photo-13656392.jpeg'},
+  {sku:'HB-VG-033',name:'Mushroom Fresh 200g',cat:'Exotic & Packed',unit:'per Packet',pexels:'mushroom',url:'https://images.pexels.com/photos/5950405/pexels-photo-5950405.jpeg'},
+  // HERBS
+  {sku:'HB-HR-001',name:'Banana Leaf',cat:'Herbs & Leafy',unit:'per Kg',pexels:'banana leaf',url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Banana-leaf-1.JPG/960px-Banana-leaf-1.JPG'},
+  {sku:'HB-HR-002',name:'Coriander',cat:'Herbs & Leafy',unit:'per Kg',pexels:'coriander cilantro',url:'https://upload.wikimedia.org/wikipedia/commons/1/13/Coriandrum_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-193.jpg'},
+  {sku:'HB-HR-003',name:'Coriander Fresh',cat:'Herbs & Leafy',unit:'per Kg',pexels:'fresh coriander',url:'https://images.pexels.com/photos/12178852/pexels-photo-12178852.jpeg'},
+  {sku:'HB-HR-004',name:'Lemon (Nimbu)',cat:'Herbs & Leafy',unit:'per Kg',pexels:'lemon',url:'https://images.pexels.com/photos/37113424/pexels-photo-37113424.jpeg'},
+  {sku:'HB-HR-005',name:'Mint (Pudina)',cat:'Herbs & Leafy',unit:'per Kg',pexels:'mint pudina',url:'https://images.pexels.com/photos/12717629/pexels-photo-12717629.jpeg'},
+];
+
+const STORAGE_KEY = 'hb_zip_picks_v1';
+const STORAGE_FILES = 'hb_zip_uploads_v1';
+
+let picks = loadPicks();        // SKU → URL overrides
+let uploads = {};                // SKU → File object (in-memory, files can't go in localStorage)
+let currentReplaceSku = null;
+
+function loadPicks() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch { return {}; }
+}
+
+function savePicks() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(picks));
+}
+
+function getCurrentUrl(sku) {
+  if (uploads[sku]) return null; // uploaded file, no URL
+  return picks[sku] || PRODUCTS.find(p => p.sku === sku)?.url || '';
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function slugify(s) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = PRODUCTS.map((p, i) => {
+    const url = getCurrentUrl(p.sku);
+    const hasUpload = !!uploads[p.sku];
+    const previewSrc = hasUpload ? uploads[p.sku].dataUrl : url;
+    return `
+      <div class="card" id="card-${p.sku}">
+        <div class="card-img-wrap">
+          <span class="sku-tag">${p.sku}</span>
+          <span class="status-tag" id="status-${p.sku}" style="display:none"></span>
+          <img src="${escapeHtml(previewSrc)}" alt="${escapeHtml(p.name)}"
+               onerror="this.style.background='#ffebee';this.alt='Failed to load'"
+               loading="lazy">
+        </div>
+        <div class="card-name">${escapeHtml(p.name)}${hasUpload ? ' 📤' : ''}</div>
+        <div class="card-cat">${escapeHtml(p.cat)} · ${escapeHtml(p.unit)}</div>
+        <div class="card-actions">
+          <button onclick="openReplace('${p.sku}')">🔄 Change</button>
+          <button class="upload-btn" onclick="document.getElementById('file-${p.sku}').click()">📤 Upload</button>
+          <input type="file" id="file-${p.sku}" accept="image/*" onchange="handleUpload(event, '${p.sku}')">
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openReplace(sku) {
+  const p = PRODUCTS.find(x => x.sku === sku);
+  if (!p) return;
+  currentReplaceSku = sku;
+  document.getElementById('modal-title').textContent = '🔄 Replace: ' + p.name;
+  const q = encodeURIComponent(p.pexels);
+  document.getElementById('modal-links').innerHTML = `
+    <a href="https://www.pexels.com/search/${q}/" target="_blank" rel="noopener">📸 Pexels</a>
+    <a href="https://unsplash.com/s/photos/${q}" target="_blank" rel="noopener">🌅 Unsplash</a>
+    <a href="https://pixabay.com/images/search/${q}/" target="_blank" rel="noopener">🎨 Pixabay</a>
+    <a href="https://www.google.com/search?q=${q}&tbm=isch" target="_blank" rel="noopener">🔍 Google</a>
+  `;
+  document.getElementById('modal-input').value = picks[sku] || '';
+  document.getElementById('modal').classList.add('shown');
+  document.getElementById('modal-input').focus();
+}
+
+function closeModal(e) {
+  if (e && e.target.id !== 'modal') return;
+  document.getElementById('modal').classList.remove('shown');
+  currentReplaceSku = null;
+}
+
+function saveReplace() {
+  if (!currentReplaceSku) return;
+  const url = document.getElementById('modal-input').value.trim();
+  if (url && !/^https?:\/\//.test(url)) {
+    alert('⚠️ Sahi URL paste karo (https:// se shuru hona chahiye)');
+    return;
+  }
+  if (url) {
+    picks[currentReplaceSku] = url;
+    delete uploads[currentReplaceSku]; // override upload
+  } else {
+    delete picks[currentReplaceSku];
+  }
+  savePicks();
+  closeModal();
+  render();
+}
+
+function handleUpload(event, sku) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    alert('⚠️ File 10MB se chhoti honi chahiye');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    uploads[sku] = { file, dataUrl: e.target.result };
+    delete picks[sku]; // upload overrides URL
+    render();
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearAll() {
+  if (!confirm('Saari changes clear karein? (Uploads aur replacements hat jayengi)')) return;
+  picks = {};
+  uploads = {};
+  localStorage.removeItem(STORAGE_KEY);
+  render();
+  document.getElementById('progress-row').classList.remove('shown');
+  document.getElementById('stat-zipped').textContent = '0';
+  document.getElementById('stat-failed').textContent = '0';
+}
+
+// ============================================================
+// DOWNLOAD ZIP — Fetch all images via images.weserv.nl proxy
+// ============================================================
+async function fetchImageBlob(url) {
+  // images.weserv.nl proxy - bypasses CORS for any image URL
+  const proxy = 'https://images.weserv.nl/?url=' + encodeURIComponent(url.replace(/^https?:\/\//, ''));
+  const r = await fetch(proxy);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return await r.blob();
+}
+
+function setStatus(sku, status, text) {
+  const tag = document.getElementById('status-' + sku);
+  const card = document.getElementById('card-' + sku);
+  if (!tag || !card) return;
+  tag.style.display = 'block';
+  tag.className = 'status-tag ' + status;
+  tag.textContent = text;
+  card.classList.remove('zipped', 'failed');
+  if (status === 'zipped') card.classList.add('zipped');
+  if (status === 'failed') card.classList.add('failed');
+}
+
+async function downloadAllZip() {
+  if (typeof JSZip === 'undefined') {
+    alert('⚠️ JSZip library load nahi hui. Internet check karo!');
+    return;
+  }
+
+  const btn = document.getElementById('download-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Building ZIP...';
+
+  document.getElementById('progress-row').classList.add('shown');
+  const fill = document.getElementById('progress-fill');
+  const status = document.getElementById('progress-status');
+  const counter = document.getElementById('progress-counter');
+
+  // Reset all status tags
+  PRODUCTS.forEach(p => setStatus(p.sku, '', ''));
+
+  const zip = new JSZip();
+  const folder = zip.folder('hariyalibasket-images');
+
+  let zipped = 0, failed = 0;
+  const total = PRODUCTS.length;
+
+  // Process in parallel batches (5 at a time to avoid overwhelming proxy)
+  const BATCH = 5;
+  for (let i = 0; i < PRODUCTS.length; i += BATCH) {
+    const batch = PRODUCTS.slice(i, i + BATCH);
+    await Promise.all(batch.map(async (p) => {
+      setStatus(p.sku, 'loading', '⏳');
+      try {
+        let blob, ext = 'jpg';
+
+        if (uploads[p.sku]) {
+          // User-uploaded file
+          blob = uploads[p.sku].file;
+          const fileName = uploads[p.sku].file.name;
+          const e = fileName.split('.').pop().toLowerCase();
+          if (['jpg','jpeg','png','webp','gif'].includes(e)) ext = e;
+        } else {
+          // Fetch from URL
+          const url = getCurrentUrl(p.sku);
+          if (!url) throw new Error('No URL');
+          blob = await fetchImageBlob(url);
+          const urlExt = url.split('?')[0].split('.').pop().toLowerCase();
+          if (['jpg','jpeg','png','webp','gif'].includes(urlExt)) ext = urlExt;
+        }
+
+        const filename = `${p.sku}-${slugify(p.name)}.${ext}`;
+        folder.file(filename, blob);
+        zipped++;
+        setStatus(p.sku, 'zipped', '✓');
+      } catch (e) {
+        failed++;
+        setStatus(p.sku, 'failed', '✗');
+        console.error('Failed:', p.sku, e);
+      }
+    }));
+
+    document.getElementById('stat-zipped').textContent = zipped;
+    document.getElementById('stat-failed').textContent = failed;
+    const done = zipped + failed;
+    fill.style.width = (done / total * 100) + '%';
+    counter.textContent = `${done} / ${total}`;
+    status.textContent = `Processing... ${done}/${total}`;
+  }
+
+  status.textContent = `📦 Generating ZIP file...`;
+
+  try {
+    const zipBlob = await zip.generateAsync(
+      { type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } },
+      meta => {
+        fill.style.width = meta.percent + '%';
+        counter.textContent = meta.percent.toFixed(0) + '%';
+      }
+    );
+
+    const link = URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = link;
+    a.download = 'hariyalibasket-images.zip';
+    a.click();
+    URL.revokeObjectURL(link);
+
+    status.textContent = `✅ Done! ZIP downloaded. (${zipped} images, ${failed} failed)`;
+    btn.disabled = false;
+    btn.textContent = '📦 Download Again';
+
+    setTimeout(() => {
+      alert(`✅ ZIP download ho gaya!\n\nTotal: ${total}\nSuccess: ${zipped}\nFailed: ${failed}\n\nAb ZIP extract karo aur WordPress Media mein upload karo.`);
+    }, 500);
+  } catch (e) {
+    status.textContent = '❌ ZIP creation failed: ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '📦 Try Again';
+  }
+}
+
+// Init
+render();
+document.getElementById('modal-input').addEventListener('keypress', e => {
+  if (e.key === 'Enter') saveReplace();
+});
+</script>
+
+</body>
+</html>
