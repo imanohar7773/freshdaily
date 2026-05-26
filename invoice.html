@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HariyaliBasket — Invoice Generator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+    background: #0a1a0e;
+    color: #fff;
+    padding: 16px;
+    min-height: 100vh;
+  }
+
+  /* ===== FORM AREA ===== */
+  .form-card {
+    max-width: 520px;
+    margin: 0 auto 16px;
+    background: #0f2d18;
+    border-radius: 16px;
+    padding: 18px;
+    border: 1px solid rgba(142, 212, 106, 0.2);
+  }
+  .form-card h2 {
+    color: #f4a228;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .form-card .sub {
+    color: #8ed46a;
+    font-size: 11px;
+    margin-bottom: 14px;
+  }
+  .field {
+    margin-bottom: 10px;
+  }
+  .field label {
+    font-size: 11px;
+    color: #8ed46a;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #2d6b42;
+    border-radius: 8px;
+    background: #1a4d2e;
+    color: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: #8ed46a;
+  }
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .row3 {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 6px;
+    margin-bottom: 6px;
+    align-items: end;
+  }
+  .row3 input {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .row3 .del-btn {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    width: 32px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .add-item-btn {
+    width: 100%;
+    background: transparent;
+    border: 2px dashed #8ed46a;
+    color: #8ed46a;
+    padding: 9px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+  .btn-primary {
+    width: 100%;
+    background: #25d366;
+    color: #fff;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  .btn-secondary {
+    width: 100%;
+    background: #1a4d2e;
+    color: #8ed46a;
+    border: 1px solid #2d6b42;
+    padding: 11px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+
+  /* ===== INVOICE ===== */
+  .invoice-wrap {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .invoice {
+    background: #fff;
+    color: #1a1a1a;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .inv-head {
+    background: linear-gradient(135deg, #1a4d2e, #0f2d18);
+    color: #fff;
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .inv-logo {
+    font-size: 32px;
+    margin-bottom: 4px;
+  }
+  .inv-brand {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+  }
+  .inv-brand span { color: #f4a228; }
+  .inv-tagline {
+    font-size: 9px;
+    color: #8ed46a;
+    letter-spacing: 2px;
+    margin-top: 2px;
+  }
+  .inv-contact {
+    font-size: 10px;
+    color: #d4ffea;
+    margin-top: 6px;
+  }
+  .inv-title-bar {
+    background: #f4a228;
+    color: #fff;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  .inv-meta {
+    padding: 14px 20px;
+    border-bottom: 1px dashed #ddd;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    font-size: 11px;
+  }
+  .inv-meta b { color: #1a4d2e; }
+  .inv-meta div { line-height: 1.7; }
+
+  .inv-cust {
+    padding: 12px 20px;
+    background: #f9fff9;
+    border-bottom: 1px dashed #ddd;
+  }
+  .inv-cust-title {
+    font-size: 10px;
+    color: #888;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .inv-cust-name {
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a4d2e;
+  }
+  .inv-cust-detail {
+    font-size: 11px;
+    color: #555;
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+
+  .inv-items {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+  .inv-items thead {
+    background: #1a4d2e;
+    color: #fff;
+  }
+  .inv-items th,
+  .inv-items td {
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .inv-items th {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  .inv-items td {
+    border-bottom: 1px solid #eee;
+  }
+  .inv-items .num { text-align: right; }
+  .inv-items tbody tr:last-child td { border-bottom: none; }
+  .inv-items td.iname { font-weight: 600; color: #1a4d2e; }
+
+  .inv-totals {
+    padding: 12px 20px;
+    background: #fff;
+  }
+  .inv-totals .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 12px;
+    color: #444;
+  }
+  .inv-totals .grand {
+    margin-top: 6px;
+    padding: 10px 0 6px;
+    border-top: 2px solid #1a4d2e;
+    font-size: 16px;
+    font-weight: 900;
+    color: #1a4d2e;
+  }
+  .inv-totals .grand span:last-child { color: #f4a228; }
+  .inv-totals .savings {
+    background: #fff8e1;
+    border: 1px solid #f4a228;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-top: 8px;
+    font-size: 11px;
+    color: #b36000;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .inv-pay {
+    padding: 10px 20px;
+    background: #f0fff4;
+    border-top: 1px dashed #ccc;
+    font-size: 11px;
+    color: #1a4d2e;
+  }
+  .inv-pay b { font-weight: 800; }
+
+  .inv-foot {
+    background: #1a4d2e;
+    color: #fff;
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  .inv-foot .ty {
+    font-size: 13px;
+    font-weight: 800;
+    color: #f4a228;
+    margin-bottom: 3px;
+  }
+
+  /* ===== ACTIONS ===== */
+  .actions {
+    max-width: 520px;
+    margin: 12px auto 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .actions button {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .act-print { background: #1a4d2e; color: #fff; }
+  .act-wa { background: #25d366; color: #fff; }
+  .act-edit { background: #f4a228; color: #fff; grid-column: 1 / -1; }
+  .act-new { background: #e74c3c; color: #fff; grid-column: 1 / -1; }
+
+  .hidden { display: none !important; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .form-card,
+    .actions,
+    .no-print { display: none !important; }
+    .invoice {
+      box-shadow: none;
+      border-radius: 0;
+      max-width: 100%;
+    }
+    .invoice-wrap { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== FORM ===== -->
+<div id="form-card" class="form-card">
+  <h2>🌿 HariyaliBasket — Invoice Banao</h2>
+  <p class="sub">Sirf details bharo, bill auto-generate ho jaayega</p>
+
+  <div class="field">
+    <label>👤 Customer Name *</label>
+    <input id="f-name" type="text" placeholder="Customer ka pura naam">
+  </div>
+
+  <div class="field">
+    <label>📞 Phone *</label>
+    <input id="f-phone" type="tel" placeholder="10-digit mobile number">
+  </div>
+
+  <div class="field">
+    <label>🏘️ Society / Colony</label>
+    <input id="f-society" type="text" placeholder="Society ka naam">
+  </div>
+
+  <div class="row2">
+    <div class="field">
+      <label>🏢 Block</label>
+      <input id="f-block" type="text" placeholder="A / B / C">
+    </div>
+    <div class="field">
+      <label>🚪 Flat No.</label>
+      <input id="f-flat" type="text" placeholder="101">
+    </div>
+  </div>
+
+  <div class="row2">
+    <div class="field">
+      <label>📅 Date</label>
+      <input id="f-date" type="date">
+    </div>
+    <div class="field">
+      <label>🧾 Bill No.</label>
+      <input id="f-billno" type="text" placeholder="HB-001">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>💳 Payment Method</label>
+    <select id="f-pay">
+      <option value="Cash on Delivery">💵 Cash on Delivery</option>
+      <option value="UPI / Online">📲 UPI / Online</option>
+      <option value="Paid">✅ Paid</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>🛒 Items (Naam · Qty · UOM · Rate)</label>
+    <div id="items-list"></div>
+    <button class="add-item-btn" onclick="addItemRow()">➕ Item Add Karo</button>
+  </div>
+
+  <div class="row2">
+    <div class="field">
+      <label>🚚 Delivery Charge (₹)</label>
+      <input id="f-delivery" type="number" value="0" min="0">
+    </div>
+    <div class="field">
+      <label>🎁 Discount (₹)</label>
+      <input id="f-discount" type="number" value="0" min="0">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>📝 Notes (optional)</label>
+    <input id="f-notes" type="text" placeholder="e.g. Kal subah deliver karna">
+  </div>
+
+  <button class="btn-primary" onclick="generateBill()">🧾 Bill Generate Karo</button>
+  <button class="btn-secondary" onclick="resetForm()">🔄 Form Reset</button>
+</div>
+
+<!-- ===== INVOICE OUTPUT ===== -->
+<div id="invoice-wrap" class="invoice-wrap hidden">
+  <div class="invoice" id="invoice">
+    <div class="inv-head">
+      <div class="inv-logo">🌿</div>
+      <div class="inv-brand">Hariyali<span>Basket</span></div>
+      <div class="inv-tagline">FARM TO DOORSTEP</div>
+      <div class="inv-contact">📱 +91 80003 44554 &nbsp;·&nbsp; Jaipur</div>
+    </div>
+
+    <div class="inv-title-bar">
+      <span>🧾 INVOICE</span>
+      <span id="inv-billno">HB-001</span>
+    </div>
+
+    <div class="inv-meta">
+      <div><b>Date:</b> <span id="inv-date">—</span></div>
+      <div style="text-align:right"><b>Time:</b> <span id="inv-time">—</span></div>
+    </div>
+
+    <div class="inv-cust">
+      <div class="inv-cust-title">🚚 DELIVER TO</div>
+      <div class="inv-cust-name" id="inv-name">—</div>
+      <div class="inv-cust-detail" id="inv-address">—</div>
+      <div class="inv-cust-detail">📞 <span id="inv-phone">—</span></div>
+    </div>
+
+    <table class="inv-items">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Item</th>
+          <th class="num">Qty</th>
+          <th class="num">Rate</th>
+          <th class="num">Amount</th>
+        </tr>
+      </thead>
+      <tbody id="inv-items-body"></tbody>
+    </table>
+
+    <div class="inv-totals">
+      <div class="row"><span>Subtotal</span><span id="inv-subtotal">₹0</span></div>
+      <div class="row" id="inv-discount-row"><span>🎁 Discount</span><span id="inv-discount">- ₹0</span></div>
+      <div class="row"><span>🚚 Delivery</span><span id="inv-delivery">₹0</span></div>
+      <div class="row grand"><span>GRAND TOTAL</span><span id="inv-total">₹0</span></div>
+      <div class="savings hidden" id="inv-savings"></div>
+    </div>
+
+    <div class="inv-pay">
+      <b>💳 Payment:</b> <span id="inv-pay">—</span>
+      <div id="inv-notes-wrap" class="hidden" style="margin-top:4px"><b>📝 Note:</b> <span id="inv-notes"></span></div>
+    </div>
+
+    <div class="inv-foot">
+      <div class="ty">🙏 Dhanyawaad! Aapka order mila!</div>
+      <div>🌿 100% Farm Fresh Guarantee · Free Replacement</div>
+      <div>WhatsApp: +91 80003 44554 &nbsp;·&nbsp; UPI: imanohar07773@ybl</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="act-print" onclick="printBill()">🖨️ Print / PDF</button>
+    <button class="act-wa" onclick="sendWhatsApp()">📱 WhatsApp Bhejo</button>
+    <button class="act-edit" onclick="editBill()">✏️ Edit Karo</button>
+    <button class="act-new" onclick="newBill()">🆕 Naya Bill</button>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   HARIYALIBASKET INVOICE GENERATOR
+   ========================================================= */
+
+let billCounter = parseInt(localStorage.getItem('hb_bill_counter') || '0');
+
+/* ---- Date helpers ---- */
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function nextBillNo() {
+  billCounter++;
+  return 'HB-' + String(billCounter).padStart(4, '0');
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+function fmtTime() {
+  return new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+}
+
+/* ---- Items ---- */
+function addItemRow(name, qty, uom, rate) {
+  const list = document.getElementById('items-list');
+  const div = document.createElement('div');
+  div.className = 'row3';
+  div.innerHTML = `
+    <input type="text" placeholder="Item naam" value="${name || ''}" class="it-name">
+    <input type="number" placeholder="Qty" value="${qty || 1}" min="0" step="0.5" class="it-qty">
+    <input type="text" placeholder="kg/pc" value="${uom || 'Kg'}" class="it-uom">
+    <input type="number" placeholder="₹ Rate" value="${rate || ''}" min="0" class="it-rate">
+    <button class="del-btn" onclick="this.parentNode.remove()">✕</button>
+  `;
+  list.appendChild(div);
+}
+
+function getItems() {
+  const rows = document.querySelectorAll('#items-list .row3');
+  const items = [];
+  rows.forEach(r => {
+    const name = r.querySelector('.it-name').value.trim();
+    const qty = parseFloat(r.querySelector('.it-qty').value) || 0;
+    const uom = r.querySelector('.it-uom').value.trim() || 'pc';
+    const rate = parseFloat(r.querySelector('.it-rate').value) || 0;
+    if (name && qty > 0 && rate > 0) {
+      items.push({ name, qty, uom, rate, amount: qty * rate });
+    }
+  });
+  return items;
+}
+
+/* ---- Generate Bill ---- */
+function generateBill() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const items = getItems();
+
+  if (!name) { alert('⚠️ Customer ka naam bharo!'); return; }
+  if (!phone) { alert('⚠️ Phone number bharo!'); return; }
+  if (!items.length) { alert('⚠️ Kam se kam ek item add karo!'); return; }
+
+  const society = document.getElementById('f-society').value.trim();
+  const block = document.getElementById('f-block').value.trim();
+  const flat = document.getElementById('f-flat').value.trim();
+  const date = document.getElementById('f-date').value || todayStr();
+  let billno = document.getElementById('f-billno').value.trim();
+  if (!billno) {
+    billno = nextBillNo();
+    localStorage.setItem('hb_bill_counter', billCounter);
+    document.getElementById('f-billno').value = billno;
+  }
+  const pay = document.getElementById('f-pay').value;
+  const delivery = parseFloat(document.getElementById('f-delivery').value) || 0;
+  const discount = parseFloat(document.getElementById('f-discount').value) || 0;
+  const notes = document.getElementById('f-notes').value.trim();
+
+  /* ----- Fill invoice ----- */
+  document.getElementById('inv-billno').textContent = billno;
+  document.getElementById('inv-date').textContent = fmtDate(date);
+  document.getElementById('inv-time').textContent = fmtTime();
+  document.getElementById('inv-name').textContent = name;
+  let addr = [society, block ? 'Block ' + block : '', flat ? 'Flat ' + flat : ''].filter(Boolean).join(' · ');
+  document.getElementById('inv-address').textContent = addr || '—';
+  document.getElementById('inv-phone').textContent = phone;
+  document.getElementById('inv-pay').textContent = pay;
+
+  if (notes) {
+    document.getElementById('inv-notes').textContent = notes;
+    document.getElementById('inv-notes-wrap').classList.remove('hidden');
+  } else {
+    document.getElementById('inv-notes-wrap').classList.add('hidden');
+  }
+
+  /* Items table */
+  const tbody = document.getElementById('inv-items-body');
+  tbody.innerHTML = items.map((it, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td class="iname">${it.name}</td>
+      <td class="num">${it.qty} ${it.uom}</td>
+      <td class="num">₹${it.rate}</td>
+      <td class="num"><b>₹${it.amount}</b></td>
+    </tr>
+  `).join('');
+
+  const subtotal = items.reduce((s, it) => s + it.amount, 0);
+  const total = subtotal - discount + delivery;
+
+  document.getElementById('inv-subtotal').textContent = '₹' + subtotal;
+  document.getElementById('inv-delivery').textContent = delivery > 0 ? '₹' + delivery : 'FREE';
+  document.getElementById('inv-discount').textContent = '- ₹' + discount;
+  document.getElementById('inv-discount-row').style.display = discount > 0 ? 'flex' : 'none';
+  document.getElementById('inv-total').textContent = '₹' + total;
+
+  if (discount > 0 || delivery === 0) {
+    let savingsTxt = [];
+    if (discount > 0) savingsTxt.push('💰 ₹' + discount + ' bachaye');
+    if (delivery === 0 && subtotal >= 499) savingsTxt.push('🎉 FREE Delivery');
+    if (savingsTxt.length) {
+      document.getElementById('inv-savings').textContent = savingsTxt.join(' · ');
+      document.getElementById('inv-savings').classList.remove('hidden');
+    } else {
+      document.getElementById('inv-savings').classList.add('hidden');
+    }
+  } else {
+    document.getElementById('inv-savings').classList.add('hidden');
+  }
+
+  document.getElementById('form-card').classList.add('hidden');
+  document.getElementById('invoice-wrap').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+/* ---- Actions ---- */
+function printBill() { window.print(); }
+
+function editBill() {
+  document.getElementById('form-card').classList.remove('hidden');
+  document.getElementById('invoice-wrap').classList.add('hidden');
+  window.scrollTo(0, 0);
+}
+
+function newBill() {
+  if (!confirm('Naya bill banana hai? Current bill clear ho jaayega.')) return;
+  resetForm();
+  document.getElementById('form-card').classList.remove('hidden');
+  document.getElementById('invoice-wrap').classList.add('hidden');
+  window.scrollTo(0, 0);
+}
+
+function resetForm() {
+  ['f-name', 'f-phone', 'f-society', 'f-block', 'f-flat', 'f-billno', 'f-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-date').value = todayStr();
+  document.getElementById('f-delivery').value = 0;
+  document.getElementById('f-discount').value = 0;
+  document.getElementById('f-pay').selectedIndex = 0;
+  document.getElementById('items-list').innerHTML = '';
+  addItemRow();
+}
+
+function sendWhatsApp() {
+  const phone = document.getElementById('f-phone').value.trim().replace(/\D/g, '');
+  const name = document.getElementById('f-name').value.trim();
+  const items = getItems();
+  const billno = document.getElementById('inv-billno').textContent;
+  const subtotal = items.reduce((s, it) => s + it.amount, 0);
+  const delivery = parseFloat(document.getElementById('f-delivery').value) || 0;
+  const discount = parseFloat(document.getElementById('f-discount').value) || 0;
+  const total = subtotal - discount + delivery;
+  const pay = document.getElementById('f-pay').value;
+
+  let msg = `🌿 *HariyaliBasket — Bill ${billno}*\n\n`;
+  msg += `👤 ${name}\n📅 ${fmtDate(document.getElementById('f-date').value)}\n\n`;
+  msg += `*Items:*\n`;
+  items.forEach((it, i) => {
+    msg += `${i + 1}. ${it.name} — ${it.qty} ${it.uom} × ₹${it.rate} = ₹${it.amount}\n`;
+  });
+  msg += `\nSubtotal: ₹${subtotal}\n`;
+  if (discount > 0) msg += `Discount: -₹${discount}\n`;
+  msg += `Delivery: ${delivery > 0 ? '₹' + delivery : 'FREE'}\n`;
+  msg += `*Grand Total: ₹${total}*\n`;
+  msg += `💳 ${pay}\n\n`;
+  msg += `🙏 Dhanyawaad! 🌿\n📱 +91 80003 44554`;
+
+  const waPhone = phone.length === 10 ? '91' + phone : phone;
+  window.open('https://wa.me/' + waPhone + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+/* ---- Init ---- */
+document.getElementById('f-date').value = todayStr();
+document.getElementById('f-billno').value = 'HB-' + String(billCounter + 1).padStart(4, '0');
+addItemRow();
+</script>
+
+</body>
+</html>

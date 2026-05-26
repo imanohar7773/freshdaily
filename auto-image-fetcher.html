@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HariyaliBasket — Auto Image Fetcher</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+    background: #0a1a0e;
+    color: #fff;
+    padding: 14px;
+    min-height: 100vh;
+  }
+  .header { text-align: center; padding: 14px 0; }
+  .header h1 { color: #f4a228; font-size: 22px; margin-bottom: 4px; }
+  .header p { color: #8ed46a; font-size: 12px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .info {
+    background: linear-gradient(135deg, rgba(37,211,102,0.15), rgba(244,162,40,0.15));
+    border: 1px solid #25d366;
+    border-radius: 14px;
+    padding: 14px 16px;
+    color: #d4ffea;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .info b { color: #f4a228; }
+  .info .step { color: #fff; font-weight: 700; }
+
+  .control-bar {
+    background: #0f2d18;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(142,212,106,0.2);
+  }
+
+  .control-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn {
+    padding: 13px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    flex: 1;
+    min-width: 160px;
+  }
+  .btn-fetch { background: #25d366; color: #fff; }
+  .btn-fetch:hover { background: #1eb958; }
+  .btn-fetch:disabled { background: #555; cursor: not-allowed; }
+  .btn-csv { background: #f4a228; color: #fff; }
+  .btn-clear { background: #e74c3c; color: #fff; }
+
+  .progress-row {
+    margin-top: 14px;
+    display: none;
+  }
+  .progress-row.shown { display: block; }
+  .progress-text {
+    font-size: 12px; color: #8ed46a;
+    margin-bottom: 6px; font-weight: 700;
+  }
+  .progress {
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #25d366, #8ed46a, #f4a228);
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .card {
+    background: #0f2d18;
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid rgba(142,212,106,0.15);
+    transition: all 0.3s;
+  }
+  .card.loading { border-color: #f4a228; }
+  .card.success { border-color: #25d366; }
+  .card.failed  { border-color: #e74c3c; }
+
+  .card-img-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #1a4d2e;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card-status {
+    position: absolute;
+    top: 6px; right: 6px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 2px 7px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 800;
+  }
+  .card-status.ok { background: #25d366; }
+  .card-status.fail { background: #e74c3c; }
+  .card-status.loading { background: #f4a228; }
+
+  .card-name {
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 2px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .card-cat {
+    font-size: 10px;
+    color: #8ed46a;
+    margin-bottom: 6px;
+  }
+  .card-actions {
+    display: flex;
+    gap: 4px;
+  }
+  .card-actions button,
+  .card-actions a {
+    flex: 1;
+    background: #1a4d2e;
+    color: #8ed46a;
+    border: none;
+    padding: 5px 6px;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    font-family: inherit;
+  }
+  .card-actions button:hover,
+  .card-actions a:hover {
+    background: #2d6b42;
+    color: #fff;
+  }
+
+  .stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .stat-item {
+    background: #1a4d2e;
+    padding: 6px 12px;
+    border-radius: 16px;
+    color: #8ed46a;
+  }
+  .stat-item.success { background: rgba(37,211,102,0.2); color: #25d366; }
+  .stat-item.failed  { background: rgba(231,76,60,0.2);  color: #e74c3c; }
+  .stat-item.total   { background: rgba(244,162,40,0.2); color: #f4a228; }
+
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal.shown { display: flex; }
+  .modal-box {
+    background: #0f2d18;
+    border-radius: 14px;
+    padding: 20px;
+    max-width: 480px;
+    width: 100%;
+    border: 1px solid #2d6b42;
+  }
+  .modal-box h3 {
+    color: #f4a228;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .modal-box .links {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .modal-box .links a {
+    background: #1a4d2e;
+    color: #8ed46a;
+    padding: 7px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .modal-box input {
+    width: 100%;
+    padding: 10px 12px;
+    background: #1a4d2e;
+    border: 1px solid #2d6b42;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 10px;
+  }
+  .modal-box .modal-actions {
+    display: flex; gap: 8px;
+  }
+  .modal-box .modal-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .modal-box .btn-save { background: #25d366; color: #fff; }
+  .modal-box .btn-cancel { background: #e74c3c; color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>🤖 Auto Image Fetcher</h1>
+    <p>Aapke 71 products ki photos automatic Wikipedia + Pexels se</p>
+  </div>
+
+  <div class="info">
+    <b>📋 Sirf 2 Step!</b><br>
+    <span class="step">1️⃣</span> <b>"▶️ Auto-Fetch All Images"</b> dabao → 30 sec mein saari images aa jayengi<br>
+    <span class="step">2️⃣</span> <b>"📥 Download CSV"</b> dabao → WordPress mein import karo → done!
+    <br><br>
+    <b>💡 Smart Features:</b>
+    <span style="color:#8ed46a">Wikipedia se primary fetch · agar koi image nahi mili to "🔄 Replace" se Pexels manually dal sakte ho · progress save hota hai</span>
+  </div>
+
+  <div class="control-bar">
+    <div class="control-row">
+      <button class="btn btn-fetch" id="fetch-btn" onclick="fetchAll()">▶️ Auto-Fetch All Images</button>
+      <button class="btn btn-csv" onclick="downloadCSV()">📥 Download CSV</button>
+      <button class="btn btn-clear" onclick="clearAll()">🗑 Clear All</button>
+    </div>
+
+    <div class="progress-row" id="progress-row">
+      <div class="progress-text" id="progress-text">Fetching...</div>
+      <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item total">Total: <span id="stat-total">71</span></div>
+      <div class="stat-item success">✓ Success: <span id="stat-success">0</span></div>
+      <div class="stat-item failed">✗ Failed: <span id="stat-failed">0</span></div>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- Replace URL Modal -->
+<div class="modal" id="replace-modal">
+  <div class="modal-box">
+    <h3 id="modal-title">🔄 Replace Image</h3>
+    <div class="links" id="modal-links"></div>
+    <p style="color:#8ed46a;font-size:11px;margin-bottom:8px">
+      💡 Image par right-click → "Copy image address" → yahan paste karo
+    </p>
+    <input type="text" id="modal-input" placeholder="Image URL paste karo (https://...)">
+    <div class="modal-actions">
+      <button class="btn-save" onclick="saveReplaced()">✓ Save</button>
+      <button class="btn-cancel" onclick="closeModal()">✕ Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// PRODUCTS LIST WITH WIKIPEDIA TITLES
+// ============================================================
+const PRODUCTS = [
+  // Fruits (22)
+  { sku: 'HB-FR-001', name: 'Apple Green Imp.',     cat: 'Fruits', unit: 'per Kg', wiki: 'Granny_Smith',           pexels: 'green apple' },
+  { sku: 'HB-FR-002', name: 'Apple Himachal',       cat: 'Fruits', unit: 'per Kg', wiki: 'Apple',                  pexels: 'red apple fresh' },
+  { sku: 'HB-FR-003', name: 'Apple Imp.',           cat: 'Fruits', unit: 'per Kg', wiki: 'Apple',                  pexels: 'apple fruit' },
+  { sku: 'HB-FR-004', name: 'Avocado Local',        cat: 'Fruits', unit: 'per Pc', wiki: 'Avocado',                pexels: 'avocado' },
+  { sku: 'HB-FR-005', name: 'Banana',               cat: 'Fruits', unit: 'per Kg', wiki: 'Banana',                 pexels: 'banana' },
+  { sku: 'HB-FR-006', name: 'Chikoo',               cat: 'Fruits', unit: 'per Kg', wiki: 'Manilkara_zapota',       pexels: 'sapota chikoo' },
+  { sku: 'HB-FR-007', name: 'Coconut Dhab',         cat: 'Fruits', unit: 'per Kg', wiki: 'Coconut',                pexels: 'tender coconut' },
+  { sku: 'HB-FR-008', name: 'Coconut Fresh',        cat: 'Fruits', unit: 'per Kg', wiki: 'Coconut',                pexels: 'coconut whole' },
+  { sku: 'HB-FR-009', name: 'Dragon Fruit',         cat: 'Fruits', unit: 'per Pc', wiki: 'Pitaya',                 pexels: 'dragon fruit' },
+  { sku: 'HB-FR-010', name: 'Guava (Desi)',         cat: 'Fruits', unit: 'per Kg', wiki: 'Guava',                  pexels: 'guava green' },
+  { sku: 'HB-FR-011', name: 'Guava Imp.',           cat: 'Fruits', unit: 'per Kg', wiki: 'Guava',                  pexels: 'guava pink' },
+  { sku: 'HB-FR-012', name: 'Jamun',                cat: 'Fruits', unit: 'per Kg', wiki: 'Syzygium_cumini',        pexels: 'jamun fruit' },
+  { sku: 'HB-FR-013', name: 'Kiwi Fresh',           cat: 'Fruits', unit: 'per Pc', wiki: 'Kiwifruit',              pexels: 'kiwi fruit' },
+  { sku: 'HB-FR-014', name: 'Mango Alphonso',       cat: 'Fruits', unit: 'per Kg', wiki: 'Alphonso_(mango)',       pexels: 'alphonso mango' },
+  { sku: 'HB-FR-015', name: 'Mango Langra',         cat: 'Fruits', unit: 'per Kg', wiki: 'Langra_(mango)',         pexels: 'mango' },
+  { sku: 'HB-FR-016', name: 'Mango Safeda',         cat: 'Fruits', unit: 'per Kg', wiki: 'Mango',                  pexels: 'yellow mango' },
+  { sku: 'HB-FR-017', name: 'Papaya Fresh',         cat: 'Fruits', unit: 'per Kg', wiki: 'Papaya',                 pexels: 'papaya ripe' },
+  { sku: 'HB-FR-018', name: 'Pineapple Fresh',      cat: 'Fruits', unit: 'per Kg', wiki: 'Pineapple',              pexels: 'pineapple' },
+  { sku: 'HB-FR-019', name: 'Pomegranate (Anar)',   cat: 'Fruits', unit: 'per Kg', wiki: 'Pomegranate',            pexels: 'pomegranate' },
+  { sku: 'HB-FR-020', name: 'Raw Papaya',           cat: 'Fruits', unit: 'per Kg', wiki: 'Papaya',                 pexels: 'green papaya' },
+  { sku: 'HB-FR-021', name: 'Sweet Lime (Mosambi)', cat: 'Fruits', unit: 'per Kg', wiki: 'Mosambi',                pexels: 'sweet lime mosambi' },
+  { sku: 'HB-FR-022', name: 'Watermelon (3-4 Kg)',  cat: 'Fruits', unit: 'per Pc', wiki: 'Watermelon',             pexels: 'watermelon' },
+  // Root Vegetables (11)
+  { sku: 'HB-RV-001', name: 'Beetroot',             cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Beetroot',         pexels: 'beetroot' },
+  { sku: 'HB-RV-002', name: 'Carrot',               cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Carrot',           pexels: 'carrot' },
+  { sku: 'HB-RV-003', name: 'Garlic',               cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Garlic',           pexels: 'garlic' },
+  { sku: 'HB-RV-004', name: 'Garlic Peeled',        cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Garlic',           pexels: 'peeled garlic' },
+  { sku: 'HB-RV-005', name: 'Ginger',               cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Ginger',           pexels: 'ginger root' },
+  { sku: 'HB-RV-006', name: 'Onion',                cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Onion',            pexels: 'red onion' },
+  { sku: 'HB-RV-007', name: 'Onion Small',          cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Shallot',          pexels: 'shallot small onion' },
+  { sku: 'HB-RV-008', name: 'Potato',               cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Potato',           pexels: 'potato' },
+  { sku: 'HB-RV-009', name: 'Potato Small',         cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Potato',           pexels: 'baby potato' },
+  { sku: 'HB-RV-010', name: 'Raw Mango',            cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Mango',            pexels: 'green raw mango' },
+  { sku: 'HB-RV-011', name: 'Red Potato',           cat: 'Root Vegetables', unit: 'per Kg', wiki: 'Potato',           pexels: 'red potato' },
+  // Green Vegetables (33)
+  { sku: 'HB-VG-001', name: 'Arbi (Colocasia)',     cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Taro',           pexels: 'taro arbi' },
+  { sku: 'HB-VG-002', name: 'Baby Corn Fresh',      cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Baby_corn',      pexels: 'baby corn' },
+  { sku: 'HB-VG-003', name: 'Bitter Gourd (Karela)',cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Bitter_melon',   pexels: 'bitter gourd karela' },
+  { sku: 'HB-VG-004', name: 'Bottle Gourd (Lauki)', cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Calabash',       pexels: 'bottle gourd' },
+  { sku: 'HB-VG-005', name: 'Brinjal (Baingan)',    cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Eggplant',       pexels: 'eggplant brinjal' },
+  { sku: 'HB-VG-006', name: 'Broccoli',             cat: 'Exotic & Packed',  unit: 'per Kg', wiki: 'Broccoli',       pexels: 'broccoli' },
+  { sku: 'HB-VG-007', name: 'Cabbage Green',        cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Cabbage',        pexels: 'green cabbage' },
+  { sku: 'HB-VG-008', name: 'Capsicum Green',       cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Bell_pepper',    pexels: 'green capsicum' },
+  { sku: 'HB-VG-009', name: 'Cauliflower',          cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Cauliflower',    pexels: 'cauliflower' },
+  { sku: 'HB-VG-010', name: 'Chola Fali',           cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Yardlong_bean',  pexels: 'long beans yardlong' },
+  { sku: 'HB-VG-011', name: 'Corn (Bhutta)',        cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Sweet_corn',     pexels: 'sweet corn cob' },
+  { sku: 'HB-VG-012', name: 'Cucumber Chinese',     cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Cucumber',       pexels: 'long cucumber' },
+  { sku: 'HB-VG-013', name: 'Curry Leaves',         cat: 'Herbs & Leafy',    unit: 'per Kg', wiki: 'Curry_tree',     pexels: 'curry leaves' },
+  { sku: 'HB-VG-014', name: 'Drumsticks (Sahjan)',  cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Moringa_oleifera', pexels: 'moringa drumstick' },
+  { sku: 'HB-VG-015', name: 'French Beans',         cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Green_bean',     pexels: 'green beans' },
+  { sku: 'HB-VG-016', name: 'Green Chilli',         cat: 'Herbs & Leafy',    unit: 'per Kg', wiki: 'Capsicum',       pexels: 'green chilli' },
+  { sku: 'HB-VG-017', name: 'Green Chilli (Hot)',   cat: 'Herbs & Leafy',    unit: 'per Kg', wiki: 'Bird%27s_eye_chili', pexels: 'hot green chilli' },
+  { sku: 'HB-VG-018', name: 'Guar Phali',           cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Guar',           pexels: 'cluster beans guar' },
+  { sku: 'HB-VG-019', name: 'Jackfruit (Kathal)',   cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Jackfruit',      pexels: 'jackfruit raw' },
+  { sku: 'HB-VG-020', name: 'Kachri',               cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Cucumis_melo',   pexels: 'kachri wild cucumber' },
+  { sku: 'HB-VG-021', name: 'Kakri',                cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Cucumis_melo',   pexels: 'armenian cucumber' },
+  { sku: 'HB-VG-022', name: 'Lady Finger (Bhindi)', cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Okra',           pexels: 'okra bhindi' },
+  { sku: 'HB-VG-023', name: 'Lettuce Green',        cat: 'Exotic & Packed',  unit: 'per Kg', wiki: 'Lettuce',        pexels: 'green lettuce' },
+  { sku: 'HB-VG-024', name: 'Parwal',               cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Trichosanthes_dioica', pexels: 'pointed gourd parwal' },
+  { sku: 'HB-VG-025', name: 'Red Capsicum',         cat: 'Exotic & Packed',  unit: 'per Kg', wiki: 'Bell_pepper',    pexels: 'red bell pepper' },
+  { sku: 'HB-VG-026', name: 'Red Pumpkin',          cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Pumpkin',        pexels: 'red pumpkin' },
+  { sku: 'HB-VG-027', name: 'Spinach (Palak)',      cat: 'Herbs & Leafy',    unit: 'per Kg', wiki: 'Spinach',        pexels: 'spinach palak' },
+  { sku: 'HB-VG-028', name: 'Spring Onion',         cat: 'Herbs & Leafy',    unit: 'per Kg', wiki: 'Scallion',       pexels: 'spring onion scallion' },
+  { sku: 'HB-VG-029', name: 'Tinda',                cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Praecitrullus_fistulosus', pexels: 'tinda apple gourd' },
+  { sku: 'HB-VG-030', name: 'Tomato',               cat: 'Green Vegetables', unit: 'per Kg', wiki: 'Tomato',         pexels: 'tomato' },
+  { sku: 'HB-VG-031', name: 'Yellow Capsicum',      cat: 'Exotic & Packed',  unit: 'per Kg', wiki: 'Bell_pepper',    pexels: 'yellow bell pepper' },
+  { sku: 'HB-VG-032', name: 'Zucchini Green/Yellow',cat: 'Exotic & Packed',  unit: 'per Kg', wiki: 'Zucchini',       pexels: 'zucchini' },
+  { sku: 'HB-VG-033', name: 'Mushroom Fresh 200g',  cat: 'Exotic & Packed',  unit: 'per Packet', wiki: 'Agaricus_bisporus', pexels: 'button mushroom' },
+  // Herbs (5)
+  { sku: 'HB-HR-001', name: 'Banana Leaf',          cat: 'Herbs & Leafy', unit: 'per Kg', wiki: 'Banana_leaf',  pexels: 'banana leaf' },
+  { sku: 'HB-HR-002', name: 'Coriander',            cat: 'Herbs & Leafy', unit: 'per Kg', wiki: 'Coriander',    pexels: 'coriander cilantro' },
+  { sku: 'HB-HR-003', name: 'Coriander Fresh',      cat: 'Herbs & Leafy', unit: 'per Kg', wiki: 'Coriander',    pexels: 'fresh coriander' },
+  { sku: 'HB-HR-004', name: 'Lemon (Nimbu)',        cat: 'Herbs & Leafy', unit: 'per Kg', wiki: 'Lemon',        pexels: 'lemon' },
+  { sku: 'HB-HR-005', name: 'Mint (Pudina)',        cat: 'Herbs & Leafy', unit: 'per Kg', wiki: 'Mentha',       pexels: 'mint pudina leaves' }
+];
+
+const STORAGE_KEY = 'hb_auto_images_v1';
+let imageData = loadFromStorage();
+let currentReplaceIdx = -1;
+
+function loadFromStorage() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch { return {}; }
+}
+
+function saveToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(imageData));
+}
+
+// ============================================================
+// WIKIPEDIA IMAGE FETCH (FREE, NO API KEY)
+// ============================================================
+async function fetchWikiImage(title) {
+  try {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&titles=${encodeURIComponent(title)}&piprop=thumbnail%7Coriginal&pithumbsize=800&origin=*`;
+    const r = await fetch(url);
+    const j = await r.json();
+    const pages = j.query?.pages || {};
+    const page = Object.values(pages)[0];
+    if (!page || page.missing !== undefined) return null;
+    return page.thumbnail?.source || page.original?.source || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// Fallback: search Wikipedia for top matching article and get its image
+async function fetchWikiSearch(searchTerm) {
+  try {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=3&prop=pageimages&piprop=thumbnail%7Coriginal&pithumbsize=800&origin=*`;
+    const r = await fetch(url);
+    const j = await r.json();
+    const pages = j.query?.pages || {};
+    // Try each result to find one with an image
+    for (const page of Object.values(pages)) {
+      const img = page.thumbnail?.source || page.original?.source;
+      if (img) return img;
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ============================================================
+// MAIN FETCH ALL
+// ============================================================
+async function fetchAll() {
+  const btn = document.getElementById('fetch-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Fetching...';
+
+  document.getElementById('progress-row').classList.add('shown');
+
+  let success = 0, failed = 0;
+  for (let i = 0; i < PRODUCTS.length; i++) {
+    const p = PRODUCTS[i];
+    setCardState(i, 'loading');
+    document.getElementById('progress-text').textContent =
+      `Fetching ${i + 1} / ${PRODUCTS.length}: ${p.name}`;
+
+    let img = await fetchWikiImage(p.wiki);
+    if (!img) {
+      img = await fetchWikiSearch(p.pexels);
+    }
+
+    if (img) {
+      imageData[p.sku] = img;
+      setCardImage(i, img);
+      setCardState(i, 'success');
+      success++;
+    } else {
+      setCardState(i, 'failed');
+      failed++;
+    }
+
+    document.getElementById('stat-success').textContent = success;
+    document.getElementById('stat-failed').textContent = failed;
+    const pct = ((i + 1) / PRODUCTS.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+
+    saveToStorage();
+
+    // Small delay to avoid hammering Wikipedia
+    await new Promise(r => setTimeout(r, 100));
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🔄 Re-Fetch All';
+  document.getElementById('progress-text').textContent =
+    `✅ Done! ${success} images fetched, ${failed} failed. Failed wale "🔄 Replace" button se manually dal sakte ho.`;
+}
+
+// ============================================================
+// UI RENDERING
+// ============================================================
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = PRODUCTS.map((p, i) => {
+    const url = imageData[p.sku] || '';
+    const stateClass = url ? 'success' : '';
+    const safeSearch = encodeURIComponent(p.pexels);
+    return `
+      <div class="card ${stateClass}" id="card-${i}">
+        <div class="card-img-wrap" id="img-wrap-${i}">
+          ${url ? `<img src="${url}" onerror="this.parentNode.innerHTML='<div style=\\'color:#666;font-size:11px\\'>❌ Load failed</div>'">` : '🌿'}
+          ${url ? '<div class="card-status ok">✓</div>' : ''}
+        </div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-cat">${p.cat} · ${p.unit}</div>
+        <div class="card-actions">
+          <button onclick="openReplace(${i})">🔄 Replace</button>
+          <a href="https://www.pexels.com/search/${safeSearch}/" target="_blank" rel="noopener">📸 Pexels</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function setCardState(idx, state) {
+  const card = document.getElementById('card-' + idx);
+  if (!card) return;
+  card.classList.remove('loading', 'success', 'failed');
+  card.classList.add(state);
+
+  const wrap = document.getElementById('img-wrap-' + idx);
+  if (wrap) {
+    let badge = wrap.querySelector('.card-status');
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.className = 'card-status';
+      wrap.appendChild(badge);
+    }
+    badge.classList.remove('ok', 'fail', 'loading');
+    if (state === 'loading') {
+      badge.classList.add('loading');
+      badge.textContent = '⏳';
+    } else if (state === 'success') {
+      badge.classList.add('ok');
+      badge.textContent = '✓';
+    } else if (state === 'failed') {
+      badge.classList.add('fail');
+      badge.textContent = '✗';
+    }
+  }
+}
+
+function setCardImage(idx, url) {
+  const wrap = document.getElementById('img-wrap-' + idx);
+  if (!wrap) return;
+  const img = wrap.querySelector('img');
+  if (img) {
+    img.src = url;
+  } else {
+    wrap.innerHTML = '<img src="' + url + '" onerror="this.style.display=\'none\'">';
+  }
+}
+
+// ============================================================
+// REPLACE MODAL
+// ============================================================
+function openReplace(idx) {
+  currentReplaceIdx = idx;
+  const p = PRODUCTS[idx];
+  document.getElementById('modal-title').textContent = '🔄 Replace: ' + p.name;
+  const safeSearch = encodeURIComponent(p.pexels);
+  document.getElementById('modal-links').innerHTML = `
+    <a href="https://www.pexels.com/search/${safeSearch}/" target="_blank" rel="noopener">📸 Pexels</a>
+    <a href="https://unsplash.com/s/photos/${safeSearch}" target="_blank" rel="noopener">🌅 Unsplash</a>
+    <a href="https://pixabay.com/images/search/${safeSearch}/" target="_blank" rel="noopener">🎨 Pixabay</a>
+    <a href="https://www.google.com/search?q=${safeSearch}&tbm=isch" target="_blank" rel="noopener">🔍 Google</a>
+  `;
+  document.getElementById('modal-input').value = imageData[p.sku] || '';
+  document.getElementById('replace-modal').classList.add('shown');
+  document.getElementById('modal-input').focus();
+}
+
+function closeModal() {
+  document.getElementById('replace-modal').classList.remove('shown');
+  currentReplaceIdx = -1;
+}
+
+function saveReplaced() {
+  if (currentReplaceIdx < 0) return;
+  const url = document.getElementById('modal-input').value.trim();
+  const p = PRODUCTS[currentReplaceIdx];
+
+  if (url && !/^https?:\/\//.test(url)) {
+    alert('⚠️ Sahi URL paste karo (https:// se shuru hona chahiye)');
+    return;
+  }
+
+  if (url) {
+    imageData[p.sku] = url;
+    setCardImage(currentReplaceIdx, url);
+    setCardState(currentReplaceIdx, 'success');
+  } else {
+    delete imageData[p.sku];
+    setCardState(currentReplaceIdx, 'failed');
+  }
+
+  saveToStorage();
+  updateCounts();
+  closeModal();
+}
+
+// ============================================================
+// CSV DOWNLOAD
+// ============================================================
+function downloadCSV() {
+  const done = Object.keys(imageData).filter(k => imageData[k]).length;
+  if (done === 0) {
+    alert('Pehle "▶️ Auto-Fetch All Images" dabao ya manually URLs add karo!');
+    return;
+  }
+
+  const headers = [
+    'SKU', 'Name', 'Categories', 'Regular price', 'Sale price',
+    'Tax status', 'In stock?', 'Short description', 'Description', 'Images'
+  ];
+
+  const defaultPrices = {
+    'Fruits':           { reg: 100, sale: 80 },
+    'Root Vegetables':  { reg: 50,  sale: 40 },
+    'Green Vegetables': { reg: 60,  sale: 50 },
+    'Herbs & Leafy':    { reg: 60,  sale: 50 },
+    'Exotic & Packed':  { reg: 140, sale: 120 }
+  };
+
+  const rows = [headers];
+  PRODUCTS.forEach(p => {
+    const url = imageData[p.sku] || '';
+    const dp = defaultPrices[p.cat] || { reg: 60, sale: 50 };
+    rows.push([
+      p.sku,
+      p.name,
+      p.cat,
+      dp.reg,
+      dp.sale,
+      'taxable',
+      1,
+      `Fresh ${p.name} - ${p.unit}`,
+      `Farm-fresh ${p.name} delivered to your doorstep. 100% quality guarantee from HariyaliBasket.`,
+      url
+    ]);
+  });
+
+  const csv = rows.map(row =>
+    row.map(cell => {
+      const s = String(cell == null ? '' : cell);
+      if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    }).join(',')
+  ).join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const link = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = link;
+  a.download = 'hariyalibasket-products-with-images.csv';
+  a.click();
+  URL.revokeObjectURL(link);
+
+  alert(`✅ CSV download ho gaya!\n\n${done}/${PRODUCTS.length} products mein image hai.\n\nAb WordPress mein:\nProducts → Import → CSV upload karo`);
+}
+
+function clearAll() {
+  if (!confirm('Saari image URLs clear kar do?')) return;
+  imageData = {};
+  localStorage.removeItem(STORAGE_KEY);
+  document.getElementById('stat-success').textContent = 0;
+  document.getElementById('stat-failed').textContent = 0;
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('progress-row').classList.remove('shown');
+  renderGrid();
+}
+
+function updateCounts() {
+  const success = Object.keys(imageData).filter(k => imageData[k]).length;
+  document.getElementById('stat-success').textContent = success;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.getElementById('stat-total').textContent = PRODUCTS.length;
+renderGrid();
+updateCounts();
+
+// Close modal on background click
+document.getElementById('replace-modal').addEventListener('click', e => {
+  if (e.target.id === 'replace-modal') closeModal();
+});
+
+// Save on Enter
+document.getElementById('modal-input').addEventListener('keypress', e => {
+  if (e.key === 'Enter') saveReplaced();
+});
+</script>
+
+</body>
+</html>
