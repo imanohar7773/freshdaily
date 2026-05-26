@@ -92,9 +92,53 @@
   .stat-item {
     background: #1a4d2e; padding: 6px 12px;
     border-radius: 16px; color: #8ed46a;
+    cursor: pointer;
   }
   .stat-item.ready { background: rgba(37,211,102,0.2); color: #25d366; }
   .stat-item.failed { background: rgba(231,76,60,0.2); color: #e74c3c; }
+  .stat-item.active { box-shadow: 0 0 0 2px currentColor; }
+
+  /* Failed list panel */
+  .failed-panel {
+    background: rgba(231,76,60,0.1);
+    border: 1px solid #e74c3c;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    color: #fff;
+    display: none;
+  }
+  .failed-panel.shown { display: block; }
+  .failed-panel h3 {
+    color: #ff8a80; font-size: 14px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .failed-panel h3 button {
+    background: #e74c3c; color: #fff; border: none;
+    padding: 5px 10px; border-radius: 6px; font-size: 11px;
+    font-weight: 700; cursor: pointer; font-family: inherit;
+  }
+  .failed-panel ul {
+    list-style: none; max-height: 220px; overflow-y: auto;
+    background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px;
+  }
+  .failed-panel li {
+    font-size: 12px; padding: 5px 0; color: #ffcdd2;
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
+    display: flex; gap: 8px; align-items: center;
+  }
+  .failed-panel li:last-child { border-bottom: none; }
+  .failed-panel li .sku {
+    background: #e74c3c; color: #fff; padding: 2px 6px;
+    border-radius: 4px; font-size: 10px; font-weight: 800;
+    min-width: 75px; text-align: center;
+  }
+  .failed-panel li button {
+    margin-left: auto;
+    background: #f4a228; color: #fff; border: none;
+    padding: 4px 10px; border-radius: 4px; font-size: 10px;
+    font-weight: 700; cursor: pointer; font-family: inherit;
+  }
 
   .grid {
     display: grid;
@@ -225,6 +269,11 @@
     .grid { grid-template-columns: repeat(2, 1fr); }
     .card-name { font-size: 11px; }
   }
+
+  @keyframes pulseHighlight {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(244,162,40,0); transform: scale(1); }
+    50% { box-shadow: 0 0 0 8px rgba(244,162,40,0.6); transform: scale(1.03); }
+  }
 </style>
 </head>
 <body>
@@ -260,10 +309,22 @@
     </div>
 
     <div class="stats">
-      <div class="stat-item">Total: <span id="stat-total">71</span></div>
-      <div class="stat-item ready">✓ ZIP Added: <span id="stat-zipped">0</span></div>
-      <div class="stat-item failed">✗ Failed: <span id="stat-failed">0</span></div>
+      <div class="stat-item" onclick="filterCards('all')">Total: <span id="stat-total">71</span></div>
+      <div class="stat-item ready" onclick="filterCards('zipped')">✓ ZIP Added: <span id="stat-zipped">0</span></div>
+      <div class="stat-item failed" onclick="filterCards('failed')">✗ Failed: <span id="stat-failed">0</span></div>
     </div>
+  </div>
+
+  <!-- Failed items panel -->
+  <div class="failed-panel" id="failed-panel">
+    <h3>
+      <span>❌ Failed Images (<span id="failed-count">0</span>)</span>
+      <button onclick="copyFailedList()">📋 Copy List</button>
+    </h3>
+    <ul id="failed-list"></ul>
+    <p style="font-size:11px;color:#ffcdd2;margin-top:8px">
+      💡 Niche grid mein in cards par red border hai. <b>"🔄 Change"</b> ya <b>"📤 Upload"</b> dabake fix karo, fir wapas <b>"📦 Download All as ZIP"</b> dabao!
+    </p>
   </div>
 
   <div class="grid" id="grid"></div>
@@ -525,6 +586,7 @@ async function downloadAllZip() {
   btn.textContent = '⏳ Building ZIP...';
 
   document.getElementById('progress-row').classList.add('shown');
+  document.getElementById('failed-panel').classList.remove('shown');
   const fill = document.getElementById('progress-fill');
   const status = document.getElementById('progress-status');
   const counter = document.getElementById('progress-counter');
@@ -536,6 +598,7 @@ async function downloadAllZip() {
   const folder = zip.folder('hariyalibasket-images');
 
   let zipped = 0, failed = 0;
+  const failedList = []; // <-- track failed items
   const total = PRODUCTS.length;
 
   // Process in parallel batches (5 at a time to avoid overwhelming proxy)
@@ -568,6 +631,13 @@ async function downloadAllZip() {
         setStatus(p.sku, 'zipped', '✓');
       } catch (e) {
         failed++;
+        failedList.push({
+          sku: p.sku,
+          name: p.name,
+          cat: p.cat,
+          url: getCurrentUrl(p.sku) || '(uploaded file failed)',
+          error: e.message || 'Unknown error'
+        });
         setStatus(p.sku, 'failed', '✗');
         console.error('Failed:', p.sku, e);
       }
@@ -582,6 +652,41 @@ async function downloadAllZip() {
   }
 
   status.textContent = `📦 Generating ZIP file...`;
+
+  // Add a _FAILED.txt file inside the ZIP if there are failures
+  if (failedList.length > 0) {
+    let txt = '═══════════════════════════════════════════════════\n';
+    txt += '  HARIYALIBASKET — FAILED IMAGES LIST\n';
+    txt += `  Date: ${new Date().toLocaleString('en-IN')}\n`;
+    txt += `  Total Failed: ${failedList.length} / ${total}\n`;
+    txt += '═══════════════════════════════════════════════════\n\n';
+    txt += 'Ye products ki images download nahi ho payi:\n\n';
+    failedList.forEach((f, i) => {
+      txt += `${i + 1}. ${f.sku} — ${f.name}\n`;
+      txt += `   Category: ${f.cat}\n`;
+      txt += `   URL: ${f.url}\n`;
+      txt += `   Error: ${f.error}\n\n`;
+    });
+    txt += '═══════════════════════════════════════════════════\n';
+    txt += '  KAISE FIX KAREIN:\n';
+    txt += '═══════════════════════════════════════════════════\n';
+    txt += '1. Tool wapas open karo\n';
+    txt += '2. Failed cards par RED border hoga\n';
+    txt += '3. "🔄 Change" dabao → naya URL paste karo\n';
+    txt += '4. Ya "📤 Upload" dabao → khud ki photo daalo\n';
+    txt += '5. "📦 Download All as ZIP" dabao again\n';
+    folder.file('_FAILED.txt', txt);
+
+    // Also build a CSV for failed items
+    let csv = 'SKU,Name,Category,URL,Error\n';
+    failedList.forEach(f => {
+      csv += `"${f.sku}","${f.name}","${f.cat}","${f.url}","${f.error}"\n`;
+    });
+    folder.file('_FAILED.csv', csv);
+  }
+
+  // Show failed panel on UI
+  showFailedPanel(failedList);
 
   try {
     const zipBlob = await zip.generateAsync(
@@ -603,14 +708,87 @@ async function downloadAllZip() {
     btn.disabled = false;
     btn.textContent = '📦 Download Again';
 
+    // Save failed list to state for re-display
+    window.__hbLastFailed = failedList;
+
     setTimeout(() => {
-      alert(`✅ ZIP download ho gaya!\n\nTotal: ${total}\nSuccess: ${zipped}\nFailed: ${failed}\n\nAb ZIP extract karo aur WordPress Media mein upload karo.`);
+      let msg = `✅ ZIP download ho gaya!\n\nTotal: ${total}\nSuccess: ${zipped}\nFailed: ${failed}`;
+      if (failedList.length > 0) {
+        msg += `\n\n❌ Failed items niche dikh rahe hain.\nZIP ke andar bhi _FAILED.txt mein list hai!`;
+      }
+      alert(msg);
     }, 500);
   } catch (e) {
     status.textContent = '❌ ZIP creation failed: ' + e.message;
     btn.disabled = false;
     btn.textContent = '📦 Try Again';
   }
+}
+
+// Show failed panel with list of failed products
+function showFailedPanel(failedList) {
+  const panel = document.getElementById('failed-panel');
+  const ul = document.getElementById('failed-list');
+  const count = document.getElementById('failed-count');
+
+  if (!failedList || failedList.length === 0) {
+    panel.classList.remove('shown');
+    return;
+  }
+
+  count.textContent = failedList.length;
+  ul.innerHTML = failedList.map(f => `
+    <li>
+      <span class="sku">${escapeHtml(f.sku)}</span>
+      <span><b>${escapeHtml(f.name)}</b> — ${escapeHtml(f.cat)}</span>
+      <button onclick="scrollToCard('${f.sku}')">→ Fix</button>
+    </li>
+  `).join('');
+
+  panel.classList.add('shown');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Filter cards by status
+function filterCards(filter) {
+  document.querySelectorAll('.stat-item').forEach(s => s.classList.remove('active'));
+  event.target.closest('.stat-item').classList.add('active');
+
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    if (filter === 'all') {
+      card.style.display = '';
+    } else if (filter === 'zipped') {
+      card.style.display = card.classList.contains('zipped') ? '' : 'none';
+    } else if (filter === 'failed') {
+      card.style.display = card.classList.contains('failed') ? '' : 'none';
+    }
+  });
+}
+
+// Scroll to a specific card and highlight it
+function scrollToCard(sku) {
+  const card = document.getElementById('card-' + sku);
+  if (!card) return;
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  card.style.animation = 'none';
+  setTimeout(() => {
+    card.style.animation = 'pulseHighlight 1.5s ease 2';
+  }, 50);
+}
+
+// Copy failed list to clipboard
+function copyFailedList() {
+  const failed = window.__hbLastFailed || [];
+  if (!failed.length) return;
+  const text = failed.map((f, i) =>
+    `${i+1}. ${f.sku} — ${f.name}`
+  ).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    alert('✅ Failed list copy ho gayi clipboard mein!\nWhatsApp/notes mein paste kar sakte ho.');
+  }).catch(() => {
+    alert('Copy failed. Manual copy karo.');
+  });
 }
 
 // Init
