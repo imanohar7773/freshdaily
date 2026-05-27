@@ -48,6 +48,25 @@ button { font-family: inherit; cursor: pointer; }
 button:active { transform: scale(0.96); }
 input, textarea { font-family: inherit; }
 
+/* BUG FIX #4: All major UI sections must render above floating leaves (z-index 1).
+   This creates a clean stacking context so leaves only show in true gaps/transparent areas. */
+.hb-marquee,
+.hb-hero,
+.hb-info-cards,
+.hb-countdown,
+.hb-how-section,
+.hb-products-section,
+.hb-features-section,
+.hb-reviews-section,
+.hb-pincode-section,
+.hb-faq-list,
+.hb-footer,
+#hb-trust-bar,
+#hb-repeat-bar {
+  position: relative;
+  z-index: 2;
+}
+
 /* Section headers */
 .hb-section-hdr {
   padding: 24px 16px 8px;

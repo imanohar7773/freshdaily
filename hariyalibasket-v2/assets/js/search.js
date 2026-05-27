@@ -75,49 +75,84 @@ function getSynonyms(word) {
 }
 
 /**
- * Score a product against the query
- * Higher = better match
+ * Score a product against the query.
+ * Higher = better match.
+ *
+ * BUG FIX #3: Short queries (< 3 chars) only match prefix patterns —
+ *   no "contains" anywhere, no typo tolerance. This prevents "al" from
+ *   matching "Brinjal" / "Spinach (Palak)" purely because they happen
+ *   to contain those 2 letters.
+ *
+ * BUG FIX #2: Partial synonym match — if the query is a prefix of any
+ *   synonym key (e.g. "al" → "aloo"), the matched products surface even
+ *   though no product is literally named "Aloo".
  */
 function score(product, query) {
   var name = product.name.toLowerCase();
   var q = query.toLowerCase().trim();
   if (!q) return 0;
 
+  var isShort = q.length < 3;
+
   // 1. Exact name match
   if (name === q) return 100;
-  // 2. Starts with
-  if (name.indexOf(q) === 0) return 80;
-  // 3. Contains
-  if (name.indexOf(q) !== -1) return 60;
 
-  // 4. Synonym match
-  var syns = getSynonyms(q);
-  for (var i = 0; i < syns.length; i++) {
-    if (name.indexOf(syns[i]) !== -1) return 50;
-  }
-  // Reverse — if any word in product matches a synonym of query
+  // 2. Name starts with query (high signal)
+  if (name.indexOf(q) === 0) return 90;
+
+  // 3. Any word in name starts with query (e.g. "Apple Himachal" matches "him")
   var nameWords = name.split(/\s+/);
-  for (var j = 0; j < nameWords.length; j++) {
-    var ws = getSynonyms(nameWords[j]);
-    for (var k = 0; k < ws.length; k++) {
-      if (q.indexOf(ws[k]) !== -1) return 45;
+  for (var i = 0; i < nameWords.length; i++) {
+    if (nameWords[i].indexOf(q) === 0 && nameWords[i] !== '') return 75;
+  }
+
+  // 4. Synonym key starts with query — "al" → "aloo" → Potato (BUG FIX #2)
+  for (var key in SYNONYMS) {
+    if (key.length <= q.length) continue; // need actual prefix relationship
+    if (key.indexOf(q) !== 0) continue;
+    // Match products that contain any of this key's targets
+    var targets = SYNONYMS[key];
+    for (var t = 0; t < targets.length; t++) {
+      if (name.indexOf(targets[t]) !== -1) return 60;
+    }
+    // Also, if a product name starts with the key itself (e.g. "Aloo Bhindi")
+    if (name.indexOf(key) === 0) return 60;
+  }
+
+  // 5. Reverse — any word in product has a synonym that starts with q
+  for (var w = 0; w < nameWords.length; w++) {
+    var ws = getSynonyms(nameWords[w]);
+    for (var s = 0; s < ws.length; s++) {
+      if (ws[s].indexOf(q) === 0) return 55;
     }
   }
 
-  // 5. Typo tolerance — check distance for short queries
-  if (q.length >= 3) {
+  // ── Stop here for short queries (BUG FIX #3) ──
+  // No "contains" matches, no typo tolerance. They cause noise.
+  if (isShort) return 0;
+
+  // 6. Contains anywhere in name (3+ char queries only)
+  if (name.indexOf(q) !== -1) return 50;
+
+  // 7. Synonym match (full query maps to known synonym)
+  var fullSyns = getSynonyms(q);
+  for (var i2 = 0; i2 < fullSyns.length; i2++) {
+    if (name.indexOf(fullSyns[i2]) !== -1) return 45;
+  }
+
+  // 8. Typo tolerance — only for 4+ char queries (was 3+, too permissive)
+  if (q.length >= 4) {
     var minDist = Infinity;
     for (var n = 0; n < nameWords.length; n++) {
       var d = distance(q, nameWords[n]);
       if (d < minDist) minDist = d;
     }
-    if (minDist <= 1) return 40;
-    if (minDist <= 2 && q.length >= 5) return 30;
+    if (minDist <= 1) return 35;
+    if (minDist <= 2 && q.length >= 6) return 25;
 
-    // Also typo on synonyms
-    if (syns.length > 0) {
-      for (var s = 0; s < syns.length; s++) {
-        if (distance(q, syns[s]) <= 1) return 35;
+    if (fullSyns.length > 0) {
+      for (var sy = 0; sy < fullSyns.length; sy++) {
+        if (distance(q, fullSyns[sy]) <= 1) return 30;
       }
     }
   }
@@ -136,11 +171,11 @@ window.HBSearch = {
   },
 
   /**
-   * Suggest products as user types (top 5)
+   * Suggest products as user types (top 7)
    */
   suggest: function(query) {
     if (!query || query.length < 1) return [];
-    return this.filter(window.HB_PRODUCTS || [], query).slice(0, 5);
+    return this.filter(window.HB_PRODUCTS || [], query).slice(0, 7);
   },
 };
 
