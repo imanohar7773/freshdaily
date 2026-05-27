@@ -5,7 +5,19 @@
   <div class="hb-search-section">
     <div class="hb-search-box">
       <span class="hb-search-icon">🔍</span>
-      <input id="hb-search-inp" type="text" placeholder="Aloo, Tamatar, Pyaaz dhundo..." autocomplete="off">
+      <input id="hb-search-inp"
+             type="search"
+             name="hb-q-<?php echo wp_generate_password( 6, false, false ); ?>"
+             placeholder="Aloo, Tamatar, Pyaaz dhundo..."
+             autocomplete="off"
+             autocorrect="off"
+             autocapitalize="off"
+             spellcheck="false"
+             inputmode="search"
+             aria-autocomplete="list"
+             role="combobox"
+             aria-controls="hb-search-suggest"
+             aria-expanded="false">
       <button class="hb-clear-btn" id="hb-clear-btn">✕</button>
     </div>
     <div id="hb-search-suggest" class="hb-search-suggest"></div>

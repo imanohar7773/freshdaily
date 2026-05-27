@@ -25,6 +25,25 @@
   font-weight: 600;
   color: var(--gray-800);
   outline: none;
+  /* BUG FIX: suppress browser native autofill suggestion bubble (mobile Chrome) */
+  -webkit-appearance: none;
+  appearance: none;
+}
+/* Hide browser-default search input "x" button (we have our own .hb-clear-btn) */
+.hb-search-box input[type="search"]::-webkit-search-cancel-button,
+.hb-search-box input[type="search"]::-webkit-search-decoration,
+.hb-search-box input[type="search"]::-webkit-search-results-button,
+.hb-search-box input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+/* Suppress yellow autofill background (Chrome) — keep our white background */
+.hb-search-box input:-webkit-autofill,
+.hb-search-box input:-webkit-autofill:hover,
+.hb-search-box input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px #fff inset !important;
+  -webkit-text-fill-color: var(--gray-800) !important;
 }
 .hb-search-box input::placeholder { color: var(--gray-400); }
 .hb-search-icon { font-size: 17px; color: var(--gray-400); }

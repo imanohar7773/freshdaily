@@ -186,6 +186,14 @@ function init() {
   var suggestBox = $('hb-search-suggest');
   if (!inp) return;
 
+  // BUG FIX: kill any browser autofill datalist that might attach
+  inp.setAttribute('autocomplete', 'off');
+  inp.setAttribute('autocorrect', 'off');
+  inp.setAttribute('autocapitalize', 'off');
+  inp.setAttribute('spellcheck', 'false');
+  // Some mobile browsers fall back to "list" attribute — clear it
+  inp.removeAttribute('list');
+
   inp.addEventListener('input', function(){
     var v = this.value;
     App.searchQuery = v;
