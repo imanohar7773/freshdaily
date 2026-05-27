@@ -1,0 +1,53 @@
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 380px) {
+  #hb-product-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 8px 10px 200px; }
+  .hb-pcard { padding: 11px 10px 10px; }
+  .hb-p-emoji { font-size: 36px; }
+  .hb-hero-title { font-size: 30px; }
+}
+@media (min-width: 600px) {
+  #hb-product-grid { grid-template-columns: repeat(3, 1fr); }
+  #hb-checkout-sheet,
+  #hb-overlay,
+  #hb-cart-bar,
+  #hb-cart-drawer {
+    max-width: 480px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+  }
+  #hb-checkout-sheet.open { transform: translateX(-50%) translateY(0); }
+  #hb-overlay {
+    transform: none;
+    left: 0;
+    max-width: 100%;
+  }
+  #hb-cart-bar { transform: translateX(-50%) translateY(110%); }
+  #hb-cart-bar.show { transform: translateX(-50%) translateY(0); }
+  #hb-cart-drawer { transform: translateX(-50%); }
+  .hb-sheet-footer { max-width: 480px; left: 50%; transform: translateX(-50%); }
+  .hb-bottom-nav { max-width: 480px; left: 50%; transform: translateX(-50%); }
+}
+@media (min-width: 900px) {
+  #hb-product-grid { grid-template-columns: repeat(4, 1fr); padding: 12px 24px 200px; }
+}
+
+/* ═══ PRINT (price list) ═══ */
+@media print {
+  .hb-marquee, .hb-header, .hb-hero, .hb-info-cards, .hb-countdown,
+  .hb-how-section, #hb-cart-bar, #hb-cart-drawer, #hb-checkout-sheet,
+  #hb-overlay, .hb-features-section, .hb-reviews-section,
+  .hb-pincode-section, .hb-bottom-nav, .hb-footer,
+  .hb-filter-bar, .hb-search-section, .hb-delivery-strip,
+  .hb-qty-ctrl, .hb-pcard-add, .hb-badge,
+  #hb-trust-bar, #hb-repeat-bar { display: none !important; }
+
+  body { background: #fff !important; padding-bottom: 0 !important; }
+  #hb-product-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6px !important;
+    padding: 0 !important;
+  }
+  .hb-pcard { background: #fff !important; border: 1px solid #ccc !important; padding: 8px !important; break-inside: avoid; }
+  .hb-pcard::before { content: '🌿 HariyaliBasket — Price List' !important; }
+}
