@@ -64,17 +64,43 @@ window.HBUtils = {
     div.textContent = s;
     return div.innerHTML;
   },
-  storage: {
-    get: function(key) {
-      try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e) { return null; }
-    },
-    set: function(key, val) {
-      try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
-    },
-    remove: function(key) {
-      try { localStorage.removeItem(key); } catch(e) {}
+  // BUG FIX #3: localStorage with in-memory fallback for incognito/disabled storage
+  storage: (function() {
+    var memCache = {};
+    var hasLS = false;
+    try {
+      var t = '__hb_test__';
+      localStorage.setItem(t, '1');
+      localStorage.removeItem(t);
+      hasLS = true;
+    } catch(e) {
+      hasLS = false;
     }
-  }
+    return {
+      available: hasLS,
+      get: function(key) {
+        if (hasLS) {
+          try {
+            var raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : null;
+          } catch(e) { /* fall through to memCache */ }
+        }
+        return memCache.hasOwnProperty(key) ? memCache[key] : null;
+      },
+      set: function(key, val) {
+        if (hasLS) {
+          try { localStorage.setItem(key, JSON.stringify(val)); return; } catch(e) { /* QuotaExceeded etc. — fall through */ }
+        }
+        memCache[key] = val;
+      },
+      remove: function(key) {
+        if (hasLS) {
+          try { localStorage.removeItem(key); } catch(e) {}
+        }
+        delete memCache[key];
+      }
+    };
+  })()
 };
 
 // Get product info from cart key

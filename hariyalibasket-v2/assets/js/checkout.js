@@ -273,12 +273,36 @@ window.HBCheckout = {
   },
 
   refreshCaptcha: function() {
-    // Simple client-side captcha (anti-bot, not cryptographically secure)
-    var a = Math.floor(Math.random() * 9) + 1;
-    var b = Math.floor(Math.random() * 9) + 1;
-    App.captcha = { a: a, b: b };
-    $('hb-cap-q').textContent = a + ' + ' + b + ' = ?';
-    $('hb-cap-v').value = '';
+    // BUG FIX #2: Real server-side CAPTCHA via AJAX (token-based, prevents bot bypass)
+    var qEl = $('hb-cap-q');
+    var inp = $('hb-cap-v');
+    if (qEl) qEl.textContent = '⏳ Loading...';
+    if (inp) inp.value = '';
+    App.captcha = null; // invalidate any prior token
+
+    var ajaxUrl = (window.HB && HB.ajaxUrl) || '/wp-admin/admin-ajax.php';
+    if (ajaxUrl === '#preview-mode') {
+      // Preview mode — fall back to client-side display (no real verification)
+      var a = Math.floor(Math.random() * 9) + 1;
+      var b = Math.floor(Math.random() * 9) + 1;
+      App.captcha = { token: '__preview__', expectedSum: a + b };
+      if (qEl) qEl.textContent = a + ' + ' + b + ' = ?';
+      return;
+    }
+
+    fetch(ajaxUrl + '?action=hb_captcha', { credentials: 'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if (res && res.success && res.data && res.data.token) {
+          App.captcha = { token: res.data.token };
+          if (qEl) qEl.textContent = res.data.question;
+        } else {
+          if (qEl) qEl.textContent = 'CAPTCHA load failed — refresh';
+        }
+      })
+      .catch(function(){
+        if (qEl) qEl.textContent = 'CAPTCHA load failed — refresh';
+      });
   },
 
   place: function() {
@@ -286,12 +310,17 @@ window.HBCheckout = {
       HBUtils.toast('UPI Transaction ID enter karo ⚠️');
       return;
     }
-    // CAPTCHA check
+    // CAPTCHA — basic client-side sanity check (real check on server)
     var capV = parseInt($('hb-cap-v').value);
-    if (!App.captcha || isNaN(capV) || capV !== App.captcha.a + App.captcha.b) {
+    if (!App.captcha || !App.captcha.token || isNaN(capV)) {
+      HBUtils.toast('CAPTCHA answer enter karo ⚠️');
+      $('hb-cap-v').focus();
+      return;
+    }
+    // Preview mode — verify locally
+    if (App.captcha.token === '__preview__' && App.captcha.expectedSum !== capV) {
       HBUtils.toast('CAPTCHA galat hai. Math check karo ⚠️');
       HBCheckout.refreshCaptcha();
-      $('hb-cap-v').focus();
       return;
     }
 
@@ -326,9 +355,6 @@ window.HBCheckout = {
     }).filter(Boolean);
     var t = HBCart.totals();
 
-    // Save last order for repeat
-    HBUtils.storage.set(App.LASTORDER_KEY, items);
-
     // Submit to WordPress AJAX (saves to hb_order CPT)
     var formData = new FormData();
     formData.append('action', 'hb_place_order');
@@ -342,34 +368,46 @@ window.HBCheckout = {
     formData.append('txn', $('hb-f-txn').value.trim());
     formData.append('items', JSON.stringify(items));
     formData.append('total', t.grand);
-    formData.append('captcha_a', App.captcha.a);
-    formData.append('captcha_b', App.captcha.b);
-    formData.append('captcha_v', capV);
+    formData.append('captcha_token', App.captcha.token);
+    formData.append('captcha_answer', capV);
 
     var ajaxUrl = (window.HB && HB.ajaxUrl) || '/wp-admin/admin-ajax.php';
 
     fetch(ajaxUrl, { method: 'POST', body: formData, credentials: 'same-origin' })
-      .then(function(r){ return r.json(); })
+      .then(function(r){
+        if (!r.ok && r.status !== 200) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
       .then(function(res){
         btn.disabled = false;
         btn.classList.remove('hb-btn-loading');
         btxt.textContent = '🎉 Place Order';
 
-        if (res && res.success) {
+        if (res && res.success && res.data && res.data.order_id) {
+          // SUCCESS — real server-saved order
           App.orderId = res.data.order_id;
+          // Save snapshot for repeat-order feature
+          HBUtils.storage.set(App.LASTORDER_KEY, items.map(function(i){
+            return { key: i.key, qty: i.qty, name: i.name };
+          }));
+          HBCheckout._afterPlace(name, phone, soc, block, flat, t, items);
         } else {
-          App.orderId = 'HB' + Math.random().toString(36).substr(2, 6).toUpperCase();
-          if (res && res.data && res.data.msg) HBUtils.toast(res.data.msg, 4000);
+          // BUG FIX #6: Server-side validation failed — DO NOT fake an order ID
+          var msg = (res && res.data && res.data.msg) ? res.data.msg : 'Order submit nahi hua. Try again.';
+          HBUtils.toast(msg, 4500);
+          if (res && res.data && res.data.captcha_failed) {
+            HBCheckout.refreshCaptcha();
+          }
+          // Stay on payment step so user can fix and retry
         }
-        HBCheckout._afterPlace(name, phone, soc, block, flat, t, items);
       })
       .catch(function(err){
-        // Network failure — still create local order ID and proceed (fallback)
+        // Network/parse failure — show error, allow retry
         btn.disabled = false;
         btn.classList.remove('hb-btn-loading');
         btxt.textContent = '🎉 Place Order';
-        App.orderId = 'HB' + Math.random().toString(36).substr(2, 6).toUpperCase();
-        HBCheckout._afterPlace(name, phone, soc, block, flat, t, items);
+        HBUtils.toast('Network issue — order submit nahi hua. Internet check karke retry karo.', 5000);
+        // No fake order ID — order was NOT placed
       });
   },
 

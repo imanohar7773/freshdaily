@@ -1,38 +1,53 @@
 <?php
 /**
- * HARIYALIBASKET — Product Importer (One-Time)
+ * HARIYALIBASKET — Product Importer (One-Time + Auto-Lock)
+ *
+ * SECURITY (BUG FIX #7):
+ *   - Requires admin login (manage_options capability)
+ *   - Auto-disables itself by writing a lock file after first successful run
+ *   - To re-run, manually delete .hb-import-lock file
+ *   - To permanently disable, just delete this file
  *
  * USAGE:
- * 1. Upload this file to: public_html/wp-content/themes/hariyalibasket-v2/
- * 2. Open: https://YOURSITE.com/wp-content/themes/hariyalibasket-v2/hb-import-products.php?run=1&clean=1
- * 3. ⚠️ DELETE this file after use!
- *
- * Parameters:
- *   ?run=1       — actually run the import (without it, just shows preview)
- *   ?clean=1     — delete all existing hb_product BEFORE import (FRESH RESET)
- *   ?clean=0     — keep existing, only add new
+ *   1. Upload to: public_html/wp-content/themes/hariyalibasket-v2/
+ *   2. Login to WordPress admin first
+ *   3. Visit: https://YOURSITE.com/wp-content/themes/hariyalibasket-v2/hb-import-products.php?run=1&clean=1
+ *   4. After run, file auto-locks. Delete it for safety.
  */
 
 // Bootstrap WordPress
 if ( ! defined( 'ABSPATH' ) ) {
     $wp_load = dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/wp-load.php';
-    if ( file_exists( $wp_load ) ) {
-        require_once $wp_load;
-    } else {
-        die( 'Could not locate wp-load.php — check the path.' );
-    }
+    if ( file_exists( $wp_load ) ) require_once $wp_load;
+    else die( 'Could not locate wp-load.php' );
 }
 
+// Auth check
 if ( ! current_user_can( 'manage_options' ) ) {
     wp_die( '❌ Sirf Administrator yeh script chala sakta hai. Pehle WordPress mein login karo.' );
 }
 
+// LOCK CHECK — prevent re-run after success
+$lock_file = __DIR__ . '/.hb-import-lock';
+$is_locked = file_exists( $lock_file );
+
 $run   = isset( $_GET['run'] )   ? intval( $_GET['run'] )   : 0;
 $clean = isset( $_GET['clean'] ) ? intval( $_GET['clean'] ) : 0;
+$force = isset( $_GET['force'] ) ? intval( $_GET['force'] ) : 0;
 
-// ── Product List (71 items) ──
+if ( $is_locked && $run && ! $force ) {
+    $lock_time = file_get_contents( $lock_file );
+    wp_die(
+        '<h2 style="font-family:sans-serif;color:#d97706">🔒 Import Already Done</h2>' .
+        '<p style="font-family:sans-serif">Import was completed at: <code>' . esc_html( $lock_time ) . '</code></p>' .
+        '<p>To re-run, delete <code>.hb-import-lock</code> in theme folder, or use <code>?force=1</code> in URL.</p>' .
+        '<p><a href="/wp-admin/edit.php?post_type=hb_product">View Products →</a></p>'
+    );
+}
+
+// Product List (71 items)
 $PRODUCTS = [
-    // FRUITS (22)
+    // FRUITS
     [ 'name' => 'Apple Green Imp.',     'uom' => 'Kg',  'mrp' => 280, 'sp' => 220, 'cat' => 'Fruits' ],
     [ 'name' => 'Apple Himachal',       'uom' => 'Kg',  'mrp' => 200, 'sp' => 160, 'cat' => 'Fruits' ],
     [ 'name' => 'Apple Imp.',           'uom' => 'Kg',  'mrp' => 280, 'sp' => 220, 'cat' => 'Fruits' ],
@@ -56,7 +71,7 @@ $PRODUCTS = [
     [ 'name' => 'Sweet Lime (Mosambi)', 'uom' => 'Kg',  'mrp' => 80,  'sp' => 60,  'cat' => 'Fruits' ],
     [ 'name' => 'Watermelon',           'uom' => 'Pc',  'mrp' => 80,  'sp' => 50,  'cat' => 'Fruits' ],
 
-    // ROOT VEGETABLES (11)
+    // ROOT VEGETABLES
     [ 'name' => 'Beetroot',             'uom' => 'Kg',  'mrp' => 50,  'sp' => 30,  'cat' => 'Root Vegetables' ],
     [ 'name' => 'Carrot',               'uom' => 'Kg',  'mrp' => 50,  'sp' => 30,  'cat' => 'Root Vegetables' ],
     [ 'name' => 'Garlic',               'uom' => 'Kg',  'mrp' => 150, 'sp' => 120, 'cat' => 'Root Vegetables' ],
@@ -69,7 +84,7 @@ $PRODUCTS = [
     [ 'name' => 'Red Potato',           'uom' => 'Kg',  'mrp' => 40,  'sp' => 25,  'cat' => 'Root Vegetables' ],
     [ 'name' => 'Raw Mango',            'uom' => 'Kg',  'mrp' => 80,  'sp' => 50,  'cat' => 'Root Vegetables' ],
 
-    // GREEN VEGETABLES (32)
+    // GREEN VEGETABLES
     [ 'name' => 'Arbi (Colocasia)',     'uom' => 'Kg',  'mrp' => 50,  'sp' => 40,  'cat' => 'Green Vegetables' ],
     [ 'name' => 'French Beans',         'uom' => 'Kg',  'mrp' => 120, 'sp' => 80,  'cat' => 'Green Vegetables' ],
     [ 'name' => 'Corn (Bhutta)',        'uom' => 'Kg',  'mrp' => 60,  'sp' => 40,  'cat' => 'Green Vegetables' ],
@@ -103,10 +118,10 @@ $PRODUCTS = [
     [ 'name' => 'Yellow Capsicum',      'uom' => 'Kg',  'mrp' => 150, 'sp' => 100, 'cat' => 'Green Vegetables' ],
     [ 'name' => 'Zucchini Green',       'uom' => 'Kg',  'mrp' => 200, 'sp' => 120, 'cat' => 'Green Vegetables' ],
 
-    // EXOTIC (1)
+    // EXOTIC
     [ 'name' => 'Mushroom Fresh 200g',  'uom' => 'Pkt', 'mrp' => 50,  'sp' => 40,  'cat' => 'Exotic & Packed' ],
 
-    // HERBS & LEAFY (5)
+    // HERBS & LEAFY
     [ 'name' => 'Coriander',            'uom' => 'Kg',  'mrp' => 80,  'sp' => 60,  'cat' => 'Herbs & Leafy' ],
     [ 'name' => 'Coriander Fresh',      'uom' => 'Kg',  'mrp' => 80,  'sp' => 60,  'cat' => 'Herbs & Leafy' ],
     [ 'name' => 'Mint (Pudina)',        'uom' => 'Kg',  'mrp' => 100, 'sp' => 80,  'cat' => 'Herbs & Leafy' ],
@@ -143,6 +158,9 @@ if ( $run ) {
             $inserted++;
         }
     }
+
+    // AUTO-LOCK after successful run
+    @file_put_contents( $lock_file, current_time( 'mysql' ) . ' (by user ID ' . get_current_user_id() . ')' );
 }
 ?>
 <!DOCTYPE html>
@@ -157,25 +175,30 @@ a.btn-amber{background:#f59e0b;color:#0d3320}
 a.btn-red{background:#ef4444;color:#fff}
 .warn{background:#fff3cd;border:2px solid #f59e0b;border-radius:10px;padding:14px;margin-top:20px;color:#92400e;font-size:13px;font-weight:700}
 .preview{text-align:left;background:#f9fafb;border-radius:10px;padding:14px;font-size:11px;max-height:200px;overflow:auto;margin:14px 0}
+.lock{background:#fee2e2;border:2px solid #ef4444;color:#7f1d1d}
 </style></head><body>
 <div class="box">
 <?php if ( $run ) : ?>
   <div style="font-size:60px">✅</div>
   <h2>Import Complete!</h2>
-  <p class="tag">Sab kuch ready hai</p>
+  <p class="tag">Sab kuch ready hai — file auto-lock ho gayi</p>
   <?php if ( $clean ) : ?>
     <div class="stat">🗑️ <strong><?php echo $deleted; ?></strong> purane products delete hue</div>
   <?php endif; ?>
   <div class="stat">📦 <strong><?php echo $inserted; ?></strong> fresh products import hue</div>
+  <div class="stat lock">🔒 Importer auto-locked. Re-run karne ke liye <code>.hb-import-lock</code> file delete karo.</div>
   <p style="margin-top:18px">
     <a class="btn" href="/wp-admin/edit.php?post_type=hb_product">Products dekhen →</a>
     <a class="btn btn-amber" href="/">Website dekhen →</a>
   </p>
-  <div class="warn">⚠️ <strong>SECURITY:</strong> Is file ko TURANT delete karo!<br>
-  cPanel → File Manager → wp-content/themes/hariyalibasket-v2/hb-import-products.php → Delete</div>
+  <div class="warn">⚠️ <strong>BEST PRACTICE:</strong> Is poori file ko ab DELETE kar do!<br>
+  cPanel → File Manager → <code>wp-content/themes/hariyalibasket-v2/hb-import-products.php</code> → Delete</div>
 <?php else : ?>
   <div style="font-size:60px">📦</div>
   <h2>HariyaliBasket Product Importer</h2>
+  <?php if ( $is_locked ) : ?>
+    <div class="stat lock">🔒 Importer pehle se locked hai. Force re-run ke liye <code>?force=1</code> URL mein add karo.</div>
+  <?php endif; ?>
   <p class="tag"><strong><?php echo $total; ?> products</strong> import karne ke liye ready hain</p>
   <div class="preview">
     <?php
@@ -185,13 +208,13 @@ a.btn-red{background:#ef4444;color:#fff}
     ?>
   </div>
   <p>
-    <a class="btn btn-red" href="?run=1&clean=1">🔥 Fresh Reset (DELETE old + import new)</a>
+    <a class="btn btn-red" href="?run=1&clean=1<?php echo $is_locked ? '&force=1' : ''; ?>">🔥 Fresh Reset (DELETE old + import new)</a>
   </p>
   <p>
-    <a class="btn btn-amber" href="?run=1&clean=0">➕ Add Only (keep existing)</a>
+    <a class="btn btn-amber" href="?run=1&clean=0<?php echo $is_locked ? '&force=1' : ''; ?>">➕ Add Only (keep existing)</a>
   </p>
   <div class="warn">⚠️ <strong>Fresh Reset</strong> SAARE existing products delete kar dega!<br>
-  Sirf tab use karo jab tum theme freshly setup kar rahe ho.</div>
+  Run hone ke baad file auto-lock ho jayegi.</div>
 <?php endif; ?>
 </div>
 </body></html>

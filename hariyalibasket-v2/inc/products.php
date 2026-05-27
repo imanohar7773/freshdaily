@@ -46,6 +46,82 @@ function hb_get_all_products() {
 }
 
 /**
+ * BUG FIX #6: Server-side cart validation
+ *
+ * Re-fetches actual prices from DB and validates client-submitted cart.
+ * Prevents browser-console price tampering.
+ *
+ * @param array $client_items Raw items from $_POST
+ * @return array|false { items: [validated], subtotal: float } or false on invalid
+ */
+function hb_validate_cart_items( $client_items ) {
+    if ( empty( $client_items ) || ! is_array( $client_items ) ) return false;
+
+    $all = hb_get_all_products();
+    $by_id = [];
+    foreach ( $all as $p ) $by_id[ $p['id'] ] = $p;
+
+    $validated = [];
+    $subtotal  = 0.0;
+
+    foreach ( $client_items as $item ) {
+        if ( ! is_array( $item ) ) continue;
+        $pid = intval( $item['pid'] ?? 0 );
+        $qty = max( 1, intval( $item['qty'] ?? 0 ) );
+        $key = sanitize_text_field( $item['key'] ?? '' );
+
+        if ( ! isset( $by_id[ $pid ] ) ) return false; // unknown product
+
+        $product = $by_id[ $pid ];
+
+        // Out-of-stock check
+        if ( $product['stock'] === 'out' ) return false;
+
+        // Resolve variant from key (e.g. "12_1" => variant index 1)
+        $sp  = $product['sp'];
+        $mrp = $product['mrp'];
+        $uom = $product['uom'];
+        $size_label = '';
+
+        $parts = explode( '_', $key );
+        if ( count( $parts ) > 1 ) {
+            $vi = intval( $parts[ count( $parts ) - 1 ] );
+            if ( ! empty( $product['variants'][ $vi ] ) ) {
+                $v = $product['variants'][ $vi ];
+                $sp  = (float) $v['sp'];
+                $mrp = (float) $v['mrp'];
+                $uom = $v['size'];
+                $size_label = $v['size'];
+            }
+        }
+
+        // Reasonable qty cap
+        if ( $qty > 99 ) return false;
+
+        $amount = $sp * $qty;
+        $subtotal += $amount;
+
+        $validated[] = [
+            'pid'    => $pid,
+            'key'    => $key,
+            'name'   => $product['name'] . ( $size_label ? ' · ' . $size_label : '' ),
+            'qty'    => $qty,
+            'sp'     => $sp,
+            'mrp'    => $mrp,
+            'uom'    => $uom,
+            'amount' => $amount,
+        ];
+    }
+
+    if ( empty( $validated ) ) return false;
+
+    return [
+        'items'    => $validated,
+        'subtotal' => $subtotal,
+    ];
+}
+
+/**
  * Determine variants for a product
  */
 function hb_get_product_variants( $post_id, $cat, $sp, $mrp, $uom ) {

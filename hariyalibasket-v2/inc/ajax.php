@@ -19,11 +19,12 @@ add_action( 'wp_ajax_nopriv_hb_get_products', 'hb_ajax_get_products' );
 function hb_ajax_place_order() {
     check_ajax_referer( 'hb_nonce', 'nonce' );
 
-    // Rate limit check
+    // ── 1. Rate limit by IP ──
     if ( function_exists( 'hb_rate_limit_check' ) && ! hb_rate_limit_check() ) {
-        wp_send_json_error( [ 'msg' => 'Too many orders. Please try again in an hour.' ], 429 );
+        wp_send_json_error( [ 'msg' => 'Bahut zyada orders. Ek ghante baad try karo.' ], 429 );
     }
 
+    // ── 2. Sanitize inputs ──
     $name    = sanitize_text_field( $_POST['name'] ?? '' );
     $phone   = sanitize_text_field( $_POST['phone'] ?? '' );
     $society = sanitize_text_field( $_POST['society'] ?? '' );
@@ -33,8 +34,10 @@ function hb_ajax_place_order() {
     $txn     = sanitize_text_field( $_POST['txn'] ?? '' );
     $items   = isset( $_POST['items'] ) ? json_decode( wp_unslash( $_POST['items'] ), true ) : [];
     $total   = floatval( $_POST['total'] ?? 0 );
+    $cap_token  = sanitize_text_field( $_POST['captcha_token']  ?? '' );
+    $cap_answer = sanitize_text_field( $_POST['captcha_answer'] ?? '' );
 
-    // Validation
+    // ── 3. Basic validation ──
     if ( empty( $name ) || empty( $society ) ) {
         wp_send_json_error( [ 'msg' => 'Naam aur society zaroori hain' ] );
     }
@@ -48,17 +51,34 @@ function hb_ajax_place_order() {
         wp_send_json_error( [ 'msg' => 'UPI Transaction ID zaroori hai' ] );
     }
 
-    // CAPTCHA check
+    // ── 4. CAPTCHA — server-side token verification ──
     if ( function_exists( 'hb_captcha_verify' ) ) {
-        $cap_a = intval( $_POST['captcha_a'] ?? 0 );
-        $cap_b = intval( $_POST['captcha_b'] ?? 0 );
-        $cap_v = intval( $_POST['captcha_v'] ?? -1 );
-        if ( ! hb_captcha_verify( $cap_a, $cap_b, $cap_v ) ) {
-            wp_send_json_error( [ 'msg' => 'CAPTCHA galat hai. Please try again.' ] );
+        if ( ! hb_captcha_verify( $cap_token, $cap_answer ) ) {
+            wp_send_json_error( [ 'msg' => 'CAPTCHA galat ya expire ho gaya. Please try again.', 'captcha_failed' => true ] );
         }
     }
 
-    // Save order
+    // ── 5. Phone-specific rate limit (BUG FIX: was missing) ──
+    if ( function_exists( 'hb_rate_limit_phone_check' ) && ! hb_rate_limit_phone_check( $phone ) ) {
+        wp_send_json_error( [ 'msg' => 'Iss mobile se aaj ke 3 orders ho chuke hain. Kal try karo ya WhatsApp pe contact karo.' ], 429 );
+    }
+
+    // ── 6. Server-side cart validation (prevent price tampering) ──
+    if ( function_exists( 'hb_validate_cart_items' ) ) {
+        $validated = hb_validate_cart_items( $items );
+        if ( $validated === false ) {
+            wp_send_json_error( [ 'msg' => 'Cart items invalid ya price tampered. Refresh karke try karo.' ] );
+        }
+        $items = $validated['items'];
+        // Recompute server-trusted total
+        $min_free = intval( get_theme_mod( 'hb_free_delivery_min', 199 ) );
+        $fee      = intval( get_theme_mod( 'hb_delivery_fee', 69 ) );
+        $subtotal = $validated['subtotal'];
+        $delivery = $subtotal >= $min_free ? 0 : $fee;
+        $total    = $subtotal + $delivery;
+    }
+
+    // ── 7. Save order ──
     if ( function_exists( 'hb_create_order' ) ) {
         $order_id = hb_create_order( [
             'name'    => $name,
@@ -73,12 +93,12 @@ function hb_ajax_place_order() {
         ] );
 
         if ( $order_id ) {
-            // Mark phone for rate limit
             if ( function_exists( 'hb_rate_limit_record' ) ) hb_rate_limit_record( $phone );
 
             wp_send_json_success( [
                 'order_id' => $order_id['code'],
                 'post_id'  => $order_id['post_id'],
+                'total'    => $total, // server-trusted total
             ] );
         }
     }
@@ -89,13 +109,13 @@ add_action( 'wp_ajax_hb_place_order',        'hb_ajax_place_order' );
 add_action( 'wp_ajax_nopriv_hb_place_order', 'hb_ajax_place_order' );
 
 /**
- * Get fresh CAPTCHA challenge
+ * Get fresh CAPTCHA challenge — token-based, server-state
  */
 function hb_ajax_captcha() {
-    if ( function_exists( 'hb_captcha_generate' ) ) {
-        wp_send_json_success( hb_captcha_generate() );
+    if ( ! function_exists( 'hb_captcha_generate' ) ) {
+        wp_send_json_error( [ 'msg' => 'CAPTCHA module not loaded' ] );
     }
-    wp_send_json_error();
+    wp_send_json_success( hb_captcha_generate() );
 }
 add_action( 'wp_ajax_hb_captcha',        'hb_ajax_captcha' );
 add_action( 'wp_ajax_nopriv_hb_captcha', 'hb_ajax_captcha' );
