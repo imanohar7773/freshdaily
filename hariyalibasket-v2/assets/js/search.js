@@ -191,27 +191,65 @@ function init() {
   inp.setAttribute('autocorrect', 'off');
   inp.setAttribute('autocapitalize', 'off');
   inp.setAttribute('spellcheck', 'false');
-  // Some mobile browsers fall back to "list" attribute — clear it
   inp.removeAttribute('list');
+
+  // ── PORTAL FIX ──
+  // Move the suggest dropdown out of .hb-search-section and into <body>.
+  // This bypasses any parent stacking context (filter-bar, products-section, etc.)
+  // that was clipping the dropdown.
+  if (suggestBox && suggestBox.parentNode !== document.body) {
+    document.body.appendChild(suggestBox);
+  }
+
+  /**
+   * Position the dropdown immediately below the input, in viewport coords.
+   * Uses position: fixed (set in CSS), so coords are relative to viewport.
+   */
+  function positionSuggest() {
+    if (!suggestBox || !inp) return;
+    var rect = inp.getBoundingClientRect();
+    suggestBox.style.top   = (rect.bottom + 6) + 'px';
+    suggestBox.style.left  = rect.left + 'px';
+    suggestBox.style.width = rect.width + 'px';
+  }
+
+  function showSuggest() {
+    positionSuggest();
+    suggestBox.classList.add('show');
+  }
+  function hideSuggest() {
+    suggestBox.classList.remove('show');
+  }
 
   inp.addEventListener('input', function(){
     var v = this.value;
     App.searchQuery = v;
     if (clearBtn) clearBtn.classList.toggle('show', !!v);
 
-    // Suggestions
     if (suggestBox) {
       var sug = HBSearch.suggest(v);
       if (sug.length && v.length > 0) {
         suggestBox.innerHTML = sug.map(function(p){
           return '<div class="hb-suggest-item" data-name="' + HBUtils.esc(p.name) + '"><span>' + HBUtils.emoji(p.name) + '</span><span>' + HBUtils.esc(p.name) + '</span></div>';
         }).join('');
-        suggestBox.classList.add('show');
+        showSuggest();
       } else {
-        suggestBox.classList.remove('show');
+        hideSuggest();
       }
     }
     HBProducts.render();
+  });
+
+  // Reposition on scroll / resize / orientation-change
+  // (mobile keyboard appearance also fires resize — important on iOS/Android)
+  window.addEventListener('scroll', function(){
+    if (suggestBox.classList.contains('show')) positionSuggest();
+  }, { passive: true });
+  window.addEventListener('resize', function(){
+    if (suggestBox.classList.contains('show')) positionSuggest();
+  });
+  inp.addEventListener('focus', function(){
+    if (inp.value && HBSearch.suggest(inp.value).length) showSuggest();
   });
 
   if (clearBtn) {
@@ -219,7 +257,7 @@ function init() {
       inp.value = '';
       App.searchQuery = '';
       clearBtn.classList.remove('show');
-      if (suggestBox) suggestBox.classList.remove('show');
+      hideSuggest();
       HBProducts.render();
     });
   }
@@ -230,11 +268,14 @@ function init() {
       if (!item) return;
       inp.value = item.getAttribute('data-name');
       App.searchQuery = inp.value;
-      suggestBox.classList.remove('show');
+      hideSuggest();
       HBProducts.render();
     });
+    // Clicking outside the input AND outside the dropdown closes it
     document.addEventListener('click', function(e){
-      if (!e.target.closest('.hb-search-section')) suggestBox.classList.remove('show');
+      if (e.target === inp) return;
+      if (suggestBox.contains(e.target)) return;
+      hideSuggest();
     });
   }
 }

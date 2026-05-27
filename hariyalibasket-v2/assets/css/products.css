@@ -66,19 +66,18 @@
   border: none;
 }
 .hb-clear-btn.show { display: flex; }
+/* BULLETPROOF FIX: portal-style — JS will move this element to <body> on init,
+   so it bypasses all stacking contexts (filter-bar, products-section, etc.). */
 .hb-search-suggest {
-  position: absolute;
-  /* Lift up by 8px to overlap with the search-section's bottom padding,
-     so the dropdown sits visually closer to the input (no gap). */
-  top: calc(100% - 8px);
-  left: 16px; right: 16px;
+  position: fixed;
   background: #fff;
   border-radius: var(--radius-md);
   box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(13,51,32,0.06);
-  z-index: 1; /* relative to search-section's stacking context (which is 800 in S1) */
+  z-index: 99999; /* effectively top of every stacking context */
   max-height: 280px;
   overflow-y: auto;
   display: none;
+  /* Width / top / left set dynamically by JS based on input's viewport rect */
 }
 .hb-search-suggest.show { display: block; }
 .hb-suggest-item {
