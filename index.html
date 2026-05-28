@@ -448,6 +448,74 @@ body {
 .badge-hot { background: #fff0e8; color: #c04a00; }
 .badge-fresh { background: #e8f0ff; color: #2a50c0; }
 .badge-best { background: var(--amber-light); color: #a06200; }
+.badge-coming {
+  background: linear-gradient(135deg, #f4a228, #e8850a);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(244,162,40,0.35);
+}
+
+/* ===== COMING SOON OVERLAY STYLE ===== */
+.item-card.coming-soon {
+  background: linear-gradient(135deg, #fffaf0 0%, #fff5e0 100%);
+  border-color: #f4a228;
+  position: relative;
+}
+.item-card.coming-soon .item-emoji {
+  background: linear-gradient(135deg, #fff0d0, #ffe0a0);
+  position: relative;
+  filter: saturate(0.9);
+}
+.item-card.coming-soon .item-emoji::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.35);
+  border-radius: 12px;
+}
+.item-card.coming-soon .price-sp {
+  color: #a06200;
+}
+.item-card.coming-soon .price-mrp,
+.item-card.coming-soon .discount-tag {
+  display: none;
+}
+
+.coming-date-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #a06200;
+  background: var(--amber-light);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+
+.notify-btn {
+  width: auto;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: #25d366;
+  border: none;
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(37,211,102,0.35);
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.notify-btn:active { transform: scale(0.94); }
 
 /* Weight tabs */
 .weight-tabs {
@@ -2346,12 +2414,15 @@ const svgMap = {
   "Tomato": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="34" r="20" fill="#e83020"/><ellipse cx="22" cy="28" rx="6" ry="9" fill="#f04030" opacity="0.5"/><path d="M24 14 Q22 6 26 10 M30 13 Q30 4 32 8 M36 14 Q38 6 40 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M22 14 Q30 10 38 14" fill="#4a7c3f"/></svg>`,
   "Spring Onion": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="44" rx="8" ry="10" fill="#f0f0e0"/><path d="M26 34 Q24 20 22 8" stroke="#4a9a30" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M30 34 Q30 18 30 6" stroke="#4a9a30" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M34 34 Q36 20 38 8" stroke="#4a9a30" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
   "Banana Leaf": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M8 30 Q20 8 52 28 Q40 52 8 30Z" fill="#3a9030"/><line x1="8" y1="30" x2="52" y2="28" stroke="#2a7020" stroke-width="2"/><path d="M30 18 Q28 30 26 42" stroke="#2a7020" stroke-width="1.5" fill="none"/><path d="M36 20 Q34 30 32 42" stroke="#2a7020" stroke-width="1.5" fill="none"/></svg>`,
+  "Litchi": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="34" r="18" fill="#d83840"/><circle cx="22" cy="28" r="2.5" fill="#a01820"/><circle cx="28" cy="24" r="2.5" fill="#a01820"/><circle cx="35" cy="26" r="2.5" fill="#a01820"/><circle cx="38" cy="33" r="2.5" fill="#a01820"/><circle cx="34" cy="40" r="2.5" fill="#a01820"/><circle cx="26" cy="42" r="2.5" fill="#a01820"/><circle cx="20" cy="36" r="2.5" fill="#a01820"/><circle cx="30" cy="32" r="2.5" fill="#a01820"/><path d="M30 16 Q32 8 36 10" stroke="#4a7c3f" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  "Custard Apple": `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="36" r="18" fill="#a8c878"/><path d="M22 28 Q26 24 30 28 Q34 24 38 28" fill="none" stroke="#7ba048" stroke-width="1.8"/><path d="M20 34 Q24 30 28 34 Q32 30 36 34 Q40 30 42 34" fill="none" stroke="#7ba048" stroke-width="1.8"/><path d="M22 40 Q26 36 30 40 Q34 36 38 40" fill="none" stroke="#7ba048" stroke-width="1.8"/><path d="M26 46 Q30 42 34 46" fill="none" stroke="#7ba048" stroke-width="1.8"/><path d="M28 18 Q26 8 30 6 Q34 8 32 16" fill="#4a7c3f"/></svg>`,
 };
 
 function getImage(name) {
   const lname = name.toLowerCase();
   // Exact priority matches
   if (lname.includes("apple green")) return svgMap["Apple Green"];
+  if (lname.includes("custard apple") || lname.includes("sitaphal")) return svgMap["Custard Apple"];
   if (lname.includes("spring onion")) return svgMap["Spring Onion"];
   if (lname.includes("dragon fruit")) return svgMap["Dragon Fruit"];
   if (lname.includes("sweet lime")) return svgMap["Sweet Lime"];
@@ -2361,6 +2432,7 @@ function getImage(name) {
   if (lname.includes("baby corn")) return svgMap["Corn"];
   if (lname.includes("banana leaf")) return svgMap["Banana Leaf"];
   if (lname.includes("bitter gourd") || lname.includes("karela")) return svgMap["Bottle"];
+  if (lname.includes("litchi")) return svgMap["Litchi"];
   // General matches
   for (let k in svgMap) {
     if (lname.includes(k.toLowerCase())) return svgMap[k];
@@ -2450,6 +2522,16 @@ const items = [
   {cat:"🌿 Herbs & Leafy",name:"Mint (Pudina)",uom:"Kg",mrp:100,sp:80},
   {cat:"🌿 Herbs & Leafy",name:"Lemon (Nimbu)",uom:"Kg",mrp:160,sp:120},
   {cat:"🌿 Herbs & Leafy",name:"Banana Leaf",uom:"Pc",mrp:30,sp:25},
+
+  // ============================================================
+  // 🌱 COMING SOON — Add 'coming' field to mark as upcoming product
+  // Example: coming: "Mid June 2026"  OR  coming: true  (for "Aane Wala Hai")
+  // - Coming soon items: 'Notify Me' button (WhatsApp) replaces Add to Cart
+  // - Auto-styled with Coming Soon badge + amber theme
+  // - Saare existing fields normal use ho sakte hain
+  // ============================================================
+  {cat:"🍊 Fruits",name:"Litchi Fresh",uom:"Kg",mrp:280,sp:220,coming:"Mid June 2026"},
+  {cat:"🍊 Fruits",name:"Custard Apple (Sitaphal)",uom:"Kg",mrp:200,sp:160,coming:"August 2026"},
 ];
 
 let cart = {};
@@ -2779,6 +2861,33 @@ function renderItems() {
     const badges = getBadges(it.name, it.cat);
     const imgSrc = getImage(it.name);
     const lineTotal = qty > 0 ? `₹${qty * dispSP}` : '';
+    const isComingSoon = !!it.coming;
+
+    // Coming Soon card (special render)
+    if (isComingSoon) {
+      const launchTxt = it.coming === true ? 'Aane Wala Hai' : it.coming;
+      const notifyMsg = encodeURIComponent(
+        `Hi! 🌿 Mujhe *${it.name}* ki notification chahiye jab available ho. (Coming: ${launchTxt})\n— from HariyaliBasket website`
+      );
+      html += `<div class="item-card coming-soon ${isFullRender ? 'animate-in' : ''}" data-idx="${it.idx}" style="animation-delay:${isFullRender ? arrIdx * 0.03 : 0}s">
+        <div class="item-emoji svg-icon">${imgSrc}</div>
+        <div class="item-body">
+          <div class="item-name">${it.name}</div>
+          <div class="item-badges"><span class="badge badge-coming">🌱 COMING SOON</span></div>
+          <div class="coming-date-strip">📅 ${launchTxt}</div>
+          <div class="price-row">
+            <span class="price-sp">₹${it.sp}</span>
+            <span class="price-unit">/ ${it.uom} (expected)</span>
+          </div>
+        </div>
+        <div class="item-right">
+          <a class="notify-btn" href="https://wa.me/${WA_NUMBER}?text=${notifyMsg}" target="_blank" rel="noopener noreferrer">
+            🔔 Notify
+          </a>
+        </div>
+      </div>`;
+      return;
+    }
 
     html += `<div class="item-card ${inCart ? 'in-cart' : ''} ${isFullRender ? 'animate-in' : ''}" data-idx="${it.idx}" style="animation-delay:${isFullRender ? arrIdx * 0.03 : 0}s">
       <div class="item-emoji svg-icon">${imgSrc}</div>
