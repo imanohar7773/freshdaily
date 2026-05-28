@@ -9,8 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <head>
   <meta charset="<?php bloginfo( 'charset' ); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="HariyaliBasket — Farm fresh vegetables and fruits delivered to your doorstep next day before 4 PM. Jaipur ki taazi sabzi.">
   <meta name="theme-color" content="#0d3320">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <?php // Description, OG tags, structured data, canonical etc. all handled by inc/seo.php on wp_head ?>
   <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>

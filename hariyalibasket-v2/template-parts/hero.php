@@ -1,8 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
-<section class="hb-hero">
+<section class="hb-hero hb-hero-compact">
   <div class="hb-hero-badge">🌿 Farm Fresh · Daily Delivery</div>
-  <h1 class="hb-hero-title">Hariyali<span>Basket</span></h1>
-  <p class="hb-hero-sub">FRUITS · VEGETABLES · HERBS · EXOTIC</p>
   <p class="hb-hero-tag">"Bacchon Ki Sehat, Buzurgon Ki Khushi —<br><em>Sab Kuch Ek Basket Mein"</em></p>
   <p class="hb-hero-tag2">Ghar Ke Liye Sirf Best — Isliye HariyaliBasket 🌿</p>
   <div class="hb-hero-btns">

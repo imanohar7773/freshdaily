@@ -153,9 +153,11 @@ function hb_get_product_variants( $post_id, $cat, $sp, $mrp, $uom ) {
         if ( strpos( $title_lower, $kw ) !== false ) return [];
     }
 
-    // 4. Auto-generate for Sabzi / Veg / Fruits / Herbs
+    // 4. Auto-generate for Sabzi / Veg / Herbs only (fruits intentionally excluded —
+    //    user wants single 1 Kg pricing for fruits, no 250g/500g splits)
     $cat_lower  = strtolower( $cat );
-    $auto_cats  = [ 'root', 'green', 'herb', 'leafy', 'sabzi', 'vegetable', 'fruit' ];
+    if ( strpos( $cat_lower, 'fruit' ) !== false ) return [];
+    $auto_cats  = [ 'root', 'green', 'herb', 'leafy', 'sabzi', 'vegetable' ];
     $is_auto    = false;
     foreach ( $auto_cats as $ac ) {
         if ( strpos( $cat_lower, $ac ) !== false ) { $is_auto = true; break; }

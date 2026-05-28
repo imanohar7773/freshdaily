@@ -422,3 +422,74 @@
 }
 .hb-bn-badge.show { display: flex; }
 .hb-bn-cart .hb-bn-icon { font-size: 22px; }
+
+
+
+/* ═══ COMPACT HERO (v2 Shop-First — no duplicate brand title) ═══ */
+.hb-hero.hb-hero-compact {
+  padding: 24px 20px 22px;
+}
+.hb-hero.hb-hero-compact::before {
+  font-size: 140px;
+  top: -25px; right: -25px;
+}
+.hb-hero.hb-hero-compact .hb-hero-tag {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.hb-hero.hb-hero-compact .hb-hero-tag2 {
+  font-size: 11px;
+  margin-bottom: 14px;
+}
+
+/* ═══ PINCODE TOP — prominent amber bar (v2 Shop-First) ═══ */
+.hb-pincode-top {
+  background: linear-gradient(135deg, var(--amber), var(--amber-deep));
+  padding: 18px 16px;
+  position: relative;
+  z-index: 5;
+}
+.hb-pincode-top .hb-pin-row {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.hb-pincode-top .hb-pin-label {
+  flex-shrink: 0;
+  color: var(--green-deep);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.hb-pincode-top input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid rgba(13,51,32,.2);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--gray-800);
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 700;
+  outline: none;
+  min-width: 0;
+}
+.hb-pincode-top input::placeholder { color: var(--gray-400); font-weight: 600; }
+.hb-pincode-top button {
+  background: var(--green-deep);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+.hb-pincode-top #hb-pin-result {
+  max-width: 480px;
+  margin: 8px auto 0;
+}

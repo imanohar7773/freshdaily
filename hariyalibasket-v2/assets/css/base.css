@@ -52,6 +52,7 @@ input, textarea { font-family: inherit; }
    This creates a clean stacking context so leaves only show in true gaps/transparent areas. */
 .hb-marquee,
 .hb-hero,
+.hb-pincode-top,
 .hb-info-cards,
 .hb-countdown,
 .hb-how-section,

@@ -3,7 +3,7 @@ $min = intval( hb_get( 'hb_free_delivery_min', 199 ) );
 $fee = intval( hb_get( 'hb_delivery_fee', 69 ) );
 ?>
 <section id="hb-section-faq" class="hb-modal-source">
-  <div class="hb-section-hdr"><h2>❓ Aksar Pooche <span>Jaane Wale Sawaal</span></h2><small>Aapke common questions ke jawab</small></div>
+  <div class="hb-section-hdr"><h2>❓ Aapke <span>Sawaal-Jawab</span></h2><small>Aapke common questions ke jawab</small></div>
   <div class="hb-faq-list">
     <div class="hb-faq-item">
       <div class="hb-faq-q">🚚 Delivery kab hoti hai? <span class="hb-faq-arrow">▼</span></div>

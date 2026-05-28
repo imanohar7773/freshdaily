@@ -32,6 +32,8 @@ $hb_modules = [
     'admin-dashboard',  // Order management dashboard
     'rate-limit',       // Spam prevention
     'captcha',          // Math CAPTCHA
+    'seo',              // SEO meta tags + structured data (Google ranking)
+    'sitemap',          // Dynamic XML sitemap (/sitemap.xml)
 ];
 
 foreach ( $hb_modules as $mod ) {
