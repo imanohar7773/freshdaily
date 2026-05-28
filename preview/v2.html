@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>HariyaliBasket v2 — Shop-First Layout (NEW)</title>
+<meta name="theme-color" content="#0d3320">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Theme CSS — same as original, cache-bust v=6 for fresh compare -->
+<link rel="stylesheet" href="../hariyalibasket-v2/assets/css/base.css?v=6">
+<link rel="stylesheet" href="../hariyalibasket-v2/assets/css/layout.css?v=6">
+<link rel="stylesheet" href="../hariyalibasket-v2/assets/css/products.css?v=6">
+<link rel="stylesheet" href="../hariyalibasket-v2/assets/css/cart.css?v=6">
+<link rel="stylesheet" href="../hariyalibasket-v2/assets/css/sections.css?v=6">
+<link rel="stylesheet" href="../hariyalibasket-v2/assets/css/modals.css?v=6">
+<link rel="stylesheet" href="../hariyalibasket-v2/assets/css/animations.css?v=6">
+<link rel="stylesheet" href="../hariyalibasket-v2/assets/css/responsive.css?v=6">
+
+<style>
+/* ── Preview banner (this layout = SHOP-FIRST proposed) ── */
+#hb-preview-banner {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: linear-gradient(90deg,#10b981,#059669);
+  color: #fff; font-size: 11px; font-weight: 800;
+  text-align: center; padding: 6px 14px;
+  z-index: 999999; letter-spacing: 0.3px;
+}
+#hb-preview-banner a {
+  color: #fff; text-decoration: underline; margin-left: 8px;
+}
+body { padding-top: 28px; }
+.hb-marquee { margin-top: 0; }
+
+/* ── Compact Hero (smaller than original — no duplicate branding) ── */
+.hb-hero-compact {
+  background: linear-gradient(160deg, var(--green-deep) 60%, var(--green-dark));
+  padding: 24px 20px 22px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hb-hero-compact::before {
+  content: '🌿';
+  font-size: 140px;
+  position: absolute;
+  top: -25px; right: -25px;
+  opacity: 0.05;
+}
+.hb-hero-compact .badge {
+  display: inline-block;
+  background: rgba(245,158,11,.15);
+  border: 1px solid rgba(245,158,11,.4);
+  color: var(--amber);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.hb-hero-compact .tag {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0;
+}
+.hb-hero-compact .tag em { color: var(--amber); font-style: normal; }
+
+/* ── Pincode top variant (prominent) ── */
+.hb-pincode-top {
+  background: linear-gradient(135deg, var(--amber), var(--amber-deep));
+  padding: 18px 16px;
+  position: relative;
+  z-index: 2;
+}
+.hb-pincode-top .row {
+  max-width: 480px; margin: 0 auto;
+  display: flex; gap: 8px; align-items: center;
+}
+.hb-pincode-top .label {
+  flex-shrink: 0;
+  color: var(--green-deep);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.hb-pincode-top input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid rgba(13,51,32,.2);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--gray-800);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  font-weight: 700;
+  min-width: 0;
+}
+.hb-pincode-top button {
+  background: var(--green-deep);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+#hb-pin-result-top { max-width: 480px; margin: 8px auto 0; }
+#hb-pin-result-top.show { display: block; }
+#hb-pin-result-top .ok {
+  background: var(--green-dark); border: 1.5px solid var(--green-glow);
+  border-radius: 10px; padding: 8px 12px; color: #fff;
+  font-size: 12px; font-weight: 700; text-align: center;
+}
+#hb-pin-result-top .no {
+  background: rgba(239,68,68,.15); border: 1.5px solid #ef4444;
+  border-radius: 10px; padding: 8px 12px; color: #fff;
+  font-size: 12px; font-weight: 700; text-align: center;
+}
+#hb-pin-result-top .no a { color: var(--amber); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div id="hb-preview-banner">
+  ✨ NEW LAYOUT — Shop-First · <a href="index.html">← Compare Original</a>
+</div>
+
+<!-- ── 1. MARQUEE ── -->
+<div class="hb-marquee">
+  <span class="hb-marquee-inner">
+    🎁 Pehla Order: 1 Kg Aloo FREE! &nbsp;•&nbsp;
+    🚚 ₹199+ pe FREE Delivery &nbsp;•&nbsp;
+    ⚡ Kal 4 PM tak Delivery &nbsp;•&nbsp;
+    💵 COD + UPI Available &nbsp;•&nbsp;
+    🌿 100% Farm Fresh Guarantee &nbsp;•&nbsp;
+    📱 WhatsApp: +91 80003 44554 &nbsp;&nbsp;
+  </span>
+</div>
+
+<!-- ── 2. HEADER ── -->
+<header class="hb-header">
+  <a class="hb-logo" href="#">
+    <div class="hb-logo-icon">🌿</div>
+    <div class="hb-logo-text">
+      <div class="hb-brand">Hariyali<em>Basket</em></div>
+      <div class="hb-tagline">NATURE'S BEST · AT YOUR DOOR</div>
+    </div>
+  </a>
+  <div class="hb-header-right">
+    <div class="hb-header-badge">⚡ 4PM Delivery</div>
+    <button class="hb-cart-btn" onclick="HBCheckout.open()" aria-label="Cart">
+      🛒
+      <span class="hb-cart-badge" id="hb-hdr-badge">0</span>
+    </button>
+    <button class="hb-menu-btn" onclick="HBNav.open()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── 3. COMPACT HERO (1-line tagline only — no duplicate brand) ── -->
+<section class="hb-hero-compact">
+  <div class="badge">🌿 Farm Fresh · Daily Delivery</div>
+  <p class="tag">"Bacchon Ki Sehat, Buzurgon Ki Khushi —<br><em>Sab Kuch Ek Basket Mein"</em></p>
+</section>
+
+<!-- ── 4. ⭐ PINCODE CHECK AT TOP (most important question first) ── -->
+<section class="hb-pincode-top">
+  <div class="row">
+    <span class="label">📍 Delivery?</span>
+    <input id="hb-pin-input-top" type="text" placeholder="Pincode ya colony name" maxlength="80">
+    <button onclick="checkPinTop()">Check ✓</button>
+  </div>
+  <div id="hb-pin-result-top"></div>
+</section>
+
+<!-- ── 5. REPEAT ORDER (returning customer fast-track) ── -->
+<div id="hb-repeat-bar" style="display:none">
+  <div class="hb-rb-text">
+    <div class="hb-rb-label">🔁 Pichla Order</div>
+    <div class="hb-rb-items" id="hb-rb-items"></div>
+  </div>
+  <button class="hb-rb-btn" onclick="HBExtras.repeatOrder()">Repeat</button>
+</div>
+
+<!-- ── 6. ⭐ PRODUCTS (the main event — visible in 2 scrolls) ── -->
+<section id="hb-products" class="hb-products-section">
+  <div class="hb-search-section">
+    <div class="hb-search-box">
+      <span class="hb-search-icon">🔍</span>
+      <input id="hb-search-inp"
+             type="search"
+             name="hb-q-nosave-x9k2"
+             placeholder="Aloo, Tamatar, Pyaaz dhundo... (try 'pyaj')"
+             autocomplete="off"
+             autocorrect="off"
+             autocapitalize="off"
+             spellcheck="false"
+             inputmode="search"
+             aria-autocomplete="list"
+             role="combobox"
+             aria-controls="hb-search-suggest"
+             aria-expanded="false">
+      <button class="hb-clear-btn" id="hb-clear-btn">✕</button>
+    </div>
+    <div id="hb-search-suggest" class="hb-search-suggest"></div>
+  </div>
+  <div class="hb-delivery-strip">
+    <div class="hb-dstrip-pill active"><span>📍 Hanging Garden</span></div>
+    <div class="hb-dstrip-pill"><span>🕐 Kal 4 PM</span></div>
+    <div class="hb-dstrip-pill"><span>🚚 Free on ₹199+</span></div>
+    <div class="hb-dstrip-pill"><span>🌿 100% Fresh</span></div>
+  </div>
+  <div class="hb-filter-bar" id="hb-filter-bar"></div>
+  <div class="hb-section-hdr">
+    <h2>Aaj ke <span>Deals</span> 🔥</h2>
+    <small id="hb-prod-count">0 items</small>
+  </div>
+  <div id="hb-product-grid"></div>
+</section>
+
+<!-- ── 7. TRUST BAR (after seeing products = social proof works) ── -->
+<div id="hb-trust-bar">
+  🔥 Aaj <span id="hb-trust-num">47</span> logon ne HariyaliBasket se order kiya!
+</div>
+
+<!-- ── 8. INFO CARDS (now reinforces post-shopping) ── -->
+<div class="hb-info-cards">
+  <div class="hb-info-card"><div class="hb-ic-icon">🎁</div><div class="hb-ic-label">1st Order Gift</div><div class="hb-ic-val">1 Kg Aloo FREE</div></div>
+  <div class="hb-info-card"><div class="hb-ic-icon">🚚</div><div class="hb-ic-label">Free Delivery</div><div class="hb-ic-val">Above ₹199</div></div>
+  <div class="hb-info-card"><div class="hb-ic-icon">⏰</div><div class="hb-ic-label">Delivery Time</div><div class="hb-ic-val">Next Day 4 PM</div></div>
+  <div class="hb-info-card"><div class="hb-ic-icon">💵</div><div class="hb-ic-label">Payment</div><div class="hb-ic-val">COD + UPI Both</div></div>
+</div>
+
+<!-- ── 9. FEATURES (8 trust points) ── -->
+<section class="hb-features-section">
+  <div class="hb-section-hdr"><h2 class="hb-h2-light">Humari <span>Khaasiyat</span></h2></div>
+  <div class="hb-features-grid">
+    <div class="hb-feat"><span>✅</span><span>100% Freshness Guarantee</span></div>
+    <div class="hb-feat"><span>🧾</span><span>No Hidden Charges</span></div>
+    <div class="hb-feat"><span>🔄</span><span>Free Replacement Policy</span></div>
+    <div class="hb-feat"><span>🌿</span><span>Jaipur ki Taazi Sabzi</span></div>
+    <div class="hb-feat"><span>⚡</span><span>Daily Fresh Stock</span></div>
+    <div class="hb-feat"><span>🏘️</span><span>Society / Colony Delivery</span></div>
+    <div class="hb-feat"><span>💳</span><span>COD + UPI Both Accepted</span></div>
+    <div class="hb-feat"><span>📦</span><span>Hygienic Packaging</span></div>
+  </div>
+</section>
+
+<!-- ── 10. REVIEWS (testimonials) ── -->
+<section class="hb-reviews-section">
+  <div class="hb-section-hdr"><h2>❤️ Customers <span>Love Us</span></h2><small>5.0 ⭐ — Hamare khush customers ki baatein</small></div>
+  <div class="hb-reviews-grid">
+    <div class="hb-review-card"><div class="hb-rc-stars">⭐⭐⭐⭐⭐</div><p>"Vegetables bilkul fresh aate hain, market se bhi better quality!"</p><div class="hb-rc-author"><div class="hb-rc-avatar">👨</div><div><div class="hb-rc-name">Rahul Sharma</div><div class="hb-rc-loc">📍 Malviya Nagar</div></div></div></div>
+    <div class="hb-review-card"><div class="hb-rc-stars">⭐⭐⭐⭐⭐</div><p>"WhatsApp pe order karo aur subah ghar pe fresh sabzi!"</p><div class="hb-rc-author"><div class="hb-rc-avatar">👩</div><div><div class="hb-rc-name">Priya Verma</div><div class="hb-rc-loc">📍 Vaishali Nagar</div></div></div></div>
+    <div class="hb-review-card"><div class="hb-rc-stars">⭐⭐⭐⭐⭐</div><p>"Hamesha 4 PM se pehle milti hai. Trusted service!"</p><div class="hb-rc-author"><div class="hb-rc-avatar">👨‍💼</div><div><div class="hb-rc-name">Anil Gupta</div><div class="hb-rc-loc">📍 Mansarovar</div></div></div></div>
+    <div class="hb-review-card"><div class="hb-rc-stars">⭐⭐⭐⭐⭐</div><p>"Mango season mein Alphonso mangoes ekdum fresh mile!"</p><div class="hb-rc-author"><div class="hb-rc-avatar">👩‍🍳</div><div><div class="hb-rc-name">Sunita Patel</div><div class="hb-rc-loc">📍 Pratap Nagar</div></div></div></div>
+  </div>
+</section>
+
+<!-- ── 11. COUNTDOWN (now urgency makes sense — user has seen value) ── -->
+<div class="hb-countdown">
+  <div class="hb-cd-label">⏳ Aaj ka Order Cutoff:</div>
+  <div class="hb-cd-timer">
+    <div class="hb-cd-unit"><span id="hb-cd-h">--</span><small>HRS</small></div>
+    <div class="hb-cd-sep">:</div>
+    <div class="hb-cd-unit"><span id="hb-cd-m">--</span><small>MIN</small></div>
+    <div class="hb-cd-sep">:</div>
+    <div class="hb-cd-unit"><span id="hb-cd-s">--</span><small>SEC</small></div>
+  </div>
+  <div class="hb-cd-note" id="hb-cd-note">⚡ Abhi order karo — kal 4 PM tak delivery!</div>
+</div>
+
+<!-- ── 12. HOW IT WORKS (for new/confused users — lower priority) ── -->
+<section class="hb-how-section">
+  <div class="hb-section-hdr">
+    <h2>🌿 Kaise <span>Kaam Karta Hai?</span></h2>
+    <small>Sirf 4 steps mein fresh sabzi ghar pe!</small>
+  </div>
+  <div class="hb-how-steps">
+    <div class="hb-step-card"><div class="hb-step-icon">🛒</div><div class="hb-step-num">STEP 1</div><h3>Items Select</h3><p>Price list dekho</p></div>
+    <div class="hb-step-card"><div class="hb-step-icon">📱</div><div class="hb-step-num">STEP 2</div><h3>Order Place</h3><p>Address + Payment</p></div>
+    <div class="hb-step-card"><div class="hb-step-icon">🌿</div><div class="hb-step-num">STEP 3</div><h3>Fresh Pack</h3><p>Farm se taaza</p></div>
+    <div class="hb-step-card hb-step-card-active"><div class="hb-step-icon">🚚</div><div class="hb-step-num">STEP 4</div><h3>Delivery</h3><p>Kal 4 PM</p></div>
+  </div>
+</section>
+
+<!-- ── 13. FAQ (questions answered) ── -->
+<section id="hb-section-faq" class="hb-modal-source" style="display:block">
+  <div class="hb-section-hdr"><h2>❓ Aksar Pooche <span>Jaane Wale Sawaal</span></h2><small>Aapke common questions ke jawab</small></div>
+  <div class="hb-faq-list">
+    <div class="hb-faq-item"><div class="hb-faq-q">🚚 Delivery kab hoti hai? <span class="hb-faq-arrow">▼</span></div><div class="hb-faq-a">Order karo aaj raat 10 PM tak — delivery hogi kal 4 PM se pehle.</div></div>
+    <div class="hb-faq-item"><div class="hb-faq-q">💰 Minimum order kitna hai? <span class="hb-faq-arrow">▼</span></div><div class="hb-faq-a">Koi minimum order nahi! ₹199 se upar order par FREE delivery.</div></div>
+    <div class="hb-faq-item"><div class="hb-faq-q">💳 Payment kaise kare? <span class="hb-faq-arrow">▼</span></div><div class="hb-faq-a">Cash on Delivery (COD) aur UPI dono accepted hain.</div></div>
+    <div class="hb-faq-item"><div class="hb-faq-q">🌿 Vegetables kitni fresh hoti hain? <span class="hb-faq-arrow">▼</span></div><div class="hb-faq-a">📦 Har Roz Naya Stock — Packed With Care, Delivered Fresh.</div></div>
+  </div>
+</section>
+
+<!-- ── 14. FOOTER ── -->
+<footer class="hb-footer">
+  <div class="hb-footer-logo">Hariyali<span>Basket</span></div>
+  <div class="hb-footer-tag">🌿 Jaipur Ki Taazi Sabzi · Roz Subah Chuni, Shaam Tak Ghar Pe</div>
+  <div class="hb-footer-copy">© 2026 HariyaliBasket · Live Preview · Shop-First Layout</div>
+</footer>
+
+<!-- ── FLOATING UI: cart bar, drawer, checkout, success, bottom nav, hamburger ── -->
+<div id="hb-cart-bar">
+  <div class="hb-meter-wrap">
+    <div class="hb-meter-labels"><span id="hb-meter-txt">🚚 Free delivery ke liye add karo</span><span id="hb-meter-pct">0%</span></div>
+    <div class="hb-meter-track"><div class="hb-meter-fill" id="hb-meter-fill"></div></div>
+  </div>
+  <div class="hb-cart-row">
+    <div class="hb-cart-info" onclick="HBCart.toggleDrawer()">
+      <div class="hb-cart-items-txt" id="hb-cart-items-txt">0 items</div>
+      <div class="hb-cart-total-txt" id="hb-cart-total-txt">₹0</div>
+    </div>
+    <button class="hb-checkout-trigger" onclick="HBCheckout.open()">Place Order <span>→</span></button>
+  </div>
+</div>
+
+<div id="hb-cart-drawer">
+  <div class="hb-cd-handle"></div>
+  <div class="hb-cd-head"><h3>🛒 Aapka Cart</h3><button class="hb-cd-clear" onclick="HBCart.clear()">🗑 Clear</button></div>
+  <div id="hb-cart-items"></div>
+</div>
+
+<div id="hb-overlay" onclick="HBCheckout.close()"></div>
+<div id="hb-checkout-sheet">
+  <div class="hb-sheet-top">
+    <div class="hb-drag-handle"></div>
+    <div class="hb-step-bar">
+      <div class="hb-step-node"><div class="hb-step-circle active" id="hb-sc1">1</div><div class="hb-step-label active" id="hb-sl1">CART</div></div>
+      <div class="hb-step-line" id="hb-sline1"></div>
+      <div class="hb-step-node"><div class="hb-step-circle" id="hb-sc2">2</div><div class="hb-step-label" id="hb-sl2">ADDRESS</div></div>
+      <div class="hb-step-line" id="hb-sline2"></div>
+      <div class="hb-step-node"><div class="hb-step-circle" id="hb-sc3">3</div><div class="hb-step-label" id="hb-sl3">PAYMENT</div></div>
+    </div>
+    <div class="hb-sheet-hdr"><h3 class="hb-sheet-title" id="hb-sheet-title">🛒 Your Cart</h3><button class="hb-sheet-close" onclick="HBCheckout.close()">✕</button></div>
+  </div>
+  <div class="hb-step-panel active" id="hb-panel1">
+    <div id="hb-co-items"></div>
+    <div class="hb-bill-card">
+      <div class="hb-bill-title">📋 BILL SUMMARY</div>
+      <div class="hb-bill-row"><span>Item Total (MRP)</span><span id="hb-b-mrp">₹0</span></div>
+      <div class="hb-bill-row hb-saving"><span>🎉 You Save</span><span id="hb-b-save">−₹0</span></div>
+      <div class="hb-bill-row"><span>Delivery Fee</span><span id="hb-b-del">₹69</span></div>
+      <hr class="hb-bill-dash">
+      <div class="hb-bill-row hb-grand"><span>Grand Total</span><span id="hb-b-grand">₹0</span></div>
+    </div>
+    <div class="hb-delivery-tag">
+      <span class="hb-dt-icon">⏰</span>
+      <div><div class="hb-dt-main">Expected Delivery</div><div class="hb-dt-sub">Tomorrow before 4:00 PM</div></div>
+      <span class="hb-dt-fast">FAST</span>
+    </div>
+  </div>
+  <div class="hb-sheet-footer show" id="hb-foot1">
+    <button class="hb-primary-btn hb-btn-green" onclick="HBCheckout.go(2)">Proceed to Delivery →</button>
+  </div>
+  <div class="hb-step-panel" id="hb-panel2">
+    <div class="hb-saved-addr" id="hb-saved-addr" onclick="HBAddress.edit()">
+      <div class="hb-sa-row">
+        <div><div class="hb-sa-label">📍 SAVED ADDRESS</div><div id="hb-saved-addr-text" class="hb-sa-text"></div></div>
+        <span class="hb-sa-change">Change</span>
+      </div>
+    </div>
+    <div id="hb-addr-form">
+      <div class="hb-form-section-label">📍 DELIVERY ADDRESS</div>
+      <div class="hb-form-group">
+        <input id="hb-f-name" class="hb-field" type="text" placeholder="Full Name *">
+        <div class="hb-soc-wrap">
+          <input id="hb-f-soc" class="hb-field" type="text" placeholder="Society / Colony *" readonly onclick="HBAddress.toggleDD()">
+          <span class="hb-soc-arrow">▼</span>
+          <div class="hb-soc-dropdown" id="hb-soc-dd">
+            <div class="hb-soc-search-wrap"><input class="hb-soc-search" id="hb-soc-q" type="text" placeholder="🔍 Search colony..."></div>
+            <div class="hb-soc-list" id="hb-soc-list"></div>
+            <div class="hb-soc-footer"><button class="hb-add-soc-btn" type="button" onclick="HBAddress.addCustom()">+ Add Your Colony</button></div>
+          </div>
+        </div>
+        <div class="hb-field-grid">
+          <input id="hb-f-block" class="hb-field" type="text" placeholder="Block / Tower">
+          <input id="hb-f-flat" class="hb-field" type="text" placeholder="Flat / House No.">
+        </div>
+        <input id="hb-f-phone" class="hb-field" type="tel" placeholder="Mobile Number *" maxlength="10">
+      </div>
+      <label class="hb-save-row"><input type="checkbox" id="hb-save-chk" checked><span>Save this address for next time</span></label>
+    </div>
+  </div>
+  <div class="hb-sheet-footer" id="hb-foot2">
+    <button class="hb-primary-btn hb-btn-green" onclick="HBAddress.validate()">Choose Payment →</button>
+  </div>
+  <div class="hb-step-panel" id="hb-panel3">
+    <div class="hb-form-section-label">💳 PAYMENT METHOD</div>
+    <div class="hb-pay-card selected" id="hb-pay-cod" onclick="HBCheckout.pickPay('cod')">
+      <div class="hb-pay-inner">
+        <div class="hb-pay-icon" style="background:#dcfce7">💵</div>
+        <div><div class="hb-pay-title">Cash on Delivery</div><div class="hb-pay-sub">Pay when your order arrives</div></div>
+        <div class="hb-pay-radio on" id="hb-radio-cod"><div class="hb-pay-dot"></div></div>
+      </div>
+    </div>
+    <div class="hb-pay-card" id="hb-pay-upi" onclick="HBCheckout.pickPay('upi')">
+      <div class="hb-pay-inner">
+        <div class="hb-pay-icon" style="background:#ede9fe">📲</div>
+        <div><div class="hb-pay-title">UPI / Online Payment</div><div class="hb-pay-sub">GPay · PhonePe · Paytm</div></div>
+        <div class="hb-pay-radio" id="hb-radio-upi"></div>
+      </div>
+    </div>
+    <div class="hb-upi-expand" id="hb-upi-expand">
+      <div class="hb-upi-step">📲 STEP 1 — Pay to this UPI ID</div>
+      <div class="hb-upi-card">
+        <div class="hb-upi-hint">UPI ID</div>
+        <div class="hb-upi-val">imanohar07773@ybl</div>
+        <button class="hb-copy-btn" type="button" onclick="HBCheckout.copyUPI()">📋 Copy UPI ID</button>
+      </div>
+      <div class="hb-upi-step">✅ STEP 2 — Enter Transaction ID</div>
+      <input id="hb-f-txn" class="hb-field" type="text" placeholder="Transaction ID">
+      <div class="hb-upi-tip">💡 GPay / PhonePe app mein milti hai</div>
+    </div>
+    <div class="hb-captcha-wrap">
+      <div class="hb-captcha-label">🔒 Bot Check (spam prevention)</div>
+      <div class="hb-captcha-row">
+        <span class="hb-captcha-q" id="hb-cap-q">5 + 3 = ?</span>
+        <input id="hb-cap-v" class="hb-field hb-cap-input" type="number" placeholder="Answer" inputmode="numeric">
+      </div>
+    </div>
+    <div class="hb-order-mini">
+      <div class="hb-om-label">ORDER TOTAL</div>
+      <div class="hb-om-row"><span class="hb-om-count" id="hb-mini-count"></span><span class="hb-om-total" id="hb-mini-total"></span></div>
+    </div>
+  </div>
+  <div class="hb-sheet-footer" id="hb-foot3">
+    <button class="hb-primary-btn hb-btn-amber" id="hb-place-btn" onclick="HBCheckout.place()">
+      <span id="hb-place-btn-txt">🎉 Place Order</span>
+    </button>
+  </div>
+</div>
+
+<div id="hb-success-screen">
+  <div class="hb-success-bg">
+    <div class="hb-success-top">
+      <div class="hb-success-ring"><span>✅</span></div>
+      <div class="hb-success-title">Order Placed!</div>
+      <div class="hb-success-sub">Delivery kal 4 PM se pehle 🚚</div>
+    </div>
+    <div class="hb-success-card">
+      <div class="hb-oid-row">
+        <div><div class="hb-oid-label">ORDER ID</div><div class="hb-oid-val" id="hb-s-orderid"></div></div>
+        <button class="hb-oid-copy" onclick="HBCheckout.copyOrderId()">Copy</button>
+      </div>
+      <div id="hb-s-details"></div>
+    </div>
+    <div class="hb-success-actions">
+      <button class="hb-wa-notify-btn" id="hb-wa-btn" onclick="HBCheckout.notifyWA()">💬 Also Notify on WhatsApp</button>
+      <button class="hb-continue-btn" onclick="HBCheckout.closeSuccess()">🛒 Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
+<nav class="hb-bottom-nav" id="hb-bottom-nav">
+  <a class="hb-bn-item active" onclick="HBNav.scrollTo('home')"><div class="hb-bn-icon">🏠</div><div class="hb-bn-label">Home</div></a>
+  <a class="hb-bn-item" onclick="HBNav.scrollTo('products')"><div class="hb-bn-icon">🛒</div><div class="hb-bn-label">Shop</div></a>
+  <a class="hb-bn-item hb-bn-cart" onclick="HBCart.toggleDrawer()"><div class="hb-bn-icon">🧺<span class="hb-bn-badge" id="hb-bn-cart-badge">0</span></div><div class="hb-bn-label">Cart</div></a>
+  <a class="hb-bn-item" onclick="alert('Real install pe — admin dashboard mein orders milenge')"><div class="hb-bn-icon">📦</div><div class="hb-bn-label">Orders</div></a>
+  <a class="hb-bn-item" onclick="alert('Real install pe — login page')"><div class="hb-bn-icon">👤</div><div class="hb-bn-label">Account</div></a>
+</nav>
+
+<div id="hb-nav-overlay" onclick="HBNav.close()"></div>
+<aside id="hb-nav-drawer">
+  <div class="hb-nd-head">
+    <div class="hb-nd-brand">Hariyali<span>Basket</span></div>
+    <button class="hb-nd-close" onclick="HBNav.close()">✕</button>
+  </div>
+  <nav class="hb-nd-links">
+    <button class="hb-nd-link" onclick="HBNav.scrollTo('home')"><span>🏠</span> Home</button>
+    <button class="hb-nd-link" onclick="HBNav.scrollTo('products')"><span>🛒</span> Products</button>
+    <button class="hb-nd-link" onclick="alert('Section preview')"><span>🌿</span> About Us</button>
+    <button class="hb-nd-link" onclick="alert('Section preview')"><span>📝</span> Blog &amp; Recipes</button>
+    <button class="hb-nd-link" onclick="alert('Section preview')"><span>❤️</span> Wishlist</button>
+    <button class="hb-nd-link" onclick="document.getElementById('hb-section-faq').scrollIntoView({behavior:'smooth'});HBNav.close()"><span>❓</span> FAQ</button>
+    <button class="hb-nd-link" onclick="alert('Real install pe contact details aayenge')"><span>📞</span> Contact</button>
+    <a class="hb-nd-link hb-nd-wa" href="https://wa.me/918000344554" target="_blank"><span>💬</span> WhatsApp Order</a>
+  </nav>
+  <div class="hb-nd-foot">© 2026 HariyaliBasket 🌿</div>
+</aside>
+
+<div id="hb-section-modal"></div>
+<div id="hb-toast"></div>
+<div id="hb-fly-mount"></div>
+<div id="hb-leaves-mount"></div>
+
+<!-- ── DEMO DATA (same as original) ── -->
+<script>
+window.HB = {
+  ajaxUrl: '#preview-mode', nonce: 'preview',
+  wa: '918000344554', upi: 'imanohar07773@ybl',
+  minFree: 199, deliveryFee: 69, sheetUrl: '', homeUrl: '#'
+};
+window.HB_SOCIETIES = ['Hanging Garden','Vaishali Nagar','Malviya Nagar','Mansarovar','Pratap Nagar','Jagatpura','Sanganer','Civil Lines','Bani Park','Raja Park'];
+
+window.HB_PRODUCTS = [
+  {id:1,name:'Apple Green Imp.',cat:'Fruits',uom:'Kg',mrp:280,sp:220,img:'',stock:'in',variants:[]},
+  {id:2,name:'Apple Himachal',cat:'Fruits',uom:'Kg',mrp:200,sp:160,img:'',stock:'in',variants:[]},
+  {id:3,name:'Avocado Local',cat:'Fruits',uom:'Pc',mrp:150,sp:120,img:'',stock:'in',variants:[]},
+  {id:4,name:'Banana',cat:'Fruits',uom:'Kg',mrp:50,sp:40,img:'',stock:'in',variants:[]},
+  {id:5,name:'Chikoo',cat:'Fruits',uom:'Kg',mrp:80,sp:60,img:'',stock:'in',variants:[]},
+  {id:6,name:'Coconut Dhab',cat:'Fruits',uom:'Pc',mrp:100,sp:70,img:'',stock:'in',variants:[]},
+  {id:7,name:'Dragon Fruit',cat:'Fruits',uom:'Pc',mrp:110,sp:90,img:'',stock:'in',variants:[]},
+  {id:8,name:'Guava (Desi)',cat:'Fruits',uom:'Kg',mrp:90,sp:60,img:'',stock:'in',variants:[]},
+  {id:9,name:'Jamun',cat:'Fruits',uom:'Kg',mrp:200,sp:140,img:'',stock:'in',variants:[]},
+  {id:10,name:'Kiwi Fresh',cat:'Fruits',uom:'Pc',mrp:45,sp:40,img:'',stock:'in',variants:[]},
+  {id:11,name:'Mango Alphonso',cat:'Fruits',uom:'Kg',mrp:220,sp:160,img:'',stock:'in',variants:[]},
+  {id:12,name:'Mango Langra',cat:'Fruits',uom:'Kg',mrp:130,sp:90,img:'',stock:'in',variants:[]},
+  {id:13,name:'Mango Safeda',cat:'Fruits',uom:'Kg',mrp:100,sp:70,img:'',stock:'in',variants:[]},
+  {id:14,name:'Papaya Fresh',cat:'Fruits',uom:'Kg',mrp:60,sp:45,img:'',stock:'in',variants:[]},
+  {id:15,name:'Pineapple Fresh',cat:'Fruits',uom:'Pc',mrp:90,sp:70,img:'',stock:'in',variants:[]},
+  {id:16,name:'Pomegranate (Anar)',cat:'Fruits',uom:'Kg',mrp:260,sp:200,img:'',stock:'in',variants:[]},
+  {id:17,name:'Sweet Lime (Mosambi)',cat:'Fruits',uom:'Kg',mrp:80,sp:60,img:'',stock:'in',variants:[]},
+  {id:18,name:'Watermelon',cat:'Fruits',uom:'Pc',mrp:80,sp:50,img:'',stock:'in',variants:[]},
+  {id:19,name:'Beetroot',cat:'Root Vegetables',uom:'Kg',mrp:50,sp:30,img:'',stock:'in',variants:[{size:'250g',sp:8,mrp:13},{size:'500g',sp:15,mrp:25},{size:'1 Kg',sp:30,mrp:50}]},
+  {id:20,name:'Carrot',cat:'Root Vegetables',uom:'Kg',mrp:50,sp:30,img:'',stock:'in',variants:[{size:'250g',sp:8,mrp:13},{size:'500g',sp:15,mrp:25},{size:'1 Kg',sp:30,mrp:50}]},
+  {id:21,name:'Garlic',cat:'Root Vegetables',uom:'Kg',mrp:150,sp:120,img:'',stock:'in',variants:[{size:'250g',sp:30,mrp:38},{size:'500g',sp:60,mrp:75},{size:'1 Kg',sp:120,mrp:150}]},
+  {id:22,name:'Ginger',cat:'Root Vegetables',uom:'Kg',mrp:200,sp:150,img:'',stock:'in',variants:[{size:'250g',sp:38,mrp:50},{size:'500g',sp:75,mrp:100},{size:'1 Kg',sp:150,mrp:200}]},
+  {id:23,name:'Onion',cat:'Root Vegetables',uom:'Kg',mrp:40,sp:25,img:'',stock:'in',variants:[{size:'250g',sp:6,mrp:10},{size:'500g',sp:13,mrp:20},{size:'1 Kg',sp:25,mrp:40}]},
+  {id:24,name:'Potato',cat:'Root Vegetables',uom:'Kg',mrp:30,sp:14,img:'',stock:'in',variants:[{size:'250g',sp:4,mrp:8},{size:'500g',sp:7,mrp:15},{size:'1 Kg',sp:14,mrp:30}]},
+  {id:25,name:'Red Potato',cat:'Root Vegetables',uom:'Kg',mrp:40,sp:25,img:'',stock:'in',variants:[{size:'250g',sp:6,mrp:10},{size:'500g',sp:13,mrp:20},{size:'1 Kg',sp:25,mrp:40}]},
+  {id:26,name:'Raw Mango',cat:'Root Vegetables',uom:'Kg',mrp:80,sp:50,img:'',stock:'out',variants:[]},
+  {id:27,name:'Arbi (Colocasia)',cat:'Green Vegetables',uom:'Kg',mrp:50,sp:40,img:'',stock:'in',variants:[{size:'250g',sp:10,mrp:13},{size:'500g',sp:20,mrp:25},{size:'1 Kg',sp:40,mrp:50}]},
+  {id:28,name:'French Beans',cat:'Green Vegetables',uom:'Kg',mrp:120,sp:80,img:'',stock:'in',variants:[]},
+  {id:29,name:'Brinjal (Baingan)',cat:'Green Vegetables',uom:'Kg',mrp:40,sp:25,img:'',stock:'in',variants:[]},
+  {id:30,name:'Cabbage Green',cat:'Green Vegetables',uom:'Kg',mrp:40,sp:20,img:'',stock:'in',variants:[]},
+  {id:31,name:'Capsicum Green',cat:'Green Vegetables',uom:'Kg',mrp:60,sp:40,img:'',stock:'in',variants:[]},
+  {id:32,name:'Cauliflower',cat:'Green Vegetables',uom:'Kg',mrp:70,sp:50,img:'',stock:'in',variants:[]},
+  {id:33,name:'Green Chilli',cat:'Green Vegetables',uom:'Kg',mrp:50,sp:30,img:'',stock:'in',variants:[]},
+  {id:34,name:'Cucumber Chinese',cat:'Green Vegetables',uom:'Kg',mrp:70,sp:40,img:'',stock:'in',variants:[]},
+  {id:35,name:'Lady Finger (Bhindi)',cat:'Green Vegetables',uom:'Kg',mrp:50,sp:40,img:'',stock:'in',variants:[]},
+  {id:36,name:'Bottle Gourd (Lauki)',cat:'Green Vegetables',uom:'Kg',mrp:40,sp:30,img:'',stock:'in',variants:[]},
+  {id:37,name:'Bitter Gourd (Karela)',cat:'Green Vegetables',uom:'Kg',mrp:60,sp:40,img:'',stock:'in',variants:[]},
+  {id:38,name:'Spinach (Palak)',cat:'Green Vegetables',uom:'Kg',mrp:60,sp:40,img:'',stock:'in',variants:[]},
+  {id:39,name:'Spring Onion',cat:'Green Vegetables',uom:'Kg',mrp:110,sp:60,img:'',stock:'in',variants:[]},
+  {id:40,name:'Tomato',cat:'Green Vegetables',uom:'Kg',mrp:40,sp:25,img:'',stock:'in',variants:[{size:'250g',sp:6,mrp:10},{size:'500g',sp:13,mrp:20},{size:'1 Kg',sp:25,mrp:40}]},
+  {id:41,name:'Broccoli',cat:'Green Vegetables',uom:'Kg',mrp:250,sp:180,img:'',stock:'in',variants:[]},
+  {id:42,name:'Red Capsicum',cat:'Green Vegetables',uom:'Kg',mrp:150,sp:100,img:'',stock:'in',variants:[]},
+  {id:43,name:'Yellow Capsicum',cat:'Green Vegetables',uom:'Kg',mrp:150,sp:100,img:'',stock:'in',variants:[]},
+  {id:44,name:'Zucchini Green',cat:'Green Vegetables',uom:'Kg',mrp:200,sp:120,img:'',stock:'in',variants:[]},
+  {id:45,name:'Mushroom Fresh 200g',cat:'Exotic & Packed',uom:'Pkt',mrp:50,sp:40,img:'',stock:'in',variants:[]},
+  {id:46,name:'Coriander',cat:'Herbs & Leafy',uom:'Kg',mrp:80,sp:60,img:'',stock:'in',variants:[]},
+  {id:47,name:'Mint (Pudina)',cat:'Herbs & Leafy',uom:'Kg',mrp:100,sp:80,img:'',stock:'in',variants:[]},
+  {id:48,name:'Lemon (Nimbu)',cat:'Herbs & Leafy',uom:'Kg',mrp:160,sp:120,img:'',stock:'in',variants:[]},
+  {id:49,name:'Banana Leaf',cat:'Herbs & Leafy',uom:'Pc',mrp:30,sp:25,img:'',stock:'in',variants:[]}
+];
+</script>
+
+<!-- Theme JS -->
+<script src="../hariyalibasket-v2/assets/js/main.js?v=6"></script>
+<script src="../hariyalibasket-v2/assets/js/products.js?v=6"></script>
+<script src="../hariyalibasket-v2/assets/js/search.js?v=6"></script>
+<script src="../hariyalibasket-v2/assets/js/cart.js?v=6"></script>
+<script src="../hariyalibasket-v2/assets/js/checkout.js?v=6"></script>
+<script src="../hariyalibasket-v2/assets/js/extras.js?v=6"></script>
+
+<!-- Top pincode check + checkout preview-mode override -->
+<script>
+// Top pincode check
+window.checkPinTop = function() {
+  var input = document.getElementById('hb-pin-input-top');
+  var resultEl = document.getElementById('hb-pin-result-top');
+  if (!input || !resultEl) return;
+  var val = input.value.trim().toLowerCase();
+  if (!val) { HBUtils.toast('Pincode ya colony name daalein!'); return; }
+  var areas = (window.HB_SOCIETIES || []).map(function(s){ return s.toLowerCase(); });
+  var pincodes = ['302017','302026','302020','302013','302018','302019','302015','302016','302021'];
+  var ok = false;
+  for (var i = 0; i < areas.length; i++) {
+    if (val.indexOf(areas[i]) !== -1 || areas[i].indexOf(val) !== -1) { ok = true; break; }
+  }
+  if (!ok) {
+    for (var j = 0; j < pincodes.length; j++) { if (val === pincodes[j]) { ok = true; break; } }
+  }
+  resultEl.classList.add('show');
+  if (ok) {
+    resultEl.innerHTML = '<div class="ok">🎉 Hum aapke area mein deliver karte hain! ₹199+ pe FREE</div>';
+  } else {
+    var wa = (window.HB && HB.wa) || '918000344554';
+    resultEl.innerHTML = '<div class="no">😕 Abhi delivery nahi — <a href="https://wa.me/' + wa + '?text=' + encodeURIComponent('Kya aap mere area mein deliver karte hain? Area: ' + input.value.trim()) + '" target="_blank">WhatsApp pe check karo →</a></div>';
+  }
+};
+document.getElementById('hb-pin-input-top').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') checkPinTop();
+});
+
+// Preview-mode checkout override (mock — no real AJAX)
+(function(){
+  var origPlace = HBCheckout.place;
+  HBCheckout.place = function() {
+    if (App.payMethod === 'upi' && !document.getElementById('hb-f-txn').value.trim()) {
+      HBUtils.toast('UPI Transaction ID enter karo ⚠️'); return;
+    }
+    var capV = parseInt(document.getElementById('hb-cap-v').value);
+    if (!App.captcha || isNaN(capV) || capV !== App.captcha.a + App.captcha.b) {
+      HBUtils.toast('CAPTCHA galat hai. Math check karo ⚠️');
+      HBCheckout.refreshCaptcha(); return;
+    }
+    var afShow = document.getElementById('hb-addr-form').style.display !== 'none';
+    var name, phone, soc, block, flat;
+    if (!afShow && App.savedAddr && App.savedAddr.name) {
+      name = App.savedAddr.name; phone = App.savedAddr.phone; soc = App.savedAddr.soc;
+      block = App.savedAddr.block || ''; flat = App.savedAddr.flat || '';
+    } else {
+      name = document.getElementById('hb-f-name').value.trim();
+      phone = document.getElementById('hb-f-phone').value.trim();
+      soc = document.getElementById('hb-f-soc').value.trim();
+      block = document.getElementById('hb-f-block').value.trim();
+      flat = document.getElementById('hb-f-flat').value.trim();
+    }
+    var t = HBCart.totals();
+    App.orderId = 'HB' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    var items = Object.keys(App.cart).map(function(k){
+      var info = HBProducts.getInfo(k);
+      if (!info) return null;
+      return { name: info.label, qty: App.cart[k], sp: info.sp, amount: App.cart[k]*info.sp };
+    }).filter(Boolean);
+    HBCheckout.close();
+    HBCheckout.showSuccess(name, phone, soc, block, flat, t);
+    var msg = '🌿 *Order — HariyaliBasket* (PREVIEW)\n📋 ' + App.orderId + '\n👤 ' + name + '\n📞 ' + phone + '\n💰 ₹' + t.grand;
+    App.waUrl = 'https://wa.me/' + HB.wa + '?text=' + encodeURIComponent(msg);
+    App.cart = {};
+    HBUtils.storage.remove(App.CART_KEY);
+    HBProducts.render();
+    HBCart.updateBar();
+    HBExtras.confetti();
+    HBUtils.toast('🎉 Preview mode — order saved locally only', 4000);
+  };
+})();
+</script>
+
+</body>
+</html>
