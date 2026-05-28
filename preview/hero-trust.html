@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>HariyaliBasket — Trust+Stats Hero Preview</title>
+<meta name="theme-color" content="#0d3320">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-deep:#0d3320; --green-dark:#1a5c38; --green-mid:#25834f;
+  --green-light:#38b26a; --green-glow:#4dda85;
+  --amber:#f59e0b; --amber-deep:#d97706;
+  --red:#ef4444; --white:#fff; --gray-100:#f3f4f6; --gray-400:#9ca3af; --gray-800:#1f2937;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:#f0f7f2;color:var(--gray-800);min-height:100vh}
+
+/* Banner */
+.banner{position:fixed;top:0;left:0;right:0;background:linear-gradient(90deg,#10b981,#059669);color:#fff;font-size:11px;font-weight:800;text-align:center;padding:6px 14px;z-index:99;letter-spacing:.3px}
+.banner a{color:#fff;text-decoration:underline;margin-left:8px}
+body{padding-top:28px}
+
+/* Marquee */
+.marquee{background:linear-gradient(90deg,var(--amber-deep),var(--amber),var(--amber-deep));padding:7px 0;overflow:hidden;white-space:nowrap}
+.marquee span{display:inline-block;animation:marq 25s linear infinite;font-size:11px;font-weight:800;color:var(--green-deep);letter-spacing:.6px}
+@keyframes marq{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+
+/* Header */
+.header{background:linear-gradient(135deg,var(--green-deep) 0%,var(--green-dark) 100%);padding:13px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90;box-shadow:0 2px 20px rgba(0,0,0,.25)}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--amber),var(--amber-deep));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 12px rgba(245,158,11,.4);flex-shrink:0}
+.brand{font-family:'Sora',sans-serif;font-size:19px;font-weight:800;color:#fff;line-height:1}
+.brand em{color:var(--amber);font-style:normal}
+.tag-mini{font-size:8.5px;color:var(--green-glow);font-weight:700;letter-spacing:2px;margin-top:2px}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.hdr-cart,.hdr-menu{position:relative;width:40px;height:40px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;gap:4px;cursor:pointer}
+.hdr-menu span{display:block;width:18px;height:2px;background:#fff;border-radius:2px}
+
+/* ═══ TRUST+STATS HERO ═══ */
+.hero{
+  background:linear-gradient(160deg,var(--green-deep) 0%,var(--green-dark) 60%,#0a2616 100%);
+  padding:24px 20px 28px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'🌿';font-size:200px;position:absolute;top:-50px;right:-40px;opacity:.06;pointer-events:none;
+}
+.hero::after{
+  content:'🍅';font-size:120px;position:absolute;bottom:-30px;left:-20px;opacity:.05;pointer-events:none;
+}
+
+/* Brand block */
+.hero-brand{text-align:center;margin-bottom:18px;position:relative}
+.hero-tagline{
+  font-family:'Sora',sans-serif;
+  font-size:24px;font-weight:800;color:#fff;
+  line-height:1.25;letter-spacing:.3px;
+}
+.hero-tagline em{color:var(--amber);font-style:normal}
+.hero-sub{
+  font-size:11px;color:var(--green-glow);font-weight:700;
+  letter-spacing:1.5px;margin-top:6px;
+}
+
+/* PINCODE CARD — prominent */
+.pin-card{
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(245,158,11,.35);
+  border-radius:16px;
+  padding:14px 12px;
+  margin:0 0 16px;
+  backdrop-filter:blur(8px);
+  position:relative;
+  z-index:2;
+}
+.pin-label{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--amber);font-weight:800;letter-spacing:.5px;
+  margin-bottom:8px;text-transform:uppercase;
+}
+.pin-row{display:flex;gap:8px}
+.pin-input{
+  flex:1;padding:11px 14px;
+  border:none;border-radius:10px;
+  background:#fff;color:var(--gray-800);
+  font-size:13px;font-weight:700;font-family:inherit;
+  outline:none;
+}
+.pin-input::placeholder{color:var(--gray-400);font-weight:600}
+.pin-btn{
+  background:linear-gradient(135deg,var(--amber),var(--amber-deep));
+  color:var(--green-deep);border:none;padding:11px 18px;border-radius:10px;
+  font-size:12px;font-weight:900;font-family:inherit;cursor:pointer;
+  white-space:nowrap;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(245,158,11,.4);
+}
+.pin-btn:active{transform:scale(.95)}
+.pin-result{margin-top:8px;font-size:12px;font-weight:700;text-align:center;color:#fff}
+.pin-result.ok{color:var(--green-glow)}
+.pin-result.no{color:#fda4af}
+
+/* TRUST STATS — 3 column */
+.stats-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:0 0 16px;
+  position:relative;z-index:2;
+}
+.stat{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(77,218,133,.18);
+  border-radius:14px;
+  padding:11px 6px 10px;
+  text-align:center;
+  backdrop-filter:blur(8px);
+  transition:transform .2s;
+}
+.stat:hover{transform:translateY(-2px)}
+.stat-icon{font-size:18px;line-height:1;margin-bottom:4px}
+.stat-num{
+  font-family:'Sora',sans-serif;
+  font-size:16px;font-weight:900;color:var(--amber);
+  line-height:1.1;
+}
+.stat-label{
+  font-size:8.5px;color:rgba(255,255,255,.7);
+  font-weight:700;letter-spacing:.4px;
+  margin-top:3px;line-height:1.2;
+}
+
+/* CTA Button */
+.cta{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;
+  background:linear-gradient(135deg,var(--amber),var(--amber-deep));
+  color:var(--green-deep);
+  font-size:14px;font-weight:900;font-family:inherit;
+  padding:14px 18px;border:none;border-radius:14px;
+  text-decoration:none;
+  box-shadow:0 6px 20px rgba(245,158,11,.45);
+  transition:transform .2s;
+  position:relative;z-index:2;
+  cursor:pointer;
+}
+.cta:active{transform:scale(.97)}
+.cta-arrow{font-size:16px;transition:transform .3s}
+.cta:hover .cta-arrow{transform:translateX(4px)}
+
+/* Below — small reassurance row */
+.assure{
+  display:flex;justify-content:center;gap:14px;flex-wrap:wrap;
+  margin-top:14px;
+  font-size:10.5px;color:var(--green-glow);font-weight:700;
+  position:relative;z-index:2;
+}
+.assure span{display:inline-flex;align-items:center;gap:4px}
+
+/* Responsive */
+@media (min-width:560px){
+  .hero{padding:36px 28px 36px}
+  .hero-tagline{font-size:30px}
+  .stat-num{font-size:20px}
+  .stat-label{font-size:10px}
+}
+
+/* Toast */
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--green-deep);color:#fff;padding:11px 22px;border-radius:9999px;font-size:13px;font-weight:800;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.2);pointer-events:none;opacity:0;transition:all .3s}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* What follows below — placeholder */
+.placeholder{padding:30px 20px;text-align:center;background:#fff;border-top:3px solid var(--amber);color:var(--gray-400);font-size:13px;font-weight:600}
+.placeholder strong{display:block;color:var(--green-dark);font-size:16px;margin-bottom:6px;font-family:'Sora',sans-serif}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  ✨ HERO PREVIEW — Trust + Stats Design ·
+  <a href="v2.html">← Compare V2</a>
+</div>
+
+<!-- Marquee -->
+<div class="marquee">
+  <span>🎁 Pehla Order: 1 Kg Aloo FREE! &nbsp;•&nbsp; 🚚 ₹199+ pe FREE Delivery &nbsp;•&nbsp; ⚡ Kal 4 PM tak Delivery &nbsp;•&nbsp; 💵 COD + UPI Available &nbsp;•&nbsp; 🌿 100% Farm Fresh Guarantee &nbsp;•&nbsp; 📱 WhatsApp: +91 80003 44554 &nbsp;&nbsp;</span>
+</div>
+
+<!-- Header -->
+<header class="header">
+  <a href="#" class="logo">
+    <div class="logo-icon">🌿</div>
+    <div>
+      <div class="brand">Hariyali<em>Basket</em></div>
+      <div class="tag-mini">NATURE'S BEST · AT YOUR DOOR</div>
+    </div>
+  </a>
+  <div class="hdr-right">
+    <div class="hdr-cart">🛒</div>
+    <div class="hdr-menu"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<!-- ═══ TRUST + STATS HERO ═══ -->
+<section class="hero">
+  <div class="hero-brand">
+    <h1 class="hero-tagline">
+      "Bacchon Ki Sehat,<br>
+      Buzurgon Ki <em>Khushi"</em>
+    </h1>
+    <div class="hero-sub">JAIPUR · FRESH · FROM FARM</div>
+  </div>
+
+  <!-- Pincode Card -->
+  <div class="pin-card">
+    <div class="pin-label">📍 Delivery hai aapke area mein?</div>
+    <div class="pin-row">
+      <input class="pin-input" id="pin" type="text" placeholder="Pincode ya colony name" maxlength="50" autocomplete="off">
+      <button class="pin-btn" onclick="checkPin()">Check ✓</button>
+    </div>
+    <div id="pinR" class="pin-result"></div>
+  </div>
+
+  <!-- Trust Stats — 3 column -->
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-icon">⭐</div>
+      <div class="stat-num">4.9</div>
+      <div class="stat-label">127 REVIEWS</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🏘️</div>
+      <div class="stat-num">500+</div>
+      <div class="stat-label">JAIPUR FAMILIES</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🚚</div>
+      <div class="stat-num">4 PM</div>
+      <div class="stat-label">KAL DELIVERY</div>
+    </div>
+  </div>
+
+  <!-- Single Clear CTA -->
+  <a href="#products" class="cta" onclick="toast('🛒 Real install pe products grid khulega')">
+    🛒 Aaj ke Deals dekho
+    <span class="cta-arrow">→</span>
+  </a>
+
+  <!-- Reassurance row -->
+  <div class="assure">
+    <span>✅ 100% Fresh</span>
+    <span>•</span>
+    <span>💵 COD + UPI</span>
+    <span>•</span>
+    <span>🔄 Free Replacement</span>
+  </div>
+</section>
+
+<!-- Placeholder for what comes next -->
+<div class="placeholder">
+  <strong>↓ Yahan se products grid shuru hoga ↓</strong>
+  Real install pe: Repeat order bar, search, filter, products, cart bar, etc.<br><br>
+  Ye sirf <strong>HERO PREVIEW</strong> hai. Tagline + Pincode + Stats + CTA — sab visible in 1 scroll.
+</div>
+
+<div id="toast"></div>
+
+<script>
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('show'),2400);
+}
+function checkPin(){
+  var v=document.getElementById('pin').value.trim().toLowerCase();
+  var r=document.getElementById('pinR');
+  if(!v){toast('Pincode ya colony likho ⚠️');return;}
+  var areas=['hanging garden','vaishali nagar','malviya nagar','mansarovar','pratap nagar','jagatpura','sanganer','civil lines','bani park','raja park'];
+  var pins=['302017','302026','302020','302013','302018','302019','302015','302016','302021'];
+  var ok=areas.some(a=>v.includes(a)||a.includes(v))||pins.includes(v);
+  r.className='pin-result '+(ok?'ok':'no');
+  r.textContent=ok?'🎉 Hum aapke area mein deliver karte hain!':'😕 Abhi delivery nahi — WhatsApp pe poochhein';
+}
+document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')checkPin();});
+</script>
+
+</body>
+</html>
